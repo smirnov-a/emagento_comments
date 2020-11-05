@@ -1,0 +1,12 @@
+{
+    "review": {
+        "column": {
+            "source": true,
+            "source_id": true,
+            "updated_at": true,
+            "parent_id": true,
+            "level": true,
+            "path": true
+        }
+    }
+}

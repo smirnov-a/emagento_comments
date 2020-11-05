@@ -1,0 +1,47 @@
+<p data-bind="text: time"></p>
+
+<!-- ko if: reviews().totalRecords -->
+<div class="left-reviews">
+    <h3>Отзывы об интернет-магазине:</h3>
+    <!-- span data-bind="text: reviews().totalRecords"></span> комментариев -->
+    <!-- magento style -->
+    <each args="data: reviews().items, as: 'item'">
+        <div class="review-content">
+            <div class="product-reviews-summary short">
+                <!-- ko if: item.rating_votes.items.length -->
+                <!-- span data-bind="text: item.rating_votes.items[0].percent"></span -->
+                <div class="rating-summary">
+                    <div class="rating-result">
+                        <span data-bind="style: {width: item.rating_votes.items[0].percent + '%'}">
+                            <span data-bind="text: item.rating_votes.items[0].value"></span>
+                        </span>
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+            <p class="content shorten" data-bind="text: item.detail"></p>
+            <div class="local-bottom-panel">
+                <span class="left date" data-bind="text: $parent.getFormatDate(item.created_at)"></span>
+                <span class="nickname"><b data-bind="text: item.nickname"></b></span>
+            </div>
+        </div>
+        <!-- ответ на отзыв -->
+        <if args="item.r_review_id">
+            <div class="reply">
+                <p class="shorten review-content reply">
+                    <span>Ответ:</span>
+                    <text args="item.r_detail"></text>
+                </p>
+            </div>
+        </if>
+    </each>
+</div>
+<!-- кнопка для добавления отзыва в модальном окне -->
+<button type="button" class="action action-show-popup" click="showFormPopup">
+    <span>Написать отзыв</span>
+</button>
+<!-- сама форма -->
+<div id="local-review-form" data-bind="visible: isFormPopupVisible()">
+    <!-- ko template: 'Local_Comments/form' --><!-- /ko -->
+</div>
+<!-- /ko -->

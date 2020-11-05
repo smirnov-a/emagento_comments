@@ -1,0 +1,80 @@
+<?php
+
+namespace Local\Comments\Ui\Component\Listing;
+
+use Magento\Framework\App\RequestInterface;
+use Magento\Ui\DataProvider\AbstractDataProvider;
+use Local\Comments\Model\ResourceModel\Review\CollectionFactory;
+use Local\Comments\Model\ResourceModel\Review\Collection;
+use Local\Comments\Model\ResourceModel\Review;
+use Magento\Framework\Api\Filter;
+
+/**
+ * Class DataProvider for Local Comments
+ * @api
+ *
+ * @method Collection getCollection
+ */
+class DataProvider extends AbstractDataProvider
+{
+    /**
+     * @var CollectionFactory
+     */
+    protected $collectionFactory;
+
+    /**
+     * @var RequestInterface $request
+     */
+    private $request;
+
+    public function __construct(
+        $name,
+        $primaryFieldName,
+        $requestFieldName,
+        CollectionFactory $collectionFactory,
+        RequestInterface $request,
+        array $meta = [],
+        array $data = []
+    ) {
+        parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data);
+        $this->collectionFactory = $collectionFactory;
+        $this->collection = $this->collectionFactory->create();
+        $this->request = $request;
+    }
+
+    /**
+     * Получение данных. Здесь фильтр по типу комментария
+     *
+     * @return array
+     */
+    public function getData(): array
+    {
+        $collection = $this->getCollection();
+        $collection
+            ->addFieldToFilter('entity_id', \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
+            ->addStoreData();
+        //echo $collection->getSelect(); exit;
+        //$data['items'] = [];
+        $data = $collection->toArray(); //var_dump($data); exit;
+        /*
+        foreach ($data['items'] as $key => $item) {
+            if (isset($item['country_id']) && !isset($item['country'])) {
+                $data['items'][$key]['country'] = $this->countryDirectory->loadByCode($item['country_id'])->getName();
+            }
+        }
+        */
+
+        return $data;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @param Filter $filter
+     * /
+    public function addFilter(Filter $filter)
+    {
+        parent::addFilter($filter);
+    }
+    */
+}

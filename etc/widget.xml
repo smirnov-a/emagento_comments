@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="Local\Comments\Block\Widget\Reviews" id="local_comments_reviews">
+        <label translate="true">Local Comments</label>
+        <description>Local store reviews</description>
+        <parameters>
+            <parameter name="reviews" sort_order="10" visible="true" xsi:type="text">
+                <label translate="true">Custom Reviews Label</label>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

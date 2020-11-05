@@ -1,0 +1,20 @@
+{
+    "name": "local/module-comments-review",
+    "description": "Magento 2 Local store reviews extension",
+    "require": {
+        "magento/framework": "*"
+    },
+    "type": "magento2-module",
+    "version": "0.0.3",
+    "license": [
+        "OSL-3.0"
+    ],
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Local\\Comments\\": ""
+        }
+    }
+}

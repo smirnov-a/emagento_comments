@@ -1,0 +1,21 @@
+<?php
+/**
+ * @var \Local\Comments\Block\Widget\Reviews $block
+ */
+$reviews = $block->getReviews();    //var_dump($reviews); exit;
+if ($reviews): ?>
+<div data-mage-init='{"localReviews": {}}' class="local-reviews">
+    <?php foreach ($reviews as $review): ?>
+        <div>
+            <span>id: <?= $block->escapeHtml($review->getId()) ?></span>
+            <span>detail: <?= $block->escapeHtml($review->getDetail()) ?></span>
+        </div>
+    <?php endforeach; ?>
+    <button id="local-reviews-button">Кнопка</button>
+</div>
+<?php endif; ?>
+<?php if ($block->getData('reviews')): ?>
+    <h2 class='reviews'><?= $block->escapeHtml($block->getData('reviews')) ?></h2>
+    <p>This is sample widget. Perform your code here.</p>
+    <p>$block->getReviews()</p>
+<?php endif; ?>

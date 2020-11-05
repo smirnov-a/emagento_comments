@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <local_comments>
+            <settings>
+                <!-- общее значение -->
+                <is_enabled>1</is_enabled>
+            </settings>
+            <flamp>
+                <!-- разрешен ли Flamp -->
+                <is_enabled>0</is_enabled>
+                <flamp_id>XXX</flamp_id>
+            </flamp>
+            <yandex>
+                <!-- разрешен ли Yandex -->
+                <is_enabled>0</is_enabled>
+                <shop_id>ID</shop_id>
+                <auth_key>XXX</auth_key>
+            </yandex>
+        </local_comments>
+    </default>
+</config>

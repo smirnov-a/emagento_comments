@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+добавить колонки в таблицу с отзывами
+bin/magento setup:db-declaration:generate-whitelist - -module-name=Local_Comments
+bin/magento setup:upgrade
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="review" resource="default" comment="Review base information">
+        <column xsi:type="varchar" name="source" nullable="false" default="local" length="32" comment="Source type (local/yandex/flamp)" />
+        <column xsi:type="varchar" name="source_id" nullable="false" default="" length="32" comment="Source comment id" />
+        <column xsi:type="timestamp" name="updated_at" nullable="true" comment="Source date edit" />
+        <column xsi:type="bigint" name="parent_id" nullable="true" comment="Parent comment id" />
+        <column xsi:type="smallint" name="level" nullable="false" default="0" comment="Comment's level" />
+        <column xsi:type="varchar" name="path" nullable="false" default="" length="255" comment="Tree path (like in catalog_category_entity)" />
+    </table>
+</schema>

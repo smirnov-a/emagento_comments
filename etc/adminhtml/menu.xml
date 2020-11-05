@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- это добавить меню первого уровня
+        <add id="Local_Comments::comments"
+             title="Store Comments" module="Local_Comments"
+             sortOrder="10"
+             resource="Magento_Backend::content"
+        />
+        -->
+        <add id="Local_Comments::comments_list"
+             module="Local_Comments"
+             parent="Magento_Backend::marketing_user_content"
+             resource="Local_Comments::comments_list"
+             translate="title"
+             title="Store comments"
+             sortOrder="30"
+             action="local_comments/grid"
+        />
+    </menu>
+</config>
