@@ -1,5 +1,5 @@
 {
-    "name": "local/module-comments-review",
+    "name": "local/module-comments",
     "description": "Magento 2 Local store reviews extension",
     "require": {
         "magento/framework": "*"
