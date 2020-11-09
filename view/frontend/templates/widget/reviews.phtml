@@ -1,21 +1,26 @@
 <?php
 /**
  * @var \Local\Comments\Block\Widget\Reviews $block
+ * @var \Magento\Framework\Escaper $escaper
  */
 $reviews = $block->getReviews();    //var_dump($reviews); exit;
 if ($reviews): ?>
-<div data-mage-init='{"localReviews": {}}' class="local-reviews">
+<!-- <div data-mage-init='{"localReviews": {}}' class="local-reviews"> -->
+<div class="local-reviews">
     <?php foreach ($reviews as $review): ?>
-        <div>
-            <span>id: <?= $block->escapeHtml($review->getId()) ?></span>
-            <span>detail: <?= $block->escapeHtml($review->getDetail()) ?></span>
-        </div>
+    <div class="review-item">
+        <div class="author"><?= $escaper->escapeHtml($review->getNickname()) ?></div>
+        <!-- <span>id: <?= $escaper->escapeHtml($review->getId()) ?></span> -->
+        <span>detail: <?= $escaper->escapeHtml($review->getDetail()) ?></span>
+    </div>
     <?php endforeach; ?>
     <button id="local-reviews-button">Кнопка</button>
 </div>
 <?php endif; ?>
+<?php /*
 <?php if ($block->getData('reviews')): ?>
-    <h2 class='reviews'><?= $block->escapeHtml($block->getData('reviews')) ?></h2>
+    <h2 class='reviews'><?= $escaper->escapeHtml($block->getData('reviews')) ?></h2>
     <p>This is sample widget. Perform your code here.</p>
     <p>$block->getReviews()</p>
 <?php endif; ?>
+*/

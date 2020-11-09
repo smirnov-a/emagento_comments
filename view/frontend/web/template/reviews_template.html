@@ -1,10 +1,11 @@
+<!-- это для теста выводить раз в секунду вермя яваскриптом; time обявлена как observable
 <p data-bind="text: time"></p>
-
+-->
 <!-- ko if: reviews().totalRecords -->
 <div class="left-reviews">
     <h3>Отзывы об интернет-магазине:</h3>
     <!-- span data-bind="text: reviews().totalRecords"></span> комментариев -->
-    <!-- magento style -->
+    <!-- knockout magento style -->
     <each args="data: reviews().items, as: 'item'">
         <div class="review-content">
             <div class="product-reviews-summary short">

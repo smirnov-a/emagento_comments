@@ -23,10 +23,12 @@
                     <argument name="jsLayout" xsi:type="array">
                         <item name="components" xsi:type="array">
                             <item name="reviews" xsi:type="array">
-                                <item name="component" xsi:type="string">Local_Comments/js/reviews</item>
+                                <item name="component" xsi:type="string">Local_Comments/js/reviews</item>       <!-- view/frontend/web/js/reviews.js -->
                                 <item name="config" xsi:type="array">
-                                    <item name="template" xsi:type="string">Local_Comments/reviews_template</item> <!-- файл .html из папки web/template -->
+                                    <item name="template" xsi:type="string">Local_Comments/reviews_template</item> <!-- view/frontend/web/template/reviews_template.html -->
+                                    <!-- для теста. можно передать из xml параметр в javascript
                                     <item name="heading" xsi:type="string">Hello World!</item>
+                                    -->
                                 </item>
                             </item>
                         </item>

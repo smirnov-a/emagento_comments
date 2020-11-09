@@ -31,6 +31,7 @@ define([
 
     var popUp = null;
     var self;
+
     return Component.extend({
         reviews : ko.observableArray([]),
         time: ko.observable( Date() ),
@@ -38,7 +39,7 @@ define([
 
         defaults: {
             template: 'Local_Comments/reviews_template',        // .html
-            heading: 'Default Heading Text'
+            //heading: 'Default Heading Text'
         },
 
         initialize: function () {
@@ -133,7 +134,7 @@ define([
                 false
             ).done(function (response) {
                 var json = JSON.parse(response);
-                console.log(json);
+                //console.log(json);
                 self.reviews(json);
                 // повесить shorten
                 $('.shorten').shorten({
