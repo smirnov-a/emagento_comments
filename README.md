@@ -1,5 +1,5 @@
-# Magento 2 Local Comments module
-> This module extends the standard Review Magento module and allows users to write local comments to the store. Also it can download comments from 2gis and Yandex
+# Magento 2 Local Comments module (Russian)
+Данный модуль расширяет стандартный модуль Magento_Reviews и позволяет пользователям оставлять комментарии к магазину. Также он может загружать отзывы к магазину из внешних источников (на данный момент из 2gis и Yandex)
 ## Table of contents
  * [General info](#general-info)
  * [Technologies](#technologies)
@@ -12,7 +12,15 @@ This module
 Module requires Magento 2
 
 ## Installation
-To install module run this commands:
+Add repository into composer.json:
+```
+"repositories": [
+    "name": "local/module-comments",
+    "type": "git",
+    "url": "https://github.com/smirnov-a/local_comments.git"
+]
+```
+Then install module running this commands:
 
 ```
 $ composer require local/module-comments

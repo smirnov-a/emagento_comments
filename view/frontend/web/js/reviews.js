@@ -11,6 +11,7 @@ define([
     'Magento_Ui/js/modal/modal',
     'jquery_shorten',
     'moment',
+    'Magento_Ui/js/modal/alert',
     'jquery/ui'
 ], function (
     Component,
@@ -21,7 +22,8 @@ define([
     $,
     modal,
     shorten,
-    moment
+    moment,
+    alert
 ) {
     'use strict';
 
@@ -33,23 +35,33 @@ define([
     var self;
 
     return Component.extend({
-        reviews : ko.observableArray([]),
-        time: ko.observable( Date() ),
+        reviews: ko.observableArray([]),
+        //time: ko.observable( Date() ),
         isFormPopupVisible: ko.observable(false),
+        nickname: ko.observable(),
 
         defaults: {
             template: 'Local_Comments/reviews_template',        // .html
+            formKey: $.cookie('form_key'),
+            ratings: [
+                {code: 1, label: 'очень плохо'},
+                {code: 2, label: 'плохо'},
+                {code: 3, label: 'средне'},
+                {code: 4, label: 'хорошо'},
+                {code: 5, label: 'отлично'},
+            ],
             //heading: 'Default Heading Text'
         },
 
-        initialize: function () {
+        initialize: function (params) {
+            //console.log(params);
             self = this;
-
             this._super();
-            this.incrementTime();
+            var userName = sessionStorage.getItem('review_user_name') || customerData.get('customer')().firstname || '';
+            self.nickname(userName);    //params.username);
+            //this.incrementTime();
             // грузить с сервера
-            this.loadReviews();
-            //this.reviews = ['1', '2', 3];
+            self.loadReviews(params.count);
             /*
             this.time = Date();
             //time is defined as observable
@@ -58,7 +70,7 @@ define([
             setInterval(this.flush.bind(this), 1000);
             */
             // подписаться на смену статуса попап
-            this.isFormPopupVisible.subscribe(function (value) {
+            self.isFormPopupVisible.subscribe(function (value) {
                 if (value) {
                     self.getPopUp().openModal();
                 }
@@ -68,57 +80,44 @@ define([
         getFormatDate: function(timestamp) {
             return moment(timestamp).format('DD.MM.YYYY');
         },
+        /* test
         incrementTime: function () {
             setInterval(function() {
                 self.time( Date() );
             }, 1000);
         },
+        */
         showFormPopup: function() {
             //alert('popup');
             this.isFormPopupVisible(true);
-            /*
-            $('<div />').html('Modal Window Content')
-                .modal({
-                    title: 'My Title',
-                    autoOpen: true,
-                    closed: function () {
-                        // on close
-                    },
-                    buttons: [{
-                        text: 'Confirm',
-                        attr: {
-                            'data-action': 'confirm'
-                        },
-                        'class': 'action-primary',
-                        click: function () {
-                            this.closeModal();
-                        }
-                    }]
-                });
-            */
         },
         getPopUp: function () {
             var self = this;
             if (!popUp) {
+                //var data = $('#form-local-comment').serializeArray();
+                //data['form_key'] = $.mage.cookies.get('form_key');
                 popUp = modal({
                     type: 'popup',
                     responsive: true,
                     innerScroll: true,
-                    title: 'Title',
+                    title: 'Добавление отзыва',
                     closed: function () {
                         self.isFormPopupVisible(false);
                     },
                     buttons: [
                         {
-                            text: 'Send',
-                            class: 'action primary'
+                            text: 'Записать',
+                            class: 'action-primary',
+                            click: function (e) {
+                                $('#form-local-comment').submit();
+                            }
                         },
                         {
-                            text: 'Cancel',
-                            class: 'action secondary'
+                            text: 'Отмена',
+                            class: 'action-secondary'
                         }
                     ]
-                }, $('#local-review-form'));
+                }, $('#local-review-form'));    // содержимое модального окна
             }
 
             return popUp;
@@ -126,13 +125,24 @@ define([
         //flush: function(){
         //    this.time(Date());
         //},
-        loadReviews: function () {
+        loadReviews: function (count) {
             //var reviews = ko.observableArray([]);
+            // post(url, data, global, contentType, headers)
+            $.ajax({
+                url: 'local_reviews/ajax/getlist',
+                type: 'POST',
+                data: {
+                    count: count
+                },
+                global: false
+            })
+            /*
             storage.post(
                 'local_reviews/ajax/getlist',
-                {},
+                data,
                 false
-            ).done(function (response) {
+            )*/
+            .done(function (response) {
                 var json = JSON.parse(response);
                 //console.log(json);
                 self.reviews(json);
@@ -157,35 +167,65 @@ define([
                     'message': $t('Could not get review list')
                 });
             });
+        },
+        submitForm: function () {
+            var $form = $('#form-local-comment');
+            if ($form.valid()) {
+                $.ajax({
+                    url: 'local_reviews/review/save',
+                    data: $('#form-local-comment').serializeArray(),
+                    method: 'POST',
+                    dataType: 'json',
+                    //contentType:'application/json; charset=utf-8',
+                })
+                .done(function (data) {
+                    //console.log(data);
+                    if (data.error) {
+                        alert({
+                            title: '',
+                            content: data.error,
+                            actions: {
+                                always: function () {}
+                            },
+                            buttons: [{
+                                text: 'Ok',
+                                class: 'action',
+                                click: function () {
+                                    this.closeModal(true);
+                                }
+                            }],
+                        });
+                    } else if (data.message) {
+                        // сбросить и закрыть форму
+                        $('#form-local-comment')[0].reset();
+                        self.getPopUp().closeModal();
+                        //this.closeModal(true);
+                        alert({
+                            title: '',
+                            content: data.message,
+                        });
+                    }
+                    //else {
+                    //    console.log('here2');
+                    //    console.log(typeof data);
+                    //}
+                })
+                .fail(function () {
+                    //console.log('error');
+                    alert({
+                        title: '',
+                        content: 'Произошла ошибка. Попробуйте позже',  //data,
+                    });
+                });
+            }
+            /*
+            utils.ajaxSubmit({
+                url: 'local_reviews/review/save',
+                data: data,
+            }, {
+                ajaxSaveType: 'default',    // 'simple'
+            });
+            */
         }
     });
 });
-
-/*
-define([
-    'jquery',
-    'mage/storage'
-], function($, storage) {
-   'use strict';
-
-   var component = function(config) {
-       //console.log(config);
-       $(document).ready(function() {
-           //alert('here');
-           fullScreenLoader.startLoader();
-           return storage.post(
-               'local_reviews/reviews/getlist',
-               JSON.stringify({count:config.count}),
-               false
-           ).done(function (data) {
-               console.log(data);
-               fullScreenLoader.stopLoader();
-           }).fail(function() {
-               fullScreenLoader.stopLoader();
-           });
-       });
-   }
-
-   return component;
-});
-*/

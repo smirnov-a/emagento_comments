@@ -7,6 +7,6 @@
 -->
 <page_layouts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/PageLayout/etc/layouts.xsd">
     <layout id="custom_home">
-        <label translate="true">Custom Home</label>
+        <label translate="true">2 Columns Custom</label>
     </layout>
 </page_layouts>

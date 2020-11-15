@@ -9,6 +9,8 @@ class Reviews extends \Magento\Framework\App\Helper\AbstractHelper
      */
     protected $_reviewCollectionFactory;
 
+    private $logger;
+
     /**
      * Reviews constructor.
      *
@@ -17,21 +19,24 @@ class Reviews extends \Magento\Framework\App\Helper\AbstractHelper
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
-        \Local\Comments\Model\ResourceModel\Review\CollectionFactory $reviewFactory
+        \Local\Comments\Model\ResourceModel\Review\CollectionFactory $reviewFactory,
+        \Psr\Log\LoggerInterface $logger
     ) {
         $this->_reviewCollectionFactory = $reviewFactory;
+        $this->logger = $logger;
         parent::__construct($context);
     }
 
     /**
      * Возвращает колекцию с комментариями к магазину
-     *
+     * @param int $count кол-во комментариев
      * @return Local\Comments\Model\ResourceModel\Review\Collection
      */
-    public function getReviewList()
+    public function getReviewList($count = 5)
     {
+        //$this->logger->info(__METHOD__.'; count: '.$count);
         $collection = $this->_reviewCollectionFactory->create()
-            ->addReviewReplyOneLevel();
+            ->addReviewReplyOneLevel($count);
         // прицепить рейтинги (там внутри цикл и запрос для каждого элемента коллекции :(
         // но в родном блоке с отзывами так же
         // решается кэшированием

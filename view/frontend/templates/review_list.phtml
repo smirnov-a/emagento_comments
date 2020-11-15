@@ -1,5 +1,5 @@
 <?php
-/** @var $block Magento\Framework\View\Element\Template */
+/** @var $block Local\Comments\Block\ReviewList */
 ?>
 <!-- <div id="review_list" data-mage-init='{"reviews":{"count":10,"param2":234}}'>reviews here...</div> -->
 <div id="reviews-list" data-bind="scope: 'reviews'">
@@ -8,16 +8,17 @@
     -->
     <!-- ko template: getTemplate() --><!-- /ko -->
 </div>
-
+<?php
+/* через конфиг не получилось из-за динамического имени пользователя
 <script type="text/x-magento-init">
 {
     "#reviews-list": {
-      "Magento_Ui/js/core/app": <?= /* @escapeNotVerified */ $block->getJsLayout() ?>
+      "Magento_Ui/js/core/app": <?= / * @escapeNotVerified * / $block->getJsLayout() ?>
     }
 }
 </script>
-<?php
-/*
+*/
+?>
 <script type="text/x-magento-init">
     {
         "#reviews-list": {
@@ -27,7 +28,8 @@
                         "component": "Local_Comments/js/reviews",
                         "config": {
                             "template": "Local_Comments/reviews_template",
-                            "heading": "Hello World!"
+                            "count": 2,
+                            "username": "<?= $block->getUserName() ?>"
                         }
                     }
                 }
@@ -35,5 +37,3 @@
         }
     }
 </script>
-*/
-?>

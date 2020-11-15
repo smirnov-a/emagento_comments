@@ -37,11 +37,28 @@
         </if>
     </each>
 </div>
-<!-- кнопка для добавления отзыва в модальном окне -->
+<!-- кнопка для добавления отзыва в модальном окне
+<button type="button" class="action" data-trigger="trigger">
+    <span>Add comment</span>
+</button>
+<div data-bind="mageInit: {
+        'Magento_Ui/js/modal/modal': {
+            'type': 'popup',
+            'title': 'Popup title',
+            'trigger': '[data-trigger=trigger]',
+            'responsive': true,
+            'buttons': [{
+                text: jQuery.mage.__('Submit'),
+                class: 'action'
+            }]
+    }}">
+    <div class="content">frm here</div>
+</div>
+-->
 <button type="button" class="action action-show-popup" click="showFormPopup">
     <span>Написать отзыв</span>
 </button>
-<!-- сама форма -->
+<!-- сама форма. шаблон в файле view/frontend/web/template/form.html -->
 <div id="local-review-form" data-bind="visible: isFormPopupVisible()">
     <!-- ko template: 'Local_Comments/form' --><!-- /ko -->
 </div>

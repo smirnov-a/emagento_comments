@@ -8,6 +8,7 @@ use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterf
 //use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Serialize\SerializerInterface;
+//use Magento\Framework\App\RequestInterface;
 
 class Getlist extends \Magento\Framework\App\Action\Action implements /*HttpGetActionInterface*/ HttpPostActionInterface
 {
@@ -23,6 +24,8 @@ class Getlist extends \Magento\Framework\App\Action\Action implements /*HttpGetA
      * @var SerializerInterface
      */
     private $serializer;
+    private $logger;
+    //protected $request;
 
     /**
      * Init controller
@@ -36,12 +39,14 @@ class Getlist extends \Magento\Framework\App\Action\Action implements /*HttpGetA
         Context $context,
         JsonFactory $resultJsonFactory,
         SerializerInterface $serializer,
-        Reviews $reviewsHelper
+        Reviews $reviewsHelper,
+        \Psr\Log\LoggerInterface $logger
     ) {
         parent::__construct($context);
         $this->resultJsonFactory = $resultJsonFactory;
         $this->serializer = $serializer;
         $this->reviewsHelper = $reviewsHelper;
+        $this->logger = $logger;
     }
 
     /**
@@ -51,7 +56,13 @@ class Getlist extends \Magento\Framework\App\Action\Action implements /*HttpGetA
      */
     public function execute()
     {
-        $data = $this->reviewsHelper->getReviewList()->toArray();   //var_dump($data); exit;
+        // кол-во может прийти параметром (по умолчанию 5)
+        //$post = $this->getRequest()->getPost(); $this->logger->info('post: '.serialize($post));
+        //$post = $this->getRequest()->getParams();   //var_dump($post); exit;
+        //$this->logger->info(__METHOD__.'; post: '.serialize($post));
+        //$count = (int)$this->getRequest()->getParam('count', 5); //var_dump($count); exit;
+        $count = $this->getRequest()->getParam('count', 5);
+        $data = $this->reviewsHelper->getReviewList($count)->toArray();   //var_dump($data); exit;
         $response = $this->serializer->serialize($data);    //var_dump($response); exit;
 
         /** @var \Magento\Framework\Controller\Result\Json $resultJson */

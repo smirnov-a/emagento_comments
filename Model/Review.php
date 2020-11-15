@@ -11,6 +11,7 @@ class Review extends MagentoReview
      *
      * @param $attributes
      * @return $this
+     * @throws \Exception
      */
     public function loadByAttributes($attributes) {
         $this->_getResource()->loadByAttributes($this, $attributes);

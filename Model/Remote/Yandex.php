@@ -8,7 +8,7 @@ namespace Local\Comments\Model\Remote;
 class Yandex extends \Local\Comments\Model\Remote\AbstractRemote
 {
     /**
-     * Собственно работа по загрудке комментариев
+     * Собственно работа по загрузке комментариев
      *
      * @return int
      */

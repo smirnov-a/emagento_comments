@@ -1,3 +1,67 @@
-<form>
-<input type="text" name="qqq" value="eee" />
+<form class="form" method="post" autocomplete="off"
+      data-mage-init='{"validation": {}}'
+      data-bind="event: { submit: submitForm }" id="form-local-comment">
+    <input type="hidden" name="form_key" data-bind="value: formKey" />
+    <fieldset class="fieldset review-fieldset">
+        <div class="field review-field-nickname required">
+            <label for="nickname_field" class="label"><span>Ваше имя</span></label>
+            <div class="control">
+                <input type="text" class="input-text required"
+                       name="nickname" id="nickname_field"  data-msg-required="Пожалуйста, представьтесь" data-bind="value: nickname()" />
+            </div>
+        </div>
+        <fieldset class="field required review-field-ratings">
+            <legend class="label"><span>Ваша оценка</span></legend><br/>
+            <div class="control">
+                <div class="nested" id="product-review-table">
+                    <div class="field choice review-field-rating">
+                        <!--
+                        <label class="label" id="1_rating_label">
+                            <span>Качество</span>
+                        </label>
+                        -->
+                        <div class="control review-control-vote">
+                            <!-- ko foreach: ratings -->
+                            <input data-bind="attr: { id: code+'_1' }, value: code"
+                                name="ratings[1]"
+                                type="radio"
+                                class="radio required" data-msg-required="Выберите оценку"/>
+                            <label data-bind="attr: { title: label, for: code+'_1', class: 'rating-'+code }">
+                                <span>звезд</span>
+                            </label>
+                            <!-- /ko -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <!--
+        <div class="field review-field-summary required">
+            <label for="summary_field" class="label"><span>Кратко</span></label>
+            <div class="control">
+                <input type="text" name="title" id="summary_field" class="input-text" data-validate="{required:true}" data-bind="value: review().title" />
+            </div>
+        </div>
+        -->
+        <div class="field review-field-text required">
+            <label for="review_field" class="label"><span>Ваш отзыв</span></label>
+            <div class="control">
+                <textarea name="detail" id="review_field" cols="5" rows="3" class="required" data-msg-required="Заполните ваш отзыв"></textarea> <!-- data-bind="value: review().detail"></textarea -->
+            </div>
+        </div>
+    </fieldset>
+    <!--
+    <div class="actions-toolbar">
+        <div class="primary">
+            <button type="submit" class="action" name="send">
+                <span>Добавить</span>
+            </button>
+        </div>
+        <div class="secondary">
+            <button type="button" class="secondary">
+                <span>Отмена</span>
+            </button>
+        </div>
+    </div>
+    -->
 </form>
