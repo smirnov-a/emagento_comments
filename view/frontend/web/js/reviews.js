@@ -12,6 +12,7 @@ define([
     'jquery_shorten',
     'moment',
     'Magento_Ui/js/modal/alert',
+    'Magento_Customer/js/customer-data',
     'jquery/ui'
 ], function (
     Component,
@@ -23,7 +24,8 @@ define([
     modal,
     shorten,
     moment,
-    alert
+    alert,
+    customerData
 ) {
     'use strict';
 
@@ -38,7 +40,7 @@ define([
         reviews: ko.observableArray([]),
         //time: ko.observable( Date() ),
         isFormPopupVisible: ko.observable(false),
-        nickname: ko.observable(),
+        nickname: ko.observable(''),
 
         defaults: {
             template: 'Local_Comments/reviews_template',        // .html
@@ -57,7 +59,8 @@ define([
             //console.log(params);
             self = this;
             this._super();
-            var userName = sessionStorage.getItem('review_user_name') || customerData.get('customer')().firstname || '';
+            var userName = this._getUserName();
+            //console.log(userName);
             self.nickname(userName);    //params.username);
             //this.incrementTime();
             // грузить с сервера
@@ -76,8 +79,12 @@ define([
                 }
             });
         },
+        // имя пользователя сперва берет из сессии, затем по клиенту
+        _getUserName: function () {
+            return sessionStorage.getItem('review_user_name') || customerData.get('customer')().firstname || '';
+        } ,
         // форматирование даты
-        getFormatDate: function(timestamp) {
+        getFormatDate: function (timestamp) {
             return moment(timestamp).format('DD.MM.YYYY');
         },
         /* test
@@ -116,7 +123,21 @@ define([
                             text: 'Отмена',
                             class: 'action-secondary'
                         }
-                    ]
+                    ],
+                    /*
+                    opened: function () {
+                        console.log('opened');
+                        var nickname = self.nickname();
+                        console.log(nickname);
+                        if (self.nickname() == '') {
+                            var userName = self._getUserName();
+                            console.log(userName);
+                            if (userName) {
+                                self.nickname(userName);
+                            }
+                        }
+                    },
+                    */
                 }, $('#local-review-form'));    // содержимое модального окна
             }
 
@@ -171,6 +192,11 @@ define([
         submitForm: function () {
             var $form = $('#form-local-comment');
             if ($form.valid()) {
+                // прописать если нужно имя в сессию
+                var userName = this._getUserName();
+                if (userName == '') {
+                    sessionStorage.setItem('review_user_name', $('#nickname_field').val());
+                }
                 $.ajax({
                     url: 'local_reviews/review/save',
                     data: $('#form-local-comment').serializeArray(),
@@ -196,8 +222,10 @@ define([
                             }],
                         });
                     } else if (data.message) {
-                        // сбросить и закрыть форму
+                        // сбросить и закрыть форму (сохранить имя пользователя)
+                        var oldUsername = self.nickname();
                         $('#form-local-comment')[0].reset();
+                        $('#nickname_field').val(oldUsername);
                         self.getPopUp().closeModal();
                         //this.closeModal(true);
                         alert({
@@ -205,10 +233,6 @@ define([
                             content: data.message,
                         });
                     }
-                    //else {
-                    //    console.log('here2');
-                    //    console.log(typeof data);
-                    //}
                 })
                 .fail(function () {
                     //console.log('error');
@@ -218,14 +242,6 @@ define([
                     });
                 });
             }
-            /*
-            utils.ajaxSubmit({
-                url: 'local_reviews/review/save',
-                data: data,
-            }, {
-                ajaxSaveType: 'default',    // 'simple'
-            });
-            */
         }
     });
 });
