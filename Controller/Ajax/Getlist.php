@@ -62,6 +62,9 @@ class Getlist extends \Magento\Framework\App\Action\Action implements /*HttpGetA
         //$this->logger->info(__METHOD__.'; post: '.serialize($post));
         //$count = (int)$this->getRequest()->getParam('count', 5); //var_dump($count); exit;
         $count = $this->getRequest()->getParam('count', 5);
+        //$collection = $this->reviewsHelper->getReviewList($count);
+        //$size = $collection->getSize();
+        //$this->logger->info('size: '.$size);
         $data = $this->reviewsHelper->getReviewList($count)->toArray();   //var_dump($data); exit;
         $response = $this->serializer->serialize($data);    //var_dump($response); exit;
 

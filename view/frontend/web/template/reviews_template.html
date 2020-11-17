@@ -58,6 +58,11 @@
 <button type="button" class="action action-show-popup" click="showFormPopup">
     <span>Написать отзыв</span>
 </button>
+<!-- ko if: reviews().totalRecords > getCount() -->
+<button type="button" class="action action-show-popup" click="showAllReviews">
+    <span>Show all</span>
+</button>
+<!-- /ko -->
 <!-- сама форма. шаблон в файле view/frontend/web/template/form.html -->
 <div id="local-review-form" data-bind="visible: isFormPopupVisible()">
     <!-- ko template: 'Local_Comments/form' --><!-- /ko -->

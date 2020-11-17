@@ -52,6 +52,7 @@ define([
                 {code: 4, label: 'хорошо'},
                 {code: 5, label: 'отлично'},
             ],
+            count: 0,
             //heading: 'Default Heading Text'
         },
 
@@ -64,6 +65,7 @@ define([
             self.nickname(userName);    //params.username);
             //this.incrementTime();
             // грузить с сервера
+            self.count = params.count;
             self.loadReviews(params.count);
             /*
             this.time = Date();
@@ -146,6 +148,9 @@ define([
         //flush: function(){
         //    this.time(Date());
         //},
+        getCount: function () {
+            return this.count;
+        },
         loadReviews: function (count) {
             //var reviews = ko.observableArray([]);
             // post(url, data, global, contentType, headers)
@@ -242,6 +247,10 @@ define([
                     });
                 });
             }
+        },
+        showAllReviews: function () {
+            console.log('showAllReviews');
+            console.log(this.count);
         }
     });
 });
