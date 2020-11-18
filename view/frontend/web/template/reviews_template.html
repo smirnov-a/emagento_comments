@@ -1,8 +1,8 @@
 <!-- это для теста выводить раз в секунду вермя яваскриптом; time обявлена как observable
 <p data-bind="text: time"></p>
 -->
-<!-- ko if: reviews().totalRecords -->
-<div class="left-reviews">
+<!-- __ko__ if: reviews().totalRecords -->
+<div class="left-reviews" data-bind="if: reviews().totalRecords">
     <h3>Отзывы об интернет-магазине:</h3>
     <!-- span data-bind="text: reviews().totalRecords"></span> комментариев -->
     <!-- knockout magento style -->
@@ -58,13 +58,14 @@
 <button type="button" class="action action-show-popup" click="showFormPopup">
     <span>Написать отзыв</span>
 </button>
+<!-- сама форма review. шаблон в файле view/frontend/web/template/form.html -->
+<div id="local-review-form" data-bind="visible: isFormPopupVisible()">
+    <!-- ko template: 'Local_Comments/form' --><!-- /ko -->
+</div>
+
 <!-- ko if: reviews().totalRecords > getCount() -->
 <button type="button" class="action action-show-popup" click="showAllReviews">
     <span>Show all</span>
 </button>
 <!-- /ko -->
-<!-- сама форма. шаблон в файле view/frontend/web/template/form.html -->
-<div id="local-review-form" data-bind="visible: isFormPopupVisible()">
-    <!-- ko template: 'Local_Comments/form' --><!-- /ko -->
-</div>
-<!-- /ko -->
+<!-- __/ko__ -->

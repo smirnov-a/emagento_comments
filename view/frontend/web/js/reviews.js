@@ -53,6 +53,7 @@ define([
                 {code: 5, label: 'отлично'},
             ],
             count: 0,
+            urlLoadReviews: 'local_reviews/ajax/getlist',
             //heading: 'Default Heading Text'
         },
 
@@ -152,14 +153,16 @@ define([
             return this.count;
         },
         loadReviews: function (count) {
+            //console.log('loadReviews');
             //var reviews = ko.observableArray([]);
             // post(url, data, global, contentType, headers)
             $.ajax({
-                url: 'local_reviews/ajax/getlist',
+                url: this.urlLoadReviews,   //'local_reviews/ajax/getlist',
                 type: 'POST',
                 data: {
                     count: count
                 },
+                //dataType: 'json', no it's not json!
                 global: false
             })
             /*
@@ -249,8 +252,10 @@ define([
             }
         },
         showAllReviews: function () {
-            console.log('showAllReviews');
-            console.log(this.count);
+            var context = ko.contextFor($('#reviews-popup').children().first()[0]);
+            //console.log(context);
+            context.$data.loadReviews(this.urlLoadReviews);
+            //console.log(this.count);
         }
     });
 });

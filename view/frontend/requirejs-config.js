@@ -6,7 +6,8 @@ var config = {
         '*': {
             jquery_shorten: 'Local_Comments/js/jquery.shorten',
             localReviews: 'Local_Comments/js/local-reviews',
-            reviews: 'Local_Comments/js/reviews'
+            reviews: 'Local_Comments/js/reviews',
+            reviews_full: 'Local_Comments/js/reviews_full',
         }
     }
 };
