@@ -10,7 +10,7 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Serialize\SerializerInterface;
 //use Magento\Framework\App\RequestInterface;
 
-class Getlist extends \Magento\Framework\App\Action\Action implements /*HttpGetActionInterface*/ HttpPostActionInterface
+class Getlist extends \Magento\Framework\App\Action\Action //implements /*HttpGetActionInterface*/ HttpPostActionInterface
 {
     /**
      * @var JsonFactory
@@ -26,6 +26,25 @@ class Getlist extends \Magento\Framework\App\Action\Action implements /*HttpGetA
     private $serializer;
     private $logger;
     //protected $request;
+    /**
+     * @var string
+     */
+    protected $_pageVarName = 'p';
+
+    /**
+     * @var string
+     */
+    protected $_limitVarName = 'limit';
+    /**
+     * @var int
+     */
+    protected $_limit;
+    /**
+     * The list of available pager limits
+     *
+     * @var array
+     */
+    protected $_availableLimit = [2 => 2, 5 => 5, 15 => 15];
 
     /**
      * Init controller
@@ -61,15 +80,74 @@ class Getlist extends \Magento\Framework\App\Action\Action implements /*HttpGetA
         //$post = $this->getRequest()->getParams();   //var_dump($post); exit;
         //$this->logger->info(__METHOD__.'; post: '.serialize($post));
         //$count = (int)$this->getRequest()->getParam('count', 5); //var_dump($count); exit;
-        $count = $this->getRequest()->getParam('count', 5);
-        //$collection = $this->reviewsHelper->getReviewList($count);
+        //$count = $this->getRequest()->getParam('count', 5);
+        $limit = $this->getLimit();
+        $page = $this->getCurrentPage();    //var_dump($page); var_dump($limit);
+        $collection = $this->reviewsHelper->getReviewList($page, $limit);   //echo $collection->getSelect(); exit;
         //$size = $collection->getSize();
         //$this->logger->info('size: '.$size);
-        $data = $this->reviewsHelper->getReviewList($count)->toArray();   //var_dump($data); exit;
-        $response = $this->serializer->serialize($data);    //var_dump($response); exit;
+        //$data = $this->reviewsHelper->getReviewList($limit)->toArray();   //var_dump($data); exit;
+        $response = $this->serializer->serialize($collection->toArray());    //var_dump($response); exit;
 
         /** @var \Magento\Framework\Controller\Result\Json $resultJson */
         $resultJson = $this->resultJsonFactory->create();
         return $resultJson->setData($response);
+    }
+
+    public function getLimit()
+    {
+        if ($this->_limit !== null) {
+            return $this->_limit;
+        }
+
+        $limits = $this->getAvailableLimit();   //var_dump($limits); exit;
+        if ($limit = $this->getRequest()->getParam($this->getLimitVarName())) {
+            if (isset($limits[$limit])) {
+                return $limit;
+            }
+        }
+
+        $limits = array_keys($limits);
+        return $limits[0];
+    }
+
+    /**
+     * Retrieve pager limit
+     *
+     * @return array
+     */
+    public function getAvailableLimit()
+    {
+        return $this->_availableLimit;
+    }
+
+    /**
+     * Retrieve name for pager limit data
+     *
+     * @return string
+     */
+    public function getLimitVarName()
+    {
+        return $this->_limitVarName;
+    }
+
+    /**
+     * Return current page
+     *
+     * @return int
+     */
+    public function getCurrentPage()
+    {
+        return (int)$this->getRequest()->getParam($this->getPageVarName(), 1);
+    }
+
+    /**
+     * Get page variable name
+     *
+     * @return string
+     */
+    public function getPageVarName()
+    {
+        return $this->_pageVarName;
     }
 }

@@ -160,7 +160,8 @@ define([
                 url: this.urlLoadReviews,   //'local_reviews/ajax/getlist',
                 type: 'POST',
                 data: {
-                    count: count
+                    limit: count,
+                    p: 1,
                 },
                 //dataType: 'json', no it's not json!
                 global: false

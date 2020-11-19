@@ -26,21 +26,22 @@ class Collection extends MagentoCollection
 
     /**
      * Добавляет в запрос ответы на отзывы. По одному отзыву для первого уровня
-     *
-     * @param int $count кол-во комментариев
+     * @param int $page
+     * @param int $limit кол-во комментариев
      * @param bool $isRand в случайном порядке (по умолчанию по дате в обратном порядке)
      * @return Collection
      */
-    public function addReviewReplyOneLevel($count = 5, $isRand = false)
+    public function addReviewReplyOneLevel($page = 1, $limit = 5, $isRand = false)
     {
+        $offset = $limit * ($page - 1);
         // нужно заджойнить таблицу на себя по полю parent_id
         // в колонках r_xxx будут данные ответа на отзыв (если есть не пустые)
         $this->addStoreReviewFilter()   // а надо ли фильтровать по складу
             ->addFieldToFilter('main_table.status_id', \Magento\Review\Model\Review::STATUS_APPROVED)   // только подтвержденгные комментарии
             ->addFieldToFilter('main_table.level', 1)       // комментарии пользователей на первом уровне
+            //->setCurPage($page)
             //->setOrder('review_id', 'ASC')
             //->setPageSize($count)
-            //->setCurPage(1)
             // дальше руками
             ->getSelect()
                 ->joinLeft(
@@ -62,7 +63,7 @@ class Collection extends MagentoCollection
                         'r_customer_id' => 'customer_id',
                     ]
                 )
-                ->limit($count);
+                ->limit($limit, $offset);
         if ($isRand) {
             $this->getSelect()->orderRand('review_id');
             //echo $this->getSelect(); exit;

@@ -18,7 +18,7 @@
     <!-- /ko -->
     <!-- /ko -->
     <!-- link More -->
-    <!-- ko if: curPage() < totalPages -->
-    <button type="button" class="acion btn" click="loadMoreReview">More...</button>
+    <!-- ko if: curPage() < totalPages() -->
+    <button type="button" class="acion btn" click="loadMoreReview" data-bind="attr: { title: totalPages() }">Показать больше...</button>
     <!-- /ko -->
 </div>
