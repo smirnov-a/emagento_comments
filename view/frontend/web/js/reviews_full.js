@@ -11,20 +11,26 @@ define([
 ) {
     'use strict';
 
+    var self;
+
     return Component.extend({
-        reviews: ko.observableArray([]),
+        reviewsFull: ko.observableArray([]),
+        totalRecords: ko.observable(0),
+        curPage: ko.observable(1),
+        totalPages: 1,
+        perPage: 15,
 
         defaults: {
             template: 'Local_Comments/reviews_full_template',        // .html
         },
 
         initialize: function (params) {
+            self = this;
             this._super();
             //console.log('here');
         },
-        loadReviews: function (url) {
-            var self = this;
-            console.log('load reviews full. url: '+url);
+        loadReviewsFull: function (url) {
+            //console.log('load reviews full. url: '+url); //return;
             var options = {
                 type: 'popup',
                 responsive: true,
@@ -41,14 +47,23 @@ define([
                 url: url,
                 type: 'POST',
                 showLoader: true,
-                dataType: 'json',
+                //dataType: 'json',
                 data: {
-                    count: 15
+                    count: self.perPage,
+                    p: self.curPage(),
                 },
                 complete: function (data) {
                     //console.log(data.responseJSON);
-                    self.reviews(data.responseJSON);
-                    $('#reviews-popup')
+                    var json = JSON.parse(data.responseJSON);   //console.log(json);
+                    self.totalRecords(json.totalRecords);  //console.log(self.totalRecords()); return;
+                    self.reviewsFull(json.items); //data.responseJSON);
+                    self.totalPages = Math.round(json.totalRecords / self.perPage);
+                    console.log(self.curPage());
+                    console.log(self.totalPages);
+                    console.log(self.perPage);
+                    //console.log(self.reviewsFull());
+                    //console.log(self.totalRecords());
+                    $('#reviews-popup-full')
                         //.html(data.responseText)
                         .modal(options)
                         .modal('openModal');
@@ -59,6 +74,9 @@ define([
                     console.log(errorThrown);
                 }
             });
+        },
+        loadMoreReview: function () {
+            console.log('loadMoreReview');
         }
     });
 });

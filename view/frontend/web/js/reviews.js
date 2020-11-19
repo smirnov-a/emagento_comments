@@ -252,10 +252,16 @@ define([
             }
         },
         showAllReviews: function () {
-            var context = ko.contextFor($('#reviews-popup').children().first()[0]);
-            //console.log(context);
-            context.$data.loadReviews(this.urlLoadReviews);
-            //console.log(this.count);
+            //console.log('showAllReviews');
+            var $node = $('#reviews-popup-full').children('div');
+            //console.log($node);
+            if ($node[0]) {
+                var context = ko.contextFor($node[0]);
+                //console.log(context);
+                if (context) {
+                    context.$data.loadReviewsFull(this.urlLoadReviews);
+                }
+            }
         }
     });
 });

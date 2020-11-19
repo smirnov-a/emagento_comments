@@ -1,10 +1,24 @@
-<!-- ko if: reviews().totalRecords -->
-<div>
+<div data-bind="{ visible: totalRecords() }">
     <h3>Отзывы об интернет-магазине:</h3>
-    <!-- ko foreach: reviews().items, as: 'item' -->
+    <div>
+        Всего <span data-bind="text: totalRecords()"></span> комментариев
+    </div>
+    <!-- ko foreach: reviewsFull() -->
     <div class="review-content">
-        <p class="content shorten" data-bind="text: item.detail"></p>
+        <p class="content" data-bind="text: $data.detail"></p>
+    </div>
+    <!-- ответ на отзыв -->
+    <!-- ko if: $data.r_review_id -->
+    <div class="reply">
+        <p class="shorten review-content reply">
+            <span>Ответ:</span>
+            <text args="$data.r_detail"></text>
+        </p>
     </div>
     <!-- /ko -->
+    <!-- /ko -->
+    <!-- link More -->
+    <!-- ko if: curPage() < totalPages -->
+    <button type="button" class="acion btn" click="loadMoreReview">More...</button>
+    <!-- /ko -->
 </div>
-<!-- /ko -->
