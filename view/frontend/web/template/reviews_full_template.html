@@ -1,10 +1,24 @@
 <div data-bind="{ visible: totalRecords() }">
     <h3>Отзывы об интернет-магазине:</h3>
+    <!--
     <div>
         Всего <span data-bind="text: totalRecords()"></span> комментариев
     </div>
+    -->
     <!-- ko foreach: reviewsFull() -->
     <div class="review-content">
+        <div class="product-reviews-summary short">
+            <!-- ko if: $data.rating_votes.items.length -->
+            <!-- span data-bind="text: $data.rating_votes.items[0].percent"></span -->
+            <div class="rating-summary">
+                <div class="rating-result">
+                    <span data-bind="style: {width: $data.rating_votes.items[0].percent + '%'}">
+                        <span data-bind="text: $data.rating_votes.items[0].value"></span>
+                    </span>
+                </div>
+            </div>
+            <!-- /ko -->
+        </div>
         <p class="content" data-bind="text: $data.detail"></p>
     </div>
     <!-- ответ на отзыв -->
@@ -19,6 +33,6 @@
     <!-- /ko -->
     <!-- link More -->
     <!-- ko if: curPage() < totalPages() -->
-    <button type="button" class="acion btn" click="loadMoreReview" data-bind="attr: { title: totalPages() }">Показать больше...</button>
+    <button type="button" class="acion btn" data-bind="click: loadMoreReview, attr: { title: totalPages() }">Показать больше...</button>
     <!-- /ko -->
 </div>

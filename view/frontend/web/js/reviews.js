@@ -260,7 +260,7 @@ define([
                 var context = ko.contextFor($node[0]);
                 //console.log(context);
                 if (context) {
-                    context.$data.loadReviewsFull(this.urlLoadReviews);
+                    context.$data.loadReviewsFull(this.urlLoadReviews, 1);
                 }
             }
         }

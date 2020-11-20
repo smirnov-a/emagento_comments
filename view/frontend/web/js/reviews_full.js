@@ -32,26 +32,31 @@ define([
         this.rating_votes = data.rating_votes;
         this.source = data.source;
         this.source_id = data.source_id;
-    };
+    }
 
     return Component.extend({
         reviewsFull: ko.observableArray([]),
         totalRecords: ko.observable(0),
         curPage: ko.observable(1),
         totalPages: ko.observable(1),
-        perPage: 15,
+        perPage: 15,    // params.count
 
         defaults: {
             template: 'Local_Comments/reviews_full_template',        // .html
+            urlLoadReviews: '',
         },
 
         initialize: function (params) {
             self = this;
             this._super();
+            self.perPage = params.count;
             //console.log('here');
         },
-        loadReviewsFull: function (url) {
-            //console.log('load reviews full. url: '+url); //return;
+        loadReviewsFull: function (url, page) {
+            //console.log('load reviews full. url: '+url+'; page: '+page); return;
+            self.urlLoadReviews = url;
+            self.curPage(page);
+
             var options = {
                 type: 'popup',
                 responsive: true,
@@ -71,19 +76,20 @@ define([
                 //dataType: 'json',
                 data: {
                     limit: self.perPage,
-                    p: self.curPage(),
+                    p: page,
                 },
                 complete: function (data) {
                     //console.log(data.responseJSON);
                     var json = JSON.parse(data.responseJSON);   console.log(json);
-                    var reviews = [];
+                    //var reviews = [];
                     self.totalRecords(json.totalRecords);  //console.log(self.totalRecords()); return;
                     //self.reviewsFull(json.items); //data.responseJSON);
                     // добалять в цикле
                     $.each(json.items, function (index, review) {
-                        reviews.push(new Review(review));
+                        //reviews.push(new Review(review));
+                        self.reviewsFull.push(new Review(review));
                     });
-                    self.reviewsFull(reviews);
+                    //self.reviewsFull(reviews);
                     self.totalPages(Math.round(json.totalRecords / self.perPage));
                     console.log(self.curPage());
                     console.log(self.totalPages());
@@ -104,6 +110,7 @@ define([
         },
         loadMoreReview: function () {
             console.log('loadMoreReview');
+            this.loadReviewsFull(self.urlLoadReviews, self.curPage() + 1);
         }
     });
 });

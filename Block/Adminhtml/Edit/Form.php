@@ -99,6 +99,29 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
         $fieldset->addField('customer', 'note', ['label' => __('Author'), 'text' => $customerText]);
 
         $fieldset->addField(
+            'summary-rating',
+            'note',
+            [
+                'label' => __('Summary Rating'),
+                'text' => $this->getLayout()->createBlock(
+                    \Magento\Review\Block\Adminhtml\Rating\Summary::class
+                )->toHtml()
+            ]
+        );
+
+        $fieldset->addField(
+            'detailed-rating',
+            'note',
+            [
+                'label' => __('Detailed Rating'),
+                'required' => true,
+                'text' => '<div id="rating_detail">' . $this->getLayout()->createBlock(
+                    \Magento\Review\Block\Adminhtml\Rating\Detailed::class
+                )->toHtml() . '</div>'
+            ]
+        );
+
+        $fieldset->addField(
             'status_id',
             'select',
             [
