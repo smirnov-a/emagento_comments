@@ -2,6 +2,7 @@
 <p data-bind="text: time"></p>
 -->
 <div class="left-reviews" data-bind="if: reviews().totalRecords">
+    <!-- ko template: { afterRender: rendered } --><!-- /ko -->
     <h3>Отзывы об интернет-магазине:</h3>
     <!-- span data-bind="text: reviews().totalRecords"></span> комментариев -->
     <!-- ko if: reviews().totalRecords -->

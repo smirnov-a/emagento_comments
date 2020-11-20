@@ -41,10 +41,12 @@ define([
         //time: ko.observable( Date() ),
         isFormPopupVisible: ko.observable(false),
         nickname: ko.observable(''),
+        ratings: ko.observableArray([]),
 
         defaults: {
             template: 'Local_Comments/reviews_template',        // .html
             formKey: $.cookie('form_key'),
+            /*
             ratings: [
                 {code: 1, label: 'очень плохо'},
                 {code: 2, label: 'плохо'},
@@ -52,6 +54,7 @@ define([
                 {code: 4, label: 'хорошо'},
                 {code: 5, label: 'отлично'},
             ],
+            */
             count: 0,
             urlLoadReviews: 'local_reviews/ajax/getlist',
             //heading: 'Default Heading Text'
@@ -263,6 +266,19 @@ define([
                     context.$data.loadReviewsFull(this.urlLoadReviews, 1);
                 }
             }
+        },
+        rendered: function () {
+            console.log('rendered');
+            // подгрузить рейтинги для формы
+            $.ajax({
+                url: 'local_reviews/ajax/getratings',
+                type: 'POST',
+                dataType: 'json',
+            })
+            .done(function (data) {
+                console.log(data);
+                self.ratings(data);
+            })
         }
     });
 });

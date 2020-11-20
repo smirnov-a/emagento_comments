@@ -10,7 +10,7 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Serialize\SerializerInterface;
 //use Magento\Framework\App\RequestInterface;
 
-class Getlist extends \Magento\Framework\App\Action\Action //implements /*HttpGetActionInterface*/ HttpPostActionInterface
+class Getlist extends \Magento\Framework\App\Action\Action implements /*HttpGetActionInterface*/ HttpPostActionInterface
 {
     /**
      * @var JsonFactory
@@ -24,6 +24,9 @@ class Getlist extends \Magento\Framework\App\Action\Action //implements /*HttpGe
      * @var SerializerInterface
      */
     private $serializer;
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
     private $logger;
     //protected $request;
     /**

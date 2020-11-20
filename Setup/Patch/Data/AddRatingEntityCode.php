@@ -1,6 +1,6 @@
 <?php
 /**
- * добавляет тип комментария "К магазину"
+ * Добавляет рейтинг для магазина в таблицу 'rating'
  */
 namespace Local\Comments\Setup\Patch\Data;
 
@@ -8,7 +8,7 @@ use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchVersionInterface;
 
-class AddReviewEntityCode implements DataPatchInterface, PatchVersionInterface
+class AddRatingEntityCode implements DataPatchInterface, PatchVersionInterface
 {
     /**
      * @var ModuleDataSetupInterface
@@ -37,22 +37,27 @@ class AddReviewEntityCode implements DataPatchInterface, PatchVersionInterface
      */
     public function apply()
     {
-        // добавить тип комментария к магазину ('store')
-        $this->moduleDataSetup->getConnection()->insertForce(
-            $this->moduleDataSetup->getTable('review_entity'),
+        $this->moduleDataSetup->getConnection()->insert(
+            $this->moduleDataSetup->getTable('rating'),
             [
                 'entity_id' => \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
-                'entity_code' => 'store'
+                'rating_code' => 'Store',
+                'position' => 0,
             ]
         );
-        // то же самое rating/rating_entity
-        $this->moduleDataSetup->getConnection()->insertForce(
-            $this->moduleDataSetup->getTable('rating_entity'),
-            [
-                'entity_id' => \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
-                'entity_code' => 'store'
-            ]
+        //Fill table rating/rating_option
+        $ratingId = $this->moduleDataSetup->getConnection()->lastInsertId(
+            $this->moduleDataSetup->getTable('rating')
         );
+        $optionData = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $optionData[] = ['rating_id' => $ratingId, 'code' => (string)$i, 'value' => $i, 'position' => $i];
+        }
+        $this->moduleDataSetup->getConnection()->insertMultiple(
+            $this->moduleDataSetup->getTable('rating_option'),
+            $optionData
+        );
+
         $this->logger->info('Patch applied');
     }
 
