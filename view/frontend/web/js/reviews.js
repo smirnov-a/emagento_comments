@@ -42,6 +42,7 @@ define([
         isFormPopupVisible: ko.observable(false),
         nickname: ko.observable(''),
         ratings: ko.observableArray([]),
+        rating: ko.observable(0),
 
         defaults: {
             template: 'Local_Comments/reviews_template',        // .html
@@ -248,10 +249,13 @@ define([
                 })
                 .fail(function () {
                     //console.log('error');
-                    alert({
-                        title: '',
-                        content: 'Произошла ошибка. Попробуйте позже',  //data,
+                    globalMessageList.addErrorMessage({
+                        'message': 'Произошла ошибка. Попробуйте позже' //$t('Could not get review list')
                     });
+                    //alert({
+                    //    title: '',
+                    //    content: 'Произошла ошибка. Попробуйте позже',  //data,
+                    //});
                 });
             }
         },
@@ -277,8 +281,14 @@ define([
             })
             .done(function (data) {
                 console.log(data);
-                self.ratings(data);
+                self.rating(data.rating_id);
+                self.ratings(data.options);
             })
+            .fail(function () {
+                globalMessageList.addErrorMessage({
+                    'message': 'Произошла ошибка. Попробуйте позже' //$t('Could not get review list')
+                });
+            });
         }
     });
 });

@@ -51,13 +51,24 @@ class AddRatingEntityCode implements DataPatchInterface, PatchVersionInterface
         );
         $optionData = [];
         for ($i = 1; $i <= 5; $i++) {
-            $optionData[] = ['rating_id' => $ratingId, 'code' => (string)$i, 'value' => $i, 'position' => $i];
+            $optionData[] = [
+                'rating_id' => $ratingId,
+                'code' => (string)$i,
+                'value' => $i,
+                'position' => $i
+            ];
         }
         $this->moduleDataSetup->getConnection()->insertMultiple(
             $this->moduleDataSetup->getTable('rating_option'),
             $optionData
         );
 
+        /* добавить строки по складам в rating_store. нет это в админке нужно отредактировать Stores -> Rating
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+
+        $rating = $objectManager->create('Magento\Review\Model\Rating')->create();
+        $rating->setStores()
+        */
         $this->logger->info('Patch applied');
     }
 

@@ -59,7 +59,10 @@ class GetRatings extends \Magento\Framework\App\Action\Action implements /*HttpG
      */
     public function execute()
     {
-        $response = [];
+        $response = [
+            'rating_id' => null,
+            'options' => [],
+        ];
         /* нужно вернуть json в таком виде
         {code: 1, label: 'очень плохо'},
         {code: 2, label: 'плохо'},
@@ -76,15 +79,23 @@ class GetRatings extends \Magento\Framework\App\Action\Action implements /*HttpG
         ];
         // взять код рейтинга для магазина из конфига
         $ratingId = $this->_scopeConfig->getValue('local_comments/settings/rating_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);   // 6
+        $response['rating_id'] = $ratingId;
         // и опции для него из rating_options
-        /** @var \Magento\Review\Model\ResourceModel\Rating\Collection */
-        $optionCollection = $this->_optionFactory->create();
-        $optionCollection->addRatingFilter($ratingId);
-        //echo $optionCollection->getSelect(); exit;
-        foreach ($optionCollection as $option) {
-            $response[] = [
+        /** @var \Magento\Review\Model\ResourceModel\Rating\Option\Collection $collection */
+        $collection = $this->_optionFactory->create();
+        $collection
+            ->addRatingFilter($ratingId)
+            ->setPositionOrder()
+            ->load();
+        //echo $collection->getSelect(); exit;
+        //$qq = $collection->getItemsByColumnValue('rating_id', $ratingId); //echo gettype($qq); var_dump($qq); exit;
+        //$this->logger->info(serialize($qq));
+
+        foreach ($collection as $option) {
+            $response['options'][] = [
                 'code' => $option->getId(),
                 'label' => $values[$option->getValue()] ?? '__',
+                'value' => $option->getValue(),
             ];
         }
         //var_dump($response); exit;

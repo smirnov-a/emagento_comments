@@ -22,11 +22,10 @@
                         -->
                         <div class="control review-control-vote">
                             <!-- ko foreach: ratings -->
-                            <input data-bind="attr: { id: code+'_1' }, value: code"
-                                name="ratings[1]"
+                            <input data-bind="attr: { id: code+'_'+value, name: 'ratings['+$parent.rating()+']' }, value: code"
                                 type="radio"
                                 class="radio required" data-msg-required="Выберите оценку"/>
-                            <label data-bind="attr: { title: label, for: code+'_1', class: 'rating-'+code }">
+                            <label data-bind="attr: { title: label, for: code+'_'+value, class: 'rating-'+value }">
                                 <span>звезд</span>
                             </label>
                             <!-- /ko -->

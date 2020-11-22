@@ -5,9 +5,20 @@
         <item name="js_config" xsi:type="array">
             <item name="provider" xsi:type="string">local_comments_listing.local_comments_listing_data_source</item>
         </item>
+        <!-- кнопка загрузки комментариев -->
+        <item name="buttons" xsi:type="array">
+            <item name="primary" xsi:type="array">
+                <item name="label" xsi:type="string" translate="true">New Button</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">router/controller/action</item>
+            </item>
+        </item>
     </argument>
 
     <settings>
+        <buttons>
+            <button class="Local\Comments\Block\Adminhtml\ProcessButton" name="process" />
+        </buttons>
         <spinner>local_comments_columns</spinner>
         <deps>
             <dep>local_comments_listing.local_comments_listing_data_source</dep>
@@ -50,6 +61,25 @@
         <paging name="listing_paging"/>
     </listingToolbar>
 
+    <!--
+    <button name="qqq">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="actions" xsi:type="array">
+                    <item name="0" xsi:type="array">
+                        <item name="targetName" xsi:type="string">TARGET</item>
+                        <item name="actionName" xsi:type="string">ACTION</item>
+                    </item>
+                </item>
+            </item>
+        </argument>
+        <settings>
+            <displayAslink>false</displayAslink>
+            <title><![CDATA[TEST]]></title>
+        </settings>
+    </button>
+    -->
+
     <columns name="local_comments_columns" class="Magento\Ui\Component\Listing\Columns">
         <settings>
             <childDefaults>
@@ -75,7 +105,7 @@
             <settings>
                 <filter>textRange</filter>
                 <label translate="true">ID</label>
-                <sorting>asc</sorting>
+                <sorting>desc</sorting>
             </settings>
         </column>
         <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="10">

@@ -53,6 +53,14 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
      * @var \Magento\Framework\Session\SessionManagerInterface
      */
     protected $_coreSession;
+    /**
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     */
+    protected $_scopeConfig;
+    /**
+     * @var \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory
+     */
+    protected $_optionFactory;
 
     /**
      * Init controller
@@ -66,6 +74,8 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
      * @param \Psr\Log\LoggerInterface $logger
      * @param \Magento\Customer\Model\Session $session
      * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory $optionFactory
      */
     public function __construct(
         Context $context,
@@ -77,7 +87,9 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Psr\Log\LoggerInterface $logger,
         \Magento\Customer\Model\Session $session,
-        \Magento\Framework\Session\SessionManagerInterface $coreSession
+        \Magento\Framework\Session\SessionManagerInterface $coreSession,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory $optionFactory
     ) {
         parent::__construct($context);
         $this->resultJsonFactory = $resultJsonFactory;
@@ -89,6 +101,8 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
         $this->logger = $logger;
         $this->_customerSession = $session;
         $this->_coreSession = $coreSession;
+        $this->_scopeConfig = $scopeConfig;
+        $this->_optionFactory = $optionFactory;
     }
 
     /**
@@ -102,16 +116,16 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
         ];
         if ($this->formKeyValidator->validate($this->getRequest())) {
             $data = $this->getRequest()->getPostValue();
-            $rating = $this->getRequest()->getParam('ratings', []);     // ratings[1]=4
+            $rating = $this->getRequest()->getParam('ratings', []);     // ratings[6]=23
 
             $review = $this->reviewFactory->create()->setData($data);
-            $review->setTitle('_auto_')
-                ->unsetData('review_id');
+            $review->unsetData('review_id')
+                ->setTitle('_auto_');
             $validate = $review->validate();
             if ($validate === true) {
                 $nickname = trim($data['nickname']);
-                // записать его в сессию
-                $this->_coreSession->setReviewUserName($nickname);
+                // записать его в сессию (не надо это в storage на стороне клиента)
+                //$this->_coreSession->setReviewUserName($nickname);
                 $productId = 0;
                 $customerId = null;
                 try {
@@ -124,26 +138,38 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
                         ->setStores([$this->storeManager->getStore()->getId()])
                         ->save();
                     // дальше рейтинг
-                    $ratingOptions = [
-                        1 => [1, 2, 3, 4, 5], // <== Look at your database table `rating_option` for these vals
-                        //2 => [6, 7, 8, 9, 10],
-                        //3 => [11, 12, 13, 14, 15]
-                    ];
-                    foreach ($ratingOptions as $ratingId => $optionIds) {
-                        if (isset($optionIds[$rating[$ratingId]])) {
-                            try {
-                                $_vote = $optionIds[$rating[$ratingId]];
-                                $this->ratingFactory->create()
-                                    ->setRatingId($ratingId)
-                                    ->setReviewId($review->getId())
-                                    ->setCustomerId($customerId)
-                                    ->addOptionVote($_vote, $productId);
-                                $review->aggregate();
-                            } catch (Exception $e) {
-                                $this->logger->error('Error append rating: '.$e->getMessage());
-                            }
+                    $ratingOptions = [];
+                    // код рейтинга из конфига
+                    $ratingId = $this->_scopeConfig->getValue('local_comments/settings/rating_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);   // 6
+                    // получить его опции
+                    /** @var \Magento\Review\Model\ResourceModel\Rating\Option\Collection $collection */
+                    $collection = $this->_optionFactory->create();
+                    $collection
+                        ->addRatingFilter($ratingId)
+                        ->setPositionOrder();
+                    foreach ($collection as $option) {
+                        $ratingOptions[$ratingId][] = $option->getId();     // [6 => [21, 22, 23, 24, 25]]
+                    }
+                    //$ratingOptions = [
+                    //    1 => [1, 2, 3, 4, 5], // <== Look at your database table `rating_option` for these vals
+                    //    //2 => [6, 7, 8, 9, 10],
+                    //    //3 => [11, 12, 13, 14, 15]
+                    //];
+                    //foreach ($ratingOptions as $ratingId => $optionIds) {
+                    if (isset($rating[$ratingId]) && in_array($rating[$ratingId], $ratingOptions[$ratingId])) {
+                        $_vote = $rating[$ratingId];    //$optionIds[$rating[$ratingId]];
+                        try {
+                            $this->ratingFactory->create()
+                                ->setRatingId($ratingId)
+                                ->setReviewId($review->getId())
+                                ->setCustomerId($customerId)
+                                ->addOptionVote($_vote, $productId);
+                        } catch (Exception $e) {
+                            $this->logger->error('Error append rating: '.$e->getMessage());
                         }
                     }
+                    //}
+                    $review->aggregate();
                     $result['message'] = 'Спасибо! Ваш отзыв ожидает проверки модератором';
                     unset($result['error']);
                 } catch (\Exception $e) {
