@@ -8,10 +8,10 @@ use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterf
 //use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Serialize\SerializerInterface;
-//use Magento\Framework\App\RequestInterface;
 
-class Getlist extends \Magento\Framework\App\Action\Action implements /*HttpGetActionInterface*/ HttpPostActionInterface
+class Getlist extends \Magento\Framework\App\Action\Action implements HttpPostActionInterface
 {
+    /* implements HttpGetActionInterface*/
     /**
      * @var JsonFactory
      */

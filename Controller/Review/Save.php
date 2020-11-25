@@ -139,8 +139,11 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
                         ->save();
                     // дальше рейтинг
                     $ratingOptions = [];
-                    // код рейтинга из конфига
-                    $ratingId = $this->_scopeConfig->getValue('local_comments/settings/rating_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);   // 6
+                    // код рейтинга из конфига (6)
+                    $ratingId = $this->_scopeConfig->getValue(
+                        'local_comments/settings/rating_id',
+                        \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+                    );
                     // получить его опции
                     /** @var \Magento\Review\Model\ResourceModel\Rating\Option\Collection $collection */
                     $collection = $this->_optionFactory->create();
@@ -157,7 +160,7 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
                     //];
                     //foreach ($ratingOptions as $ratingId => $optionIds) {
                     if (isset($rating[$ratingId]) && in_array($rating[$ratingId], $ratingOptions[$ratingId])) {
-                        $_vote = $rating[$ratingId];    //$optionIds[$rating[$ratingId]];
+                        $_vote = $rating[$ratingId];
                         try {
                             $this->ratingFactory->create()
                                 ->setRatingId($ratingId)

@@ -117,8 +117,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
                 'label' => __('Detailed Rating'),
                 'required' => true,
                 'text' => '<div id="rating_detail">' . $this->getLayout()->createBlock(
-                    //\Magento\Review\Block\Adminhtml\Rating\Detailed::class
-                \Local\Comments\Block\Adminhtml\Rating\Detailed::class
+                    \Local\Comments\Block\Adminhtml\Rating\Detailed::class
                 )->toHtml() . '</div>'
             ]
         );

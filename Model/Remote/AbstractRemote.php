@@ -97,8 +97,11 @@ abstract class AbstractRemote
         $this->_ratingFactory = $ratingFactory;
         $this->_storeManager = $storeManager;
         $this->dateTime = $dateTime;
-        // взять из конфига
-        $this->_globalEnabled = $this->_scopeConfig->getValue('local_comments/settings/is_enabled', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        // активность взять из конфига
+        $this->_globalEnabled = $this->_scopeConfig->getValue(
+            'local_comments/settings/is_enabled',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 
     /**

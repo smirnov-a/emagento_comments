@@ -20,8 +20,8 @@ class ReviewList extends \Magento\Framework\View\Element\Template
      */
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
-        array $data = [],
-        \Magento\Customer\Model\Session $session
+        \Magento\Customer\Model\Session $session,
+        array $data = []
     ) {
         parent::__construct($context, $data);
         $this->_customerSession = $session;

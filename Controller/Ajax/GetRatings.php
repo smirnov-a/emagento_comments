@@ -7,10 +7,10 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
 //use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Framework\Serialize\SerializerInterface;
 
-class GetRatings extends \Magento\Framework\App\Action\Action implements /*HttpGetActionInterface*/ HttpPostActionInterface
+class GetRatings extends \Magento\Framework\App\Action\Action implements HttpPostActionInterface
 {
+    /* implements HttpGetActionInterface */
     /**
      * @var JsonFactory
      */
@@ -27,7 +27,6 @@ class GetRatings extends \Magento\Framework\App\Action\Action implements /*HttpG
      * @var \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory
      */
     protected $_optionFactory;
-
 
     /**
      * Init controller
@@ -77,8 +76,11 @@ class GetRatings extends \Magento\Framework\App\Action\Action implements /*HttpG
             4 => 'хорошо',
             5 => 'отлично',
         ];
-        // взять код рейтинга для магазина из конфига
-        $ratingId = $this->_scopeConfig->getValue('local_comments/settings/rating_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);   // 6
+        // взять код рейтинга для магазина из конфига (6)
+        $ratingId = $this->_scopeConfig->getValue(
+            'local_comments/settings/rating_id',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
         $response['rating_id'] = $ratingId;
         // и опции для него из rating_options
         /** @var \Magento\Review\Model\ResourceModel\Rating\Option\Collection $collection */
@@ -88,8 +90,6 @@ class GetRatings extends \Magento\Framework\App\Action\Action implements /*HttpG
             ->setPositionOrder()
             ->load();
         //echo $collection->getSelect(); exit;
-        //$qq = $collection->getItemsByColumnValue('rating_id', $ratingId); //echo gettype($qq); var_dump($qq); exit;
-        //$this->logger->info(serialize($qq));
 
         foreach ($collection as $option) {
             $response['options'][] = [

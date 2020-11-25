@@ -8,14 +8,6 @@ namespace Local\Comments\Block\Adminhtml\Rating;
 class Detailed extends \Magento\Review\Block\Adminhtml\Rating\Detailed
 {
     /**
-     * Rating detail template name
-     *
-     * @var string
-     *
-    protected $_template = 'Magento_Review::rating/detailed.phtml';
-    */
-
-    /**
      * Get collection of ratings
      *
      * @return RatingCollection
