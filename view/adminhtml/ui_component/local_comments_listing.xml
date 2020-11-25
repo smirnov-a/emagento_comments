@@ -5,7 +5,7 @@
         <item name="js_config" xsi:type="array">
             <item name="provider" xsi:type="string">local_comments_listing.local_comments_listing_data_source</item>
         </item>
-        <!-- кнопка загрузки комментариев -->
+        <!-- кнопка загрузки комментариев. ниже
         <item name="buttons" xsi:type="array">
             <item name="primary" xsi:type="array">
                 <item name="label" xsi:type="string" translate="true">New Button</item>
@@ -13,6 +13,7 @@
                 <item name="url" xsi:type="string">router/controller/action</item>
             </item>
         </item>
+        -->
     </argument>
 
     <settings>

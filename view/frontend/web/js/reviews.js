@@ -13,6 +13,7 @@ define([
     'moment',
     'Magento_Ui/js/modal/alert',
     'Magento_Customer/js/customer-data',
+    /*'Local_Comments/js/settings',*/
     'jquery/ui'
 ], function (
     Component,
@@ -57,7 +58,7 @@ define([
             ],
             */
             count: 0,
-            urlLoadReviews: 'local_reviews/ajax/getlist',
+            urlLoadReviews: 'local_reviews/ajax/getlist',   // settings.url_getlist
             //heading: 'Default Heading Text'
         },
 

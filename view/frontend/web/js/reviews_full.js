@@ -80,7 +80,7 @@ define([
                 },
                 complete: function (data) {
                     //console.log(data.responseJSON);
-                    var json = JSON.parse(data.responseJSON);   console.log(json);
+                    var json = JSON.parse(data.responseJSON);   //console.log(json);
                     //var reviews = [];
                     self.totalRecords(json.totalRecords);  //console.log(self.totalRecords()); return;
                     //self.reviewsFull(json.items); //data.responseJSON);
