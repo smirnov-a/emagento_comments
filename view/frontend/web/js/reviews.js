@@ -121,7 +121,7 @@ define([
                     },
                     buttons: [
                         {
-                            text: 'Записать',
+                            text: 'Отправить',
                             class: 'action-primary',
                             click: function (e) {
                                 $('#form-local-comment').submit();

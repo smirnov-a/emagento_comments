@@ -7,20 +7,17 @@ use Magento\Review\Model\ResourceModel\Review\Collection as MagentoCollection;
 class Collection extends MagentoCollection
 {
     /**
-    public function __construct(\Magento\Framework\Data\Collection\EntityFactory $entityFactory, \Psr\Log\LoggerInterface $logger, \Magento\Framework\Data\Collection\Db\FetchStrategyInterface $fetchStrategy, \Magento\Framework\Event\ManagerInterface $eventManager, \Magento\Review\Helper\Data $reviewData, \Magento\Review\Model\Rating\Option\VoteFactory $voteFactory, \Magento\Store\Model\StoreManagerInterface $storeManager, \Magento\Framework\DB\Adapter\AdapterInterface $connection = null, \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null)
-    {
-        parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager, $reviewData, $voteFactory, $storeManager, $connection, $resource);
-    }
-    */
-
-    /**
      * Устанавливает фильт по типу комментариев
      *
      * @return $this
      */
     public function addStoreReviewFilter()
     {
-        $this->addFieldToFilter('main_table.entity_id', ['eq' => \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE]);
+        $this->addFieldToFilter(
+            'main_table.entity_id',
+            ['eq' => \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE]
+        );
+
         return $this;
     }
 
@@ -37,16 +34,21 @@ class Collection extends MagentoCollection
         // нужно заджойнить таблицу на себя по полю parent_id
         // в колонках r_xxx будут данные ответа на отзыв (если есть не пустые)
         $this->addStoreReviewFilter()   // а надо ли фильтровать по складу
-            ->addFieldToFilter('main_table.status_id', \Magento\Review\Model\Review::STATUS_APPROVED)   // только подтвержденгные комментарии
-            ->addFieldToFilter('main_table.level', 1)       // комментарии пользователей на первом уровне
+            ->addFieldToFilter(
+                'main_table.status_id',
+                \Magento\Review\Model\Review::STATUS_APPROVED
+            )
+            // комментарии пользователей на первом уровне
+            ->addFieldToFilter('main_table.level', 1)
             //->setCurPage($page)
             //->setOrder('review_id', 'ASC')
             //->setPageSize($count)
             // дальше руками
             ->getSelect()
+                // ответы магазина на втором уровне (если цепочка комментарий-ответ ниже то сюда не попадет)
                 ->joinLeft(
                     ['main_table2' => 'review'],
-                    'main_table.review_id = main_table2.parent_id AND main_table2.level=2',  // ответы магазина на втором уровне (если цепочка комментарий-ответ ниже то сюда не попадет)
+                    'main_table.review_id = main_table2.parent_id AND main_table2.level=2',
                     [
                         'r_review_id' => 'review_id',
                         'r_level' => 'level',

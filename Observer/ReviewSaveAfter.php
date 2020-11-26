@@ -49,7 +49,8 @@ class ReviewSaveAfter implements \Magento\Framework\Event\ObserverInterface
         // после сохранения отзыва нужно проверить его тип entity_id
         // если \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE, то прописать/обновить path и level
         // работать если еще не заполнено (т.е. сработает при добавлении отзыва)
-        if (!$dataObject->getPath() && $dataObject->getEntityId() == \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE) {
+        if (!$dataObject->getPath() &&
+            $dataObject->getEntityId() == \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE) {
             // обновить поле path и level прямым запросом
             $path = $dataObject->getId();
             $level = 1;

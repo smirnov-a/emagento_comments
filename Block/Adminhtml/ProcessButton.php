@@ -24,7 +24,7 @@ class ProcessButton /*extends GenericButton*/ implements ButtonProviderInterface
                 'mage-init' => [
                     'Local_Comments/js/button' => [
                         'url' =>  $this->_urlInterface->getUrl(
-                            'local_comments/ajax/load',
+                            'local_comments/reviews/load',
                             ['_scope' => 1, '_nosid' => true]
                         )
                     ],

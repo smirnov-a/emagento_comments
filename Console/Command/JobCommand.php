@@ -56,12 +56,12 @@ class JobCommand extends Command
 
     /**
      * {@inheritdoc}
-     */
+     * /
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $omParams = $_SERVER;
         $omParams[StoreManager::PARAM_RUN_CODE] = 'admin';
-        $omParams[Store::CUSTOM_ENTRY_POINT_PARAM] = true;
+        $omParams[Store::CUSTOM_ENTRY_POINT_PARAM] = true;  var_dump($omParams); exit;
         $objectManager = $this->objectManagerFactory->create($omParams);
 
         $type = $input->getArgument(self::TYPE_ARGUMENT);
@@ -71,7 +71,7 @@ class JobCommand extends Command
             ->setParentId(2)
             ->save();
         die('here');
-        $collectionFactory = $objectManager->create(\Local\Comments\Model\ResourceModel\Review\CollectionFactory::class);  //, ['parameters' => $params]);
+        $collectionFactory = $objectManager->create(\Local\Comments\Model\ResourceModel\Review\CollectionFactory::class);
         $collection = $collectionFactory->create();
         $reviewCollection = $collection->getItems();
         foreach ($reviewCollection as $review) {
@@ -83,4 +83,5 @@ class JobCommand extends Command
 
         return \Magento\Framework\Console\Cli::RETURN_SUCCESS;
     }
+    */
 }

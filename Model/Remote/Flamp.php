@@ -26,6 +26,8 @@ class Flamp extends \Local\Comments\Model\Remote\AbstractRemote
             return 0;
         }
         $this->_logger->info('Flamp. Found ' . count($work['reviews']) . ' comments');
+        // 'local_comments/settings/rating_id' 6
+        $ratingId = $this->getConfigCommonValue('rating_id');
         foreach ($work['reviews'] as $item) {
             try {
                 // если есть текст комментария
@@ -55,7 +57,7 @@ class Flamp extends \Local\Comments\Model\Remote\AbstractRemote
                         ->setUpdatedAt($item['date_edited'] ?? null)
                         ->setEntityPkValue(0)       // в контексте отзыва о магазине это код магазина
                         ->setStatusId(\Magento\Review\Model\Review::STATUS_APPROVED)
-                        ->setTitle('')              // тайтл пустой
+                        ->setTitle('_robot_')              // тайтл пустой
                         ->setDetail($msgReview)     // текст отзыва
                         ->setNickname($nick)
                         ->setStoreId($storeId)
@@ -64,7 +66,7 @@ class Flamp extends \Local\Comments\Model\Remote\AbstractRemote
                     // добавить рейтинг, если есть
                     if (!empty($item['rating'])) {        // там число от 1 до 5
                         $this->_ratingFactory->create()
-                            ->setRatingId(1)                // TODO Quality
+                            ->setRatingId($ratingId)
                             ->setReviewId($review->getId())
                             //->setCustomerId(Mage::getSingleton('customer/session')->getCustomerId())
                             ->addOptionVote((int)$item['rating'], $storeId);
@@ -130,7 +132,7 @@ class Flamp extends \Local\Comments\Model\Remote\AbstractRemote
                                 // в контексте отзыва о магазине это код магазина
                                 ->setEntityPkValue(0)
                                 ->setStatusId(\Magento\Review\Model\Review::STATUS_APPROVED)
-                                ->setTitle('')
+                                ->setTitle('_robot_')
                                 ->setDetail($msgReply)
                                 ->setNickname($nickReply)
                                 ->setStoreId($storeId)
@@ -182,10 +184,11 @@ class Flamp extends \Local\Comments\Model\Remote\AbstractRemote
     public function getUrl()
     {
         // id взять из конфига
-        $id = $this->_scopeConfig->getValue(
-            'local_comments/flamp/flamp_id',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
+        $id = $this->getConfigValue('flamp_id');
+        //$id = $this->_scopeConfig->getValue(
+        //    'local_comments/flamp/flamp_id',
+        //    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        //);
         // https://api.reviews.2gis.com/2.0/branches/1267165676751243/reviews?limit=24&is_advertiser=false&fields=meta.providers,meta.branch_rating,meta.branch_reviews_count,meta.org_rating,meta.org_reviews_count
         return sprintf('https://api.reviews.2gis.com/2.0/branches/%s/reviews', $id);
     }
@@ -205,14 +208,29 @@ class Flamp extends \Local\Comments\Model\Remote\AbstractRemote
     }
 
     /**
-     * Включен ли Flamp в админке
+     * Включен ли Flamp в админке 'local_comments/flamp/is_enabled'
      *
      * @return bool
      */
     public function isEnabled()
     {
-        return (bool)$this->_scopeConfig->getValue(
-            'local_comments/flamp/is_enabled',
+        return (bool)$this->getConfigValue('is_enabled');
+        //return (bool)$this->_scopeConfig->getValue(
+        //    'local_comments/flamp/is_enabled',
+        //    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        //);
+    }
+
+    /**
+     * Get value from core_config
+     *
+     * @param string $item
+     * @return int|null|string
+     */
+    public function getConfigValue($item)
+    {
+        return $this->_scopeConfig->getValue(
+            'local_comments/flamp/' . $item,
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
     }

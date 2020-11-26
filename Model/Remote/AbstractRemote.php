@@ -57,7 +57,7 @@ abstract class AbstractRemote
      */
     protected $dateTime;
 
-    private $_globalEnabled;
+    //private $_globalEnabled;
 
     /**
      * AbstractRemote constructor.
@@ -98,10 +98,10 @@ abstract class AbstractRemote
         $this->_storeManager = $storeManager;
         $this->dateTime = $dateTime;
         // активность взять из конфига
-        $this->_globalEnabled = $this->_scopeConfig->getValue(
-            'local_comments/settings/is_enabled',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
+        //$this->_globalEnabled = $this->_scopeConfig->getValue(
+        //    'local_comments/settings/is_enabled',
+        //    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        //);
     }
 
     /**
@@ -141,7 +141,8 @@ abstract class AbstractRemote
      */
     public function isGlobalEnabled()
     {
-        return (bool)$this->_globalEnabled;
+        return (bool)$this->getConfigCommonValue('is_enabled');
+        //return (bool)$this->_globalEnabled;
     }
 
     /**
@@ -215,5 +216,19 @@ abstract class AbstractRemote
         }
 
         return $stores;
+    }
+
+    /**
+     * Get value 'local_comments/settings/<item>'
+     *
+     * @param string $item
+     * @return int|null|string
+     */
+    public function getConfigCommonValue($item)
+    {
+        return $this->_scopeConfig->getValue(
+            'local_comments/settings/' . $item,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
     }
 }

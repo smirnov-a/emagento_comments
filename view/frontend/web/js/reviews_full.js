@@ -62,7 +62,7 @@ define([
                 responsive: true,
                 innerScroll: true,
                 buttons: [{
-                    text: $.mage.__('Continue'),
+                    text: $.mage.__('Close'),
                     class: 'primary action submit btn btn-default',
                     click: function () {
                         this.closeModal();

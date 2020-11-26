@@ -7,7 +7,6 @@ use Magento\Framework\Api\Search\SearchResultInterface;
 use Magento\Framework\Api\Search\AggregationInterface;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
-
 class Collection extends AbstractCollection implements SearchResultInterface
 {
     /**
@@ -135,5 +134,4 @@ class Collection extends AbstractCollection implements SearchResultInterface
     {
         return null;
     }
-
 }
