@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Controller\Review;
+namespace Emagento\Comments\Controller\Review;
 
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
@@ -26,7 +26,7 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
     /**
      * Review model
      *
-     * @var \Local\Comments\Model\ReviewFactory
+     * @var \Emagento\Comments\Model\ReviewFactory
      */
     protected $reviewFactory;
     /**
@@ -68,7 +68,7 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
      * @param JsonFactory $resultJsonFactory
      * @param SerializerInterface $serializer
      * @param Validator $formKeyValidator
-     * @param \Local\Comments\Model\ReviewFactory $reviewFactory
+     * @param \Emagento\Comments\Model\ReviewFactory $reviewFactory
      * @param \Magento\Review\Model\RatingFactory $ratingFactory
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Psr\Log\LoggerInterface $logger
@@ -82,7 +82,7 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
         JsonFactory $resultJsonFactory,
         SerializerInterface $serializer,
         Validator $formKeyValidator,
-        \Local\Comments\Model\ReviewFactory $reviewFactory,
+        \Emagento\Comments\Model\ReviewFactory $reviewFactory,
         \Magento\Review\Model\RatingFactory $ratingFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Psr\Log\LoggerInterface $logger,
@@ -130,7 +130,7 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
                 $customerId = null;
                 try {
                     $review->setEntityPkValue($productId)    // код товара в данном случае 0
-                        ->setEntityId(\Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
+                        ->setEntityId(\Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
                         ->setStatusId(\Magento\Review\Model\Review::STATUS_PENDING)
                         ->setCustomerId($customerId)
                         ->setNickname($nickname)

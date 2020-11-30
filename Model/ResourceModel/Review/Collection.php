@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Model\ResourceModel\Review;
+namespace Emagento\Comments\Model\ResourceModel\Review;
 
 use Magento\Review\Model\ResourceModel\Review\Collection as MagentoCollection;
 
@@ -15,7 +15,7 @@ class Collection extends MagentoCollection
     {
         $this->addFieldToFilter(
             'main_table.entity_id',
-            ['eq' => \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE]
+            ['eq' => \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE]
         );
 
         return $this;

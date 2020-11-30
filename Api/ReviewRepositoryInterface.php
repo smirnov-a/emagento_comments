@@ -1,25 +1,25 @@
 <?php
 
 
-namespace Local\Comments\Api;
+namespace Emagento\Comments\Api;
 
 use Magento\Framework\Api\SearchCriteriaInterface;
-use Local\Comments\Api\Data\ReviewInterface;
+use Emagento\Comments\Api\Data\ReviewInterface;
 
 interface ReviewRepositoryInterface
 {
     /**
      * Save review.
      *
-     * @param \Local\Comments\Api\Data\ReviewInterface $review
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @param \Emagento\Comments\Api\Data\ReviewInterface $review
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function save(ReviewInterface $review);
 
     /**
      * @param int $reviewId
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getById($reviewId);
@@ -28,7 +28,7 @@ interface ReviewRepositoryInterface
      * Retrieve review matching the specified criteria.
      *
      * @param \Magento\Framework\Api\SearchCriteriaInterface $searchCriteria
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getList(SearchCriteriaInterface $searchCriteria);

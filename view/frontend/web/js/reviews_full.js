@@ -42,7 +42,7 @@ define([
         perPage: 15,    // params.count
 
         defaults: {
-            template: 'Local_Comments/reviews_full_template',        // .html
+            template: 'Emagento_Comments/reviews_full_template',        // .html
             urlLoadReviews: '',
         },
 

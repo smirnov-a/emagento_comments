@@ -1,9 +1,9 @@
 <?php
 
-namespace Local\Comments\Cron;
+namespace Emagento\Comments\Cron;
 
 /**
- * Вытягивает комментарии с Yandex, Flamp etc
+ * Retrive comments from Yandex, Flamp etc
  */
 class GetRemoteComments
 {
@@ -31,9 +31,8 @@ class GetRemoteComments
     public function execute()
     {
         $cnt = 0;
-        $remotes = ['Flamp', 'Yandex'];
-        foreach ($remotes as $remote) {
-            $class = 'Local\Comments\Model\Remote\\' . $remote;
+        foreach (['Flamp', 'Yandex'] as $remote) {
+            $class = 'Emagento\Comments\Model\Remote\\' . $remote;
             $job = $this->_objectManager->create($class);
 
             $cnt += $job->getComments();

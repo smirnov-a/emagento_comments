@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Model\Config;
+namespace Emagento\Comments\Model\Config;
 
 class Rating implements \Magento\Framework\Option\ArrayInterface
 {
@@ -28,7 +28,7 @@ class Rating implements \Magento\Framework\Option\ArrayInterface
         $result = [];
         /** @var \Magento\Review\Model\ResourceModel\Rating\Collection */
         $ratingCollection = $this->_ratingFactory->create();
-        $ratingCollection->addEntityFilter(\Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE);
+        $ratingCollection->addEntityFilter(\Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE);
         //echo $ratingCollection->getSelect(); exit;
         foreach ($ratingCollection as $rating) {
             //echo $rating->getRatingId().' '.$rating->getRatingCode()."<br/>";

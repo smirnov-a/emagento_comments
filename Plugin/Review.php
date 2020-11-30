@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Plugin;
+namespace Emagento\Comments\Plugin;
 
 class Review
 {
@@ -31,7 +31,7 @@ class Review
         // перед сохранением нужно прописать поля 'path' и 'level'
         // они зависят от parent_id: если он не пустой, то сходить за данными parent'а я взять его level и path
         // только для комментариев к магазину
-        if ($subject->getEntityId() == \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE) {
+        if ($subject->getEntityId() == \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE) {
             // значения по умолчанию
             $path = $subject->getId();
             $level = 1;

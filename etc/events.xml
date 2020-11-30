@@ -2,6 +2,6 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="review_save_after">
-        <observer name="local_comments_review_save_after" instance="Local\Comments\Observer\ReviewSaveAfter" />
+        <observer name="emagento_comments_review_save_after" instance="Emagento\Comments\Observer\ReviewSaveAfter" />
     </event>
 </config>

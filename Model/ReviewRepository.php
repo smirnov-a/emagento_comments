@@ -1,11 +1,11 @@
 <?php
 
-namespace Local\Comments\Model;
+namespace Emagento\Comments\Model;
 
-use Local\Comments\Api\Data;
-use Local\Comments\Api\ReviewRepositoryInterface;
-use Local\Comments\Model\ResourceModel\Review as ResourceReview;
-use Local\Comments\Model\ResourceModel\Review\CollectionFactory as ReviewCollectionFactory;
+use Emagento\Comments\Api\Data;
+use Emagento\Comments\Api\ReviewRepositoryInterface;
+use Emagento\Comments\Model\ResourceModel\Review as ResourceReview;
+use Emagento\Comments\Model\ResourceModel\Review\CollectionFactory as ReviewCollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessorInterface;
 
@@ -42,7 +42,7 @@ class ReviewRepository implements ReviewRepositoryInterface
     private $collectionProcessor;
 
     /**
-     * @var \Local\Comments\Api\Data\ReviewInterfaceFactory
+     * @var \Emagento\Comments\Api\Data\ReviewInterfaceFactory
      */
     //protected $dataReviewFactory;
 
@@ -74,11 +74,11 @@ class ReviewRepository implements ReviewRepositoryInterface
     /**
      * Save Review data
      *
-     * @param \Local\Comments\Api\Data\ReviewInterface|Review $review
+     * @param \Emagento\Comments\Api\Data\ReviewInterface|Review $review
      * @return Review
      * @throws CouldNotSaveException
      */
-    public function save(\Local\Comments\Api\Data\ReviewInterface $review)
+    public function save(\Emagento\Comments\Api\Data\ReviewInterface $review)
     {
         if ($review->getStoreId() === null) {
             $storeId = $this->storeManager->getStore()->getId();
@@ -123,11 +123,11 @@ class ReviewRepository implements ReviewRepositoryInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      * @param \Magento\Framework\Api\SearchCriteriaInterface $criteria
-     * @return \Local\Comments\Api\Data\ReviewSearchResultsInterface
+     * @return \Emagento\Comments\Api\Data\ReviewSearchResultsInterface
      */
     public function getList(\Magento\Framework\Api\SearchCriteriaInterface $criteria)
     {
-        /** @var \Local\Comments\Model\ResourceModel\Review\Collection $collection */
+        /** @var \Emagento\Comments\Model\ResourceModel\Review\Collection $collection */
         $collection = $this->reviewCollectionFactory->create();
 
         $this->collectionProcessor->process($criteria, $collection);
@@ -144,11 +144,11 @@ class ReviewRepository implements ReviewRepositoryInterface
     /**
      * Delete Review
      *
-     * @param \Local\Comments\Api\Data\ReviewInterface $review
+     * @param \Emagento\Comments\Api\Data\ReviewInterface $review
      * @return bool
      * @throws CouldNotDeleteException
      */
-    public function delete(\Local\Comments\Api\Data\ReviewInterface $review)
+    public function delete(\Emagento\Comments\Api\Data\ReviewInterface $review)
     {
         try {
             $this->resource->delete($review);
@@ -184,7 +184,7 @@ class ReviewRepository implements ReviewRepositoryInterface
     {
         if (!$this->collectionProcessor) {
             $this->collectionProcessor = \Magento\Framework\App\ObjectManager::getInstance()->get(
-                \Local\Comments\Model\Api\SearchCriteria\ReviewCollectionProcessor::class
+                \Emagento\Comments\Model\Api\SearchCriteria\ReviewCollectionProcessor::class
             );
         }
         return $this->collectionProcessor;

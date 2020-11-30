@@ -1,11 +1,11 @@
 <?php
 
-namespace Local\Comments\Helper;
+namespace Emagento\Comments\Helper;
 
 class Reviews extends \Magento\Framework\App\Helper\AbstractHelper
 {
     /**
-     * @var \Local\Comments\Model\ResourceModel\Review\CollectionFactory
+     * @var \Emagento\Comments\Model\ResourceModel\Review\CollectionFactory
      */
     protected $_reviewCollectionFactory;
 
@@ -15,11 +15,11 @@ class Reviews extends \Magento\Framework\App\Helper\AbstractHelper
      * Reviews constructor.
      *
      * @param \Magento\Framework\App\Helper\Context $context
-     * @param \Local\Comments\Model\ResourceModel\Review\CollectionFactory $reviewFactory
+     * @param \Emagento\Comments\Model\ResourceModel\Review\CollectionFactory $reviewFactory
      */
     public function __construct(
         \Magento\Framework\App\Helper\Context $context,
-        \Local\Comments\Model\ResourceModel\Review\CollectionFactory $reviewFactory,
+        \Emagento\Comments\Model\ResourceModel\Review\CollectionFactory $reviewFactory,
         \Psr\Log\LoggerInterface $logger
     ) {
         $this->_reviewCollectionFactory = $reviewFactory;
@@ -32,7 +32,7 @@ class Reviews extends \Magento\Framework\App\Helper\AbstractHelper
      * @param int $page текущая страница
      * @param int $limit кол-во комментариев
      *
-     * @return Local\Comments\Model\ResourceModel\Review\Collection
+     * @return Emagento\Comments\Model\ResourceModel\Review\Collection
      */
     public function getReviewList($page = 1, $limit = 5)
     {

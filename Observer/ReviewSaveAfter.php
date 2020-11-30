@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Observer;
+namespace Emagento\Comments\Observer;
 
 use Psr\Log\LoggerInterface;
 
@@ -11,7 +11,7 @@ class ReviewSaveAfter implements \Magento\Framework\Event\ObserverInterface
      */
     protected $_reviewFactory;
     /**
-     * @var \Local\Comments\Model\ResourceModel\Review
+     * @var \Emagento\Comments\Model\ResourceModel\Review
      */
     protected $_reviewResource;
     /**
@@ -23,12 +23,12 @@ class ReviewSaveAfter implements \Magento\Framework\Event\ObserverInterface
      * Constructor
      *
      * @param \Magento\Review\Model\ReviewFactory $reviewFactory
-     * @param \Local\Comments\Model\ResourceModel\Review $reviewResource
+     * @param \Emagento\Comments\Model\ResourceModel\Review $reviewResource
      * @param LoggerInterface $logger
      */
     public function __construct(
         \Magento\Review\Model\ReviewFactory $reviewFactory,
-        \Local\Comments\Model\ResourceModel\Review $reviewResource,
+        \Emagento\Comments\Model\ResourceModel\Review $reviewResource,
         LoggerInterface $logger
     ) {
         $this->_reviewFactory = $reviewFactory;
@@ -47,10 +47,10 @@ class ReviewSaveAfter implements \Magento\Framework\Event\ObserverInterface
         //$this->_logger->info('Starting review observer...');
         $dataObject = $observer->getEvent()->getDataObject();
         // после сохранения отзыва нужно проверить его тип entity_id
-        // если \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE, то прописать/обновить path и level
+        // если \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE, то прописать/обновить path и level
         // работать если еще не заполнено (т.е. сработает при добавлении отзыва)
         if (!$dataObject->getPath() &&
-            $dataObject->getEntityId() == \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE) {
+            $dataObject->getEntityId() == \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE) {
             // обновить поле path и level прямым запросом
             $path = $dataObject->getId();
             $level = 1;

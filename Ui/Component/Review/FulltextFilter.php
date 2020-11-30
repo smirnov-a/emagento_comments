@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Local\Comments\Ui\Component\Review;
+namespace Emagento\Comments\Ui\Component\Review;
 
-use Local\Comments\Ui\Component\AddFilterInterface;
+use Emagento\Comments\Ui\Component\AddFilterInterface;
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;

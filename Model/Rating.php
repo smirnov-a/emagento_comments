@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Model;
+namespace Emagento\Comments\Model;
 
 use Magento\Review\Model\Rating as MagentoRating;
 

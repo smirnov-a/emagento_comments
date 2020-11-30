@@ -13,7 +13,6 @@ define([
     'moment',
     'Magento_Ui/js/modal/alert',
     'Magento_Customer/js/customer-data',
-    /*'Local_Comments/js/settings',*/
     'jquery/ui'
 ], function (
     Component,
@@ -46,7 +45,7 @@ define([
         rating: ko.observable(0),
 
         defaults: {
-            template: 'Local_Comments/reviews_template',        // .html
+            template: 'Emagento_Comments/reviews_template',        // .html
             formKey: $.cookie('form_key'),
             /*
             ratings: [

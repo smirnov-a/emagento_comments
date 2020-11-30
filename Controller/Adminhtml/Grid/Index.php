@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Controller\Adminhtml\Grid;
+namespace Emagento\Comments\Controller\Adminhtml\Grid;
 
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Backend\App\Action\Context;
@@ -8,15 +8,15 @@ use Magento\Framework\View\Result\PageFactory;
 
 class Index extends \Magento\Backend\App\Action implements HttpGetActionInterface
 {
-    const ACL_RESOURCE = 'Local_Comments::comments_list';   // из acl.xml
-    const MENU_ITEM = 'Local_Comments::comments_list';      // из menu.xml
+    const ACL_RESOURCE = 'Emagento_Comments::comments_list';   // из acl.xml
+    const MENU_ITEM = 'Emagento_Comments::comments_list';      // из menu.xml
 
     /**
      * Authorization level of a basic admin session
      *
      * @see _isAllowed()
      */
-    const ADMIN_RESOURCE = 'Local_Comments::comments_list';
+    const ADMIN_RESOURCE = 'Emagento_Comments::comments_list';
 
     /**
      * @var PageFactory
@@ -60,8 +60,8 @@ class Index extends \Magento\Backend\App\Action implements HttpGetActionInterfac
         $resultPage = $this->resultPageFactory->create();
         //$resultPage = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
         $resultPage->setActiveMenu(self::MENU_ITEM);
-        $resultPage->addBreadcrumb(__('Local Comments'), __('Local Comments'));
-        $resultPage->addBreadcrumb(__('Local Comments'), __('Local Comments'));
+        $resultPage->addBreadcrumb(__('Emagento Comments'), __('Emagento Comments'));
+        $resultPage->addBreadcrumb(__('Emagento Comments'), __('Emagento Comments'));
         $resultPage->getConfig()->getTitle()->prepend(__('Store comments'));
 
         return $resultPage;

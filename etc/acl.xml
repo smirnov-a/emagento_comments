@@ -3,7 +3,7 @@
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
-                <resource id="Local_Comments::comments_list" title="Samples" sortOrder="10" />
+                <resource id="Emagento_Comments::comments_list" title="Samples" sortOrder="10" />
             </resource>
         </resources>
     </acl>

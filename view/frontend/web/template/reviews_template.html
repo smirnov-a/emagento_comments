@@ -8,7 +8,13 @@
     <!-- ko if: reviews().totalRecords -->
     <!-- knockout magento style -->
     <each args="data: reviews().items, as: 'item'">
-        <div class="review-content">
+        <div class="review-content" data-bind="attr: { 'data-id': item.review_id, 'data-source-id': item.source_id }">
+            <!-- ko if: item.source == 'flamp' -->
+            <img src="/media/wysiwyg/flamp_80x20.png" alt="Flamp logo" />
+            <!-- /ko -->
+            <!-- ko if: item.source == 'yandex' -->
+            <img src="/media/wysiwyg/yandex_87x23.png" alt="Yandex logo" />
+            <!-- /ko -->
             <div class="product-reviews-summary short">
                 <!-- ko if: item.rating_votes.items.length -->
                 <!-- span data-bind="text: item.rating_votes.items[0].percent"></span -->
@@ -31,7 +37,8 @@
         <if args="item.r_review_id">
             <div class="reply">
                 <p class="shorten review-content reply">
-                    <span>Ответ:</span>
+                    <img src="/media/wysiwyg/company_20x20.jpg" alt="Company logo" align="top" />
+                    <span class="reply">Ответ:</span>
                     <text args="item.r_detail"></text>
                 </p>
             </div>
@@ -71,5 +78,5 @@
 
 <!-- сама форма review. шаблон в файле view/frontend/web/template/form.html -->
 <div id="local-review-form" data-bind="visible: isFormPopupVisible()">
-    <!-- ko template: 'Local_Comments/form' --><!-- /ko -->
+    <!-- ko template: 'Emagento_Comments/form' --><!-- /ko -->
 </div>

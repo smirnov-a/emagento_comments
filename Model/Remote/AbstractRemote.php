@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Model\Remote;
+namespace Emagento\Comments\Model\Remote;
 
 use Psr\Log\LoggerInterface;
 use Magento\Framework\HTTP\ZendClient;
@@ -37,11 +37,11 @@ abstract class AbstractRemote
      */
     protected $_filterManager;
     /**
-     * @var \Local\Comments\Model\ResourceModel\Review
+     * @var \Emagento\Comments\Model\ResourceModel\Review
      */
     protected $_reviewsResource;
     /**
-     * @var \Local\Comments\Model\ReviewFactory
+     * @var \Emagento\Comments\Model\ReviewFactory
      */
     protected $_reviewFactory;
     /**
@@ -68,7 +68,7 @@ abstract class AbstractRemote
      * @param \Magento\Framework\Serialize\Serializer\Json $jsonSerializer
      * @param \Magento\Framework\Escaper $escaper
      * @param \Magento\Framework\Filter\FilterManager $filterManager
-     * @param \Local\Comments\Model\ResourceModel\Review $reviewResource
+     * @param \Emagento\Comments\Model\ResourceModel\Review $reviewResource
      * @param \Magento\Review\Model\ReviewFactory $reviewFactory
      * @param \Magento\Review\Model\RatingFactory $ratingFactory
      * @param DateTime $dateTime
@@ -80,8 +80,8 @@ abstract class AbstractRemote
         \Magento\Framework\Serialize\Serializer\Json $jsonSerializer,
         \Magento\Framework\Escaper $escaper,
         \Magento\Framework\Filter\FilterManager $filterManager,
-        \Local\Comments\Model\ResourceModel\Review $reviewResource,
-        \Local\Comments\Model\ReviewFactory $reviewFactory,
+        \Emagento\Comments\Model\ResourceModel\Review $reviewResource,
+        \Emagento\Comments\Model\ReviewFactory $reviewFactory,
         \Magento\Review\Model\RatingFactory $ratingFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         DateTime $dateTime

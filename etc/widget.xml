@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
-    <widget class="Local\Comments\Block\Widget\Reviews" id="local_comments_reviews">
+    <widget class="Emagento\Comments\Block\Widget\Reviews" id="local_comments_reviews">
         <label translate="true">Local Comments</label>
         <description>Local store reviews</description>
         <parameters>

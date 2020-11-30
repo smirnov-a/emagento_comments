@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Controller\Adminhtml\Comment;
+namespace Emagento\Comments\Controller\Adminhtml\Comment;
 
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
@@ -28,7 +28,7 @@ class Edit extends ProductController implements HttpGetActionInterface
         $resultPage->getConfig()->getTitle()->prepend(__('Customer Reviews'));
         $resultPage->getConfig()->getTitle()->prepend(__('Edit Review'));
         //$resultPage->addContent($resultPage->getLayout()->createBlock(\Magento\Review\Block\Adminhtml\Edit::class));
-        $resultPage->addContent($resultPage->getLayout()->createBlock(\Local\Comments\Block\Adminhtml\Edit::class));
+        $resultPage->addContent($resultPage->getLayout()->createBlock(\Emagento\Comments\Block\Adminhtml\Edit::class));
         return $resultPage;
     }
 
@@ -41,7 +41,7 @@ class Edit extends ProductController implements HttpGetActionInterface
             return true;
         }
 
-        if (!$this->_authorization->isAllowed('Local_Comments::local_comments')) {
+        if (!$this->_authorization->isAllowed('Emagento_Comments::local_comments')) {
             return  false;
         }
 

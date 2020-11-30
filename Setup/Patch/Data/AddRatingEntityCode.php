@@ -2,7 +2,7 @@
 /**
  * Добавляет рейтинг для магазина в таблицу 'rating'
  */
-namespace Local\Comments\Setup\Patch\Data;
+namespace Emagento\Comments\Setup\Patch\Data;
 
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
@@ -40,7 +40,7 @@ class AddRatingEntityCode implements DataPatchInterface, PatchVersionInterface
         $this->moduleDataSetup->getConnection()->insert(
             $this->moduleDataSetup->getTable('rating'),
             [
-                'entity_id' => \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
+                'entity_id' => \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
                 'rating_code' => 'Store',
                 'position' => 0,
             ]

@@ -18,7 +18,7 @@
 
     <settings>
         <buttons>
-            <button class="Local\Comments\Block\Adminhtml\ProcessButton" name="process" />
+            <button class="Emagento\Comments\Block\Adminhtml\ProcessButton" name="process" />
         </buttons>
         <spinner>local_comments_columns</spinner>
         <deps>
@@ -33,10 +33,10 @@
             </storageConfig>
             <updateUrl path="mui/index/render"/>
         </settings>
-        <aclResource>Local_Comments::local_comments</aclResource>
-        <!-- dataProvider class="Local\Comments\Ui\Component\DataProvider" name="local_comments_listing_data_source" -->
+        <aclResource>Emagento_Comments::local_comments</aclResource>
+        <!-- dataProvider class="Emagento\Comments\Ui\Component\DataProvider" name="local_comments_listing_data_source" -->
         <!-- dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="local_comments_listing_data_source" -->
-        <dataProvider class="Local\Comments\Ui\Component\Listing\DataProvider" name="local_comments_listing_data_source">
+        <dataProvider class="Emagento\Comments\Ui\Component\Listing\DataProvider" name="local_comments_listing_data_source">
             <settings>
                 <requestFieldName>entity_id</requestFieldName>
                 <primaryFieldName>review_id</primaryFieldName>
@@ -116,6 +116,14 @@
                 <label translate="true">Created</label>
             </settings>
         </column>
+        <column name="source" sortOrder="15"> <!-- class="Emagento\Comments\Ui\Component\Listing\Columns\Source" sortOrder="15" -->
+            <settings>
+                <filter>select</filter>
+                <options class="Emagento\Comments\Ui\Component\Listing\Columns\Source" />
+                <dataType>select</dataType>
+                <label translate="true">Source</label>
+            </settings>
+        </column>
         <column name="status_id" class="Magento\Review\Ui\Component\Listing\Columns\Status" sortOrder="20">
             <settings>
                 <filter>select</filter>
@@ -124,6 +132,7 @@
                 <label translate="true">Status</label>
             </settings>
         </column>
+        <!--
         <column name="title" sortOrder="30">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -137,6 +146,7 @@
                 <label translate="true">Title</label>
             </settings>
         </column>
+        -->
         <column name="nickname" sortOrder="40">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
@@ -175,7 +185,7 @@
             </settings>
         </column>
 
-        <actionsColumn name="actions" class="Local\Comments\Ui\Component\Listing\Columns\ReviewActions" sortOrder="100">
+        <actionsColumn name="actions" class="Emagento\Comments\Ui\Component\Listing\Columns\ReviewActions" sortOrder="100">
             <settings>
                 <indexField>entity_id</indexField>
             </settings>

@@ -1,7 +1,7 @@
 var config = {
     map: {
         '*': {
-            local_comments_button: 'Local_Comments/js/button',
+            emagento_comments_button: 'Emagento_Comments/js/button',
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Block\Adminhtml;
+namespace Emagento\Comments\Block\Adminhtml;
 
 class Edit extends \Magento\Backend\Block\Widget\Form\Container
 {
@@ -56,7 +56,7 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
         parent::_construct();
 
         $this->_objectId = 'id';
-        $this->_blockGroup = 'Local_Comments';
+        $this->_blockGroup = 'Emagento_Comments';
         $this->_controller = 'adminhtml';
 
         /** @var $actionPager \Magento\Review\Helper\Action\Pager */

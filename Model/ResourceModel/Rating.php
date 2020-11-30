@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Model\ResourceModel;
+namespace Emagento\Comments\Model\ResourceModel;
 
 use Magento\Review\Model\ResourceModel\Rating as MagentoRating;
 

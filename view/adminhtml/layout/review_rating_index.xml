@@ -12,7 +12,7 @@
                 <arguments>
                     <argument name="header" xsi:type="string" translate="true">Entity</argument>
                     <argument name="type" xsi:type="string">options</argument>
-                    <argument name="options" xsi:type="options" model="Local\Comments\Model\Source\Rating\Entity"/>
+                    <argument name="options" xsi:type="options" model="Emagento\Comments\Model\Source\Rating\Entity"/>
                     <argument name="index" xsi:type="string">entity_id</argument>
                     <!--
                      <argument name="index" xsi:type="string">entity_id</argument>

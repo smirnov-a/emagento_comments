@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Setup;
+namespace Emagento\Comments\Setup;
 
 use Magento\Framework\Setup\UpgradeSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;

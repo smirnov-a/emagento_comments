@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Model\Api\SearchCriteria\CollectionProcessor\FilterProcessor;
+namespace Emagento\Comments\Model\Api\SearchCriteria\CollectionProcessor\FilterProcessor;
 
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor\CustomFilterInterface;
@@ -18,7 +18,7 @@ class ReviewStoreFilter implements CustomFilterInterface
     public function apply(Filter $filter, AbstractDb $collection)
     {
         //var_dump($filter); exit;
-        /** @var \Local\Comments\Model\ResourceModel\Review\Collection $collection */
+        /** @var \Emagento\Comments\Model\ResourceModel\Review\Collection $collection */
         $collection->addStoreFilter($filter->getValue(), false);
 
         return true;

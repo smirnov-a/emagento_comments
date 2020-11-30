@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Controller\Adminhtml\Comment;
+namespace Emagento\Comments\Controller\Adminhtml\Comment;
 
 use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
 use Magento\Review\Controller\Adminhtml\Product as ProductController;

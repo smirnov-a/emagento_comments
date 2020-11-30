@@ -17,13 +17,13 @@ Add repository into composer.json:
 "repositories": [
     "name": "local/module-comments",
     "type": "git",
-    "url": "https://github.com/smirnov-a/local_comments.git"
+    "url": "https://github.com/smirnov-a/emagento_comments.git"
 ]
 ```
 Then install module running this commands:
 
 ```
 $ composer require local/module-comments
-$ bin/magento module:enable Local_Comments
+$ bin/magento module:enable Emagento_Comments
 $ bin/magento setup:upgrade
 ```

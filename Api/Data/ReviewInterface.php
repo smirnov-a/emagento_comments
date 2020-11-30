@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Api\Data;
+namespace Emagento\Comments\Api\Data;
 
 interface ReviewInterface
 {
@@ -71,61 +71,61 @@ interface ReviewInterface
 
     /**
      * @param int $id
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      */
     public function setId($id);
 
     /**
      * @param string $createdAt
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      */
     public function setCreatedAt($createdAt);
 
     /**
      * @param int $entityId
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      */
     public function setEntityId($entityId);
 
     /**
      * @param int $entityPkValue
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      */
     public function setEntityPkValue($entityPkValue);
 
     /**
      * @param int $statusId
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      */
     public function setStatusId($statusId);
 
     /**
      * @param string $source
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      */
     public function setSource($source);
 
     /**
      * @param string $sourceId
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      */
     public function setSourceId($sourceId);
 
     /**
      * @param string $updatedAt
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      */
     public function setUpdatedAt($updatedAt);
 
     /**
      * @param int $parentId
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      */
     public function setParentId($parentId);
 
     /**
      * @param int $level
-     * @return \Local\Comments\Api\Data\ReviewInterface
+     * @return \Emagento\Comments\Api\Data\ReviewInterface
      */
     public function setLevel($level);
 }

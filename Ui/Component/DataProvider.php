@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Ui\Component;
+namespace Emagento\Comments\Ui\Component;
 
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\FilterBuilder;
@@ -89,7 +89,7 @@ class DataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvi
     {
         $metadata = [];
 
-        if (!$this->getAuthorizationInstance()->isAllowed('Local_Comments::save')) {
+        if (!$this->getAuthorizationInstance()->isAllowed('Emagento_Comments::save')) {
             $metadata = [
                 'cms_page_columns' => [
                     'arguments' => [

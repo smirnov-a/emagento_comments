@@ -1,8 +1,8 @@
 <?php
 
-namespace Local\Comments\Controller\Ajax;
+namespace Emagento\Comments\Controller\Ajax;
 
-use Local\Comments\Helper\Reviews;
+use Emagento\Comments\Helper\Reviews;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterface;
 //use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;

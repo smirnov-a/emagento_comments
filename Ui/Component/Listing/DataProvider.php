@@ -1,16 +1,16 @@
 <?php
 
-namespace Local\Comments\Ui\Component\Listing;
+namespace Emagento\Comments\Ui\Component\Listing;
 
 use Magento\Framework\App\RequestInterface;
 use Magento\Ui\DataProvider\AbstractDataProvider;
-use Local\Comments\Model\ResourceModel\Review\CollectionFactory;
-use Local\Comments\Model\ResourceModel\Review\Collection;
-use Local\Comments\Model\ResourceModel\Review;
+use Emagento\Comments\Model\ResourceModel\Review\CollectionFactory;
+use Emagento\Comments\Model\ResourceModel\Review\Collection;
+use Emagento\Comments\Model\ResourceModel\Review;
 use Magento\Framework\Api\Filter;
 
 /**
- * Class DataProvider for Local Comments
+ * Class DataProvider for Emagento Comments
  * @api
  *
  * @method Collection getCollection
@@ -51,7 +51,7 @@ class DataProvider extends AbstractDataProvider
     {
         $collection = $this->getCollection();
         $collection
-            ->addFieldToFilter('entity_id', \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
+            ->addFieldToFilter('entity_id', \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
             ->addStoreData();
         //echo $collection->getSelect(); exit;
         //$data['items'] = [];

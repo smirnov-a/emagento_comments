@@ -1,11 +1,11 @@
 <?php
 
-namespace Local\Comments\Model\Remote;
+namespace Emagento\Comments\Model\Remote;
 
 /**
  * Class load Yandex store reviews
  */
-class Yandex extends \Local\Comments\Model\Remote\AbstractRemote
+class Yandex extends \Emagento\Comments\Model\Remote\AbstractRemote
 {
     /**
      * Собственно работа по загрузке комментариев
@@ -58,7 +58,7 @@ class Yandex extends \Local\Comments\Model\Remote\AbstractRemote
                         $this->_escaper->escapeHtml($this->_filterManager->removeTags($item['author']))
                         : 'Anonymous';
                     $review
-                        ->setEntityId(\Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)    // 4 отзыв к магазину
+                        ->setEntityId(\Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)    // 4 отзыв к магазину
                         ->setSource('yandex')
                         ->setSourceId($item['id'])
                         ->setCreatedAt($item['date'] ?? $this->dateTime->timestamp())     // у Яндекса не редактируется
@@ -114,7 +114,7 @@ class Yandex extends \Local\Comments\Model\Remote\AbstractRemote
                         if (!$reply->getId()) {
                             // добавить с типом 4
                             $reply
-                                ->setEntityId(\Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
+                                ->setEntityId(\Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
                                 ->setSource('yandex')
                                 ->setSourceId($item['official_answer']['id'])
                                 ->setParentId($reviewId)

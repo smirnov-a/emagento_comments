@@ -4,10 +4,10 @@
 var config = {
     map: {
         '*': {
-            jquery_shorten: 'Local_Comments/js/jquery.shorten',
-            localReviews: 'Local_Comments/js/local-reviews',
-            reviews: 'Local_Comments/js/reviews',
-            reviews_full: 'Local_Comments/js/reviews_full',
+            jquery_shorten: 'Emagento_Comments/js/jquery.shorten',
+            localReviews: 'Emagento_Comments/js/local-reviews',
+            reviews: 'Emagento_Comments/js/reviews',
+            reviews_full: 'Emagento_Comments/js/reviews_full',
         }
     }
 };

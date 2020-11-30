@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Block;
+namespace Emagento\Comments\Block;
 
 /**
  * Class

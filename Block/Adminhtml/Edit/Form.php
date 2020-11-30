@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Block\Adminhtml\Edit;
+namespace Emagento\Comments\Block\Adminhtml\Edit;
 
 class Form extends \Magento\Backend\Block\Widget\Form\Generic
 {
@@ -105,7 +105,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
                 'label' => __('Summary Rating'),
                 'text' => $this->getLayout()->createBlock(
                     \Magento\Review\Block\Adminhtml\Rating\Summary::class
-                    //\Local\Comments\Block\Adminhtml\Rating\Summary::class
+                    //\Emagento\Comments\Block\Adminhtml\Rating\Summary::class
                 )->toHtml()
             ]
         );
@@ -117,7 +117,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
                 'label' => __('Detailed Rating'),
                 'required' => true,
                 'text' => '<div id="rating_detail">' . $this->getLayout()->createBlock(
-                    \Local\Comments\Block\Adminhtml\Rating\Detailed::class
+                    \Emagento\Comments\Block\Adminhtml\Rating\Detailed::class
                 )->toHtml() . '</div>'
             ]
         );

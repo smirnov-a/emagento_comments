@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Ui\Component\Listing\Columns;
+namespace Emagento\Comments\Ui\Component\Listing\Columns;
 
 use Magento\Ui\Component\Listing\Columns\Column;
 

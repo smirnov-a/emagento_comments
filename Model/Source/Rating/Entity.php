@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Model\Source\Rating;
+namespace Emagento\Comments\Model\Source\Rating;
 
 use Magento\Framework\Data\OptionSourceInterface;
 
@@ -24,7 +24,7 @@ class Entity implements OptionSourceInterface   //implements \Magento\Framework\
                     'label' => 'Product'
                 ],
                 [
-                    'value' => \Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
+                    'value' => \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
                     'label' => 'Store'
                 ],
             ];

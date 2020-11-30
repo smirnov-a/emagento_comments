@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Local\Comments\Model\ResourceModel\Review\Grid;
+namespace Emagento\Comments\Model\ResourceModel\Review\Grid;
 
 use Magento\Framework\Api\Search\SearchResultInterface;
 use Magento\Framework\Api\Search\AggregationInterface;

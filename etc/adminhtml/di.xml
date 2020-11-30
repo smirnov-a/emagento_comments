@@ -1,9 +1,12 @@
 <?xml version="1.0"?>
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <!-- не получилось плагином придется reference :(
+    <!-- https://stackoverflow.com/questions/64951327/add-custom-field-to-adminhtml-form-and-fill-data-magento-2/65008085#65008085 -->
     <type name="Magento\Review\Block\Adminhtml\Rating\Edit\Tab\Form">
-        <plugin name="add_entity_type_rating_form" type="Local\Comments\Plugin\Block\Adminhtml\Rating\Edit\Tab\Form" sortOrder="1"/>
+        <plugin name="add_entity_type_rating_form" type="Emagento\Comments\Plugin\Block\Adminhtml\Rating\Edit\Tab\Form" sortOrder="10" disabled="false" />
     </type>
-    -->
+
+    <type name="Magento\Review\Controller\Adminhtml\Rating\Save">
+        <plugin name="replace_rating_save_execute" type="Emagento\Comments\Plugin\Controller\Adminhtml\Rating\Save" sortOrder="10" disabled="false" />
+    </type>
 </config>

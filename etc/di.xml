@@ -5,7 +5,7 @@
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="job_review_command" xsi:type="object">Local\Comments\Console\Command\JobCommand</item>
+                <item name="job_review_command" xsi:type="object">Emagento\Comments\Console\Command\JobCommand</item>
             </argument>
         </arguments>
     </type>
@@ -13,11 +13,11 @@
     плагином не получилось
     пришлось подписаться на review_save_after и оттуда прямым запросом
     <type name="Magento\Review\Model\Review">
-        <plugin name="local_comments_before_save" type="Local\Comments\Plugin\Review" sortOrder="10" disabled="false" />
+        <plugin name="local_comments_before_save" type="Emagento\Comments\Plugin\Review" sortOrder="10" disabled="false" />
     </type>
     -->
     <!--
-    <type name="Local\Comments\Ui\Component\DataProvider">
+    <type name="Emagento\Comments\Ui\Component\DataProvider">
         <arguments>
             <argument name="additionalFilterPool" xsi:type="array">
                 <item name="fulltext" xsi:type="object">Magento\Cms\Ui\Component\Page\FulltextFilter</item>
@@ -27,67 +27,67 @@
     -->
 
     <!-- https://www.hungersoft.com/info/not-a-registered-handle-data-source-magento2-admin-grid -->
-    <virtualType name="Local\Comments\Model\ResourceModel\Review\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+    <virtualType name="Emagento\Comments\Model\ResourceModel\Review\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">review</argument>
-            <argument name="resourceModel" xsi:type="string">Local\Comments\Model\ResourceModel\Review\Collection</argument>
+            <argument name="resourceModel" xsi:type="string">Emagento\Comments\Model\ResourceModel\Review\Collection</argument>
         </arguments>
     </virtualType>
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
-                <item name="local_comments_listing_data_source" xsi:type="string">Local\Comments\Model\ResourceModel\Review\Grid\Collection</item>
+                <item name="local_comments_listing_data_source" xsi:type="string">Emagento\Comments\Model\ResourceModel\Review\Grid\Collection</item>
             </argument>
         </arguments>
     </type>
 
     <!--
-    <preference for="Local\Comments\Api\Data\ReviewSearchResultsInterface" type="Local\Comments\Model\ReviewSearchResults" />
-    <preference for="Local\Comments\Api\ReviewRepositoryInterface" type="Local\Comments\Model\ReviewRepository" />
+    <preference for="Emagento\Comments\Api\Data\ReviewSearchResultsInterface" type="Emagento\Comments\Model\ReviewSearchResults" />
+    <preference for="Emagento\Comments\Api\ReviewRepositoryInterface" type="Emagento\Comments\Model\ReviewRepository" />
 
-    <virtualType name="Local\Comments\Model\Api\SearchCriteria\ReviewCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
+    <virtualType name="Emagento\Comments\Model\Api\SearchCriteria\ReviewCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
         <arguments>
             <argument name="processors" xsi:type="array">
-                <item name="filters" xsi:type="object">Local\Comments\Model\Api\SearchCriteria\CollectionProcessor\ReviewFilterProcessor</item>
+                <item name="filters" xsi:type="object">Emagento\Comments\Model\Api\SearchCriteria\CollectionProcessor\ReviewFilterProcessor</item>
                 <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
                 <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <virtualType name="Local\Comments\Model\Api\SearchCriteria\CollectionProcessor\ReviewFilterProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
+    <virtualType name="Emagento\Comments\Model\Api\SearchCriteria\CollectionProcessor\ReviewFilterProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
         <arguments>
             <argument name="customFilters" xsi:type="array">
-                <item name="store_id" xsi:type="object">Local\Comments\Model\Api\SearchCriteria\CollectionProcessor\FilterProcessor\ReviewStoreFilter</item>
+                <item name="store_id" xsi:type="object">Emagento\Comments\Model\Api\SearchCriteria\CollectionProcessor\FilterProcessor\ReviewStoreFilter</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Local\Comments\Model\ReviewRepository">
+    <type name="Emagento\Comments\Model\ReviewRepository">
         <arguments>
-            <argument name="collectionProcessor" xsi:type="object">Local\Comments\Model\Api\SearchCriteria\ReviewCollectionProcessor</argument> <!- - virtual see below - ->
+            <argument name="collectionProcessor" xsi:type="object">Emagento\Comments\Model\Api\SearchCriteria\ReviewCollectionProcessor</argument> <!- - virtual see below - ->
         </arguments>
     </type>
     -->
     <!-- local_comments logger -->
-    <virtualType name="Local\Comments\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
+    <virtualType name="Emagento\Comments\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>
             <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
             <argument name="fileName" xsi:type="string">/var/log/local_comments.log</argument>
         </arguments>
     </virtualType>
-    <virtualType name="Local\Comments\Logger\Logger" type="Magento\Framework\Logger\Monolog">
+    <virtualType name="Emagento\Comments\Logger\Logger" type="Magento\Framework\Logger\Monolog">
         <arguments>
             <argument name="name" xsi:type="string">LocalComment</argument>
             <argument name="handlers" xsi:type="array">
-                <item name="system" xsi:type="object">Local\Comments\Logger\Handler</item>
+                <item name="system" xsi:type="object">Emagento\Comments\Logger\Handler</item>
             </argument>
         </arguments>
     </virtualType>
 
-    <type name="Local\Comments\Model\Remote\AbstractRemote">
+    <type name="Emagento\Comments\Model\Remote\AbstractRemote">
         <arguments>
-            <argument name="logger" xsi:type="object">Local\Comments\Logger\Logger</argument>
+            <argument name="logger" xsi:type="object">Emagento\Comments\Logger\Logger</argument>
         </arguments>
     </type>
 </config>

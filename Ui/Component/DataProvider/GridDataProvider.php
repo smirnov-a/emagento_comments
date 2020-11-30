@@ -1,8 +1,8 @@
 <?php
 
-namespace Local\Comments\Ui\Component\DataProvider;
+namespace Emagento\Comments\Ui\Component\DataProvider;
 
-//use Local\Comments\Api\ReviewRepositoryInterface;
+//use Emagento\Comments\Api\ReviewRepositoryInterface;
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Controller\Adminhtml\Reviews;
+namespace Emagento\Comments\Controller\Adminhtml\Reviews;
 
 //use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
@@ -12,13 +12,19 @@ class Load extends \Magento\Backend\App\Action //implements HttpPostActionInterf
      * @var JsonFactory
      */
     protected $resultJsonFactory;
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    protected $_objectManager;
 
     public function __construct(
         Context $context,
-        JsonFactory $resultJsonFactory
+        JsonFactory $resultJsonFactory,
+        \Magento\Framework\ObjectManagerInterface $objectmanager
     ) {
         parent::__construct($context);
         $this->resultJsonFactory = $resultJsonFactory;
+        $this->_objectManager = $objectmanager;
     }
 
     /**
@@ -26,8 +32,15 @@ class Load extends \Magento\Backend\App\Action //implements HttpPostActionInterf
      */
     public function execute()
     {
+        $cnt = 0;
+        foreach (['Flamp', 'Yandex'] as $remote) {
+            $class = 'Emagento\Comments\Model\Remote\\' . $remote;
+            $job = $this->_objectManager->create($class);
+
+            $cnt += $job->getComments();
+        }
         $resultJson = $this->resultJsonFactory->create();
 
-        return $resultJson->setData([]);
+        return $resultJson->setData(['success' => true, 'processed' => $cnt]);
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Local\Comments\Ui\Component;
+namespace Emagento\Comments\Ui\Component;
 
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;

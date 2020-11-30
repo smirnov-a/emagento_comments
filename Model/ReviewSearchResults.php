@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Local\Comments\Model;
+namespace Emagento\Comments\Model;
 
 use Magento\Framework\Api\SearchResults;
-use Local\Comments\Api\Data\ReviewSearchResultsInterface;
+use Emagento\Comments\Api\Data\ReviewSearchResultsInterface;
 
 class ReviewSearchResults extends SearchResults implements ReviewSearchResultsInterface
 {

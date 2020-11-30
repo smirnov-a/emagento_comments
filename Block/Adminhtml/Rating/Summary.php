@@ -1,6 +1,6 @@
 <?php
 
-namespace Local\Comments\Block\Adminhtml\Rating;
+namespace Emagento\Comments\Block\Adminhtml\Rating;
 
 /**
  * Adminhtml summary rating stars

@@ -1,11 +1,11 @@
 <?php
 
-namespace Local\Comments\Model\Remote;
+namespace Emagento\Comments\Model\Remote;
 
 /**
  * Class for work with Flamp
  */
-class Flamp extends \Local\Comments\Model\Remote\AbstractRemote
+class Flamp extends \Emagento\Comments\Model\Remote\AbstractRemote
 {
     /**
      * Собственно работа по загрузке комментариев
@@ -21,14 +21,18 @@ class Flamp extends \Local\Comments\Model\Remote\AbstractRemote
         $storeId = $this->getStoreId();
         $stores = $this->getStores();
         // сходить за комментариями на Flamp
-        $work = $this->doRequest();
+        $work = $this->doRequest(); //var_dump($work); exit;
         if (!$work || !isset($work['reviews'])) {
+            if (isset($work['error_code']) && $work['message']) {
+                $this->_logger->info('Error loading Flamp reviews: ' . $work['message']);
+            }
             return 0;
         }
         $this->_logger->info('Flamp. Found ' . count($work['reviews']) . ' comments');
         // 'local_comments/settings/rating_id' 6
         $ratingId = $this->getConfigCommonValue('rating_id');
         foreach ($work['reviews'] as $item) {
+            //var_dump($item); exit;
             try {
                 // если есть текст комментария
                 if (empty($item['text'])) {
@@ -46,11 +50,11 @@ class Flamp extends \Local\Comments\Model\Remote\AbstractRemote
                     $review,
                     ['source' => 'flamp', 'source_id' => $item['id']]
                 );
-                //echo $review->getId(); exit;
+                //echo 'id: '. $review->getId(); exit;
                 if (!$review->getId()) {
                     // отзыва еще нет. добавить с типом "Отзыв к магазину" и сразу "Готов к показу"
                     $review
-                        ->setEntityId(\Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
+                        ->setEntityId(\Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
                         ->setSource('flamp')
                         ->setSourceId($item['id'])
                         ->setCreatedAt($item['date_created'] ?? $this->dateTime->timestamp())
@@ -120,7 +124,7 @@ class Flamp extends \Local\Comments\Model\Remote\AbstractRemote
                         if (!$reply->getId()) {
                             // добавить с типом 4 Отзыв к магазину
                             $reply
-                                ->setEntityId(\Local\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
+                                ->setEntityId(\Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
                                 ->setSource('flamp')
                                 ->setSourceId($item['official_answer']['id'])
                                 ->setParentId($reviewId)

@@ -1,5 +1,5 @@
 <?php
-/** @var $block Local\Comments\Block\ReviewList */
+/** @var $block Emagento\Comments\Block\ReviewList */
 ?>
 <!-- <div id="review_list" data-mage-init='{"reviews":{"count":10,"param2":234}}'>reviews here...</div> -->
 <div id="reviews-list" data-bind="scope: 'reviews'">
@@ -24,9 +24,9 @@
             "Magento_Ui/js/core/app": {
                 "components": {
                     "reviews": {
-                        "component": "Local_Comments/js/reviews",
+                        "component": "Emagento_Comments/js/reviews",
                         "config": {
-                            "template": "Local_Comments/reviews_template",
+                            "template": "Emagento_Comments/reviews_template",
                             "count": 2,
                             "username": "<?= $block->getUserName() ?>"
                         }
@@ -47,9 +47,9 @@
         "Magento_Ui/js/core/app": {
             "components": {
                 "reviews_full": {
-                    "component": "Local_Comments/js/reviews_full",
+                    "component": "Emagento_Comments/js/reviews_full",
                     "config": {
-                        "template": "Local_Comments/reviews_full_template",
+                        "template": "Emagento_Comments/reviews_full_template",
                         "count": 5
                     }
                 }
