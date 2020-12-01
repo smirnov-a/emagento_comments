@@ -6,6 +6,8 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Review\Model\Rating;
+use Magento\Backend\Model\Session;
 
 class Save extends Action
 {
@@ -49,7 +51,7 @@ class Save extends Action
         if ($this->getRequest()->getPostValue()) {
             try {
                 /** @var \Magento\Review\Model\Rating $ratingModel */
-                $ratingModel = $this->_objectManager->create(\Magento\Review\Model\Rating::class);
+                $ratingModel = $this->_objectManager->create(Rating::class);
                 $stores = $this->getRequest()->getParam('stores');
                 $position = (int)$this->getRequest()->getParam('position');
                 $stores[] = 0;
@@ -61,7 +63,7 @@ class Save extends Action
                     ->setPosition($position)
                     ->setId($this->getRequest()->getParam('id'))
                     ->setIsActive($isActive)
-                    ->setEntityId($this->getRequest()->getParam('entity_id'))  //$this->coreRegistry->registry('entityId'))
+                    ->setEntityId($this->getRequest()->getParam('entity_id'))
                     ->save();
 
                 $options = $this->getRequest()->getParam('option_title');
@@ -69,7 +71,7 @@ class Save extends Action
                 if (is_array($options)) {
                     $i = 1;
                     foreach ($options as $key => $optionCode) {
-                        $optionModel = $this->_objectManager->create(\Magento\Review\Model\Rating\Option::class);
+                        $optionModel = $this->_objectManager->create(Rating\Option::class);
                         if (!preg_match("/^add_([0-9]*?)$/", $key)) {
                             $optionModel->setId($key);
                         }
@@ -84,10 +86,10 @@ class Save extends Action
                 }
 
                 $this->messageManager->addSuccessMessage(__('You saved the rating.'));
-                $this->_objectManager->get(\Magento\Backend\Model\Session::class)->setRatingData(false);
+                $this->_objectManager->get(Session::class)->setRatingData(false);
             } catch (\Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
-                $this->_objectManager->get(\Magento\Backend\Model\Session::class)
+                $this->_objectManager->get(Session::class)
                     ->setRatingData($this->getRequest()->getPostValue());
                 $resultRedirect->setPath('review/rating/edit', ['id' => $this->getRequest()->getParam('id')]);
                 return $resultRedirect;

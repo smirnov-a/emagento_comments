@@ -3,16 +3,17 @@
 namespace Emagento\Comments\Block\Adminhtml;
 
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
+use Magento\Backend\Model\UrlInterface;
 
-class ProcessButton /*extends GenericButton*/ implements ButtonProviderInterface
+class ProcessButton implements ButtonProviderInterface
 {
     /**
-     * @var \Magento\Backend\Model\UrlInterface
+     * @var UrlInterface
      */
     protected $_backendUrlBuilder;
 
     public function __construct(
-        \Magento\Backend\Model\UrlInterface $urlInterface
+        UrlInterface $urlInterface
     ) {
         $this->_backendUrlBuilder = $urlInterface;
     }
@@ -24,7 +25,8 @@ class ProcessButton /*extends GenericButton*/ implements ButtonProviderInterface
             ['_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA]
         );
         $html =  '<div style="height:5em; position:relative">';
-        $html .=   '<p style="margin:0; position:absolute; top:50%; left:50%; margin-right:-50%; transform:translate(-50%,-50%)">';
+        $html .=   '<p style="margin:0; position:absolute; top:50%; left:50%; margin-right:-50%; ';
+        $html .=             'transform:translate(-50%,-50%)">';
         $html .=      '<span>Processing... </span><img src="' . $imgLoader . '" alt="Ajax loader" />';
         $html .=   '</p>';
         $html .= '</div>';
@@ -32,30 +34,17 @@ class ProcessButton /*extends GenericButton*/ implements ButtonProviderInterface
         return [
             'label' => __('Load reviews'),
             'class' => 'save primary',
-            'on_click' => '',   // alert("test")
+            'on_click' => '',
             'data_attribute' => [
                 'mage-init' => [
                     'Emagento_Comments/js/button' => [
                         'url' =>  $this->_backendUrlBuilder->getUrl(
-                            'local_comments/reviews/load'//,
-                            //['_scope' => 1, '_nosid' => true]
+                            'local_comments/reviews/load'
                         ),
                         'html_templ' => $html,
                     ],
-                    //'Magento_Ui/js/form/button-adapter' => [
-                    //    'actions' => [
-                    //        [
-                    //            'targetName' => 'Emagento_Comments/js/button',
-                    //            'actionName' => 'processReviews',
-                    //        ]
-                    //    ],
-                    //],
                 ]
             ],
-            //'data_attribute' => [
-            //    'mage-init' => ['button' => ['event' => 'save']],
-            //    'form-role' => 'save',
-            //],
             'sort_order' => 90,
         ];
     }

@@ -6,8 +6,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Ui\DataProvider\AbstractDataProvider;
 use Emagento\Comments\Model\ResourceModel\Review\CollectionFactory;
 use Emagento\Comments\Model\ResourceModel\Review\Collection;
-use Emagento\Comments\Model\ResourceModel\Review;
-use Magento\Framework\Api\Filter;
+use Emagento\Comments\Helper\Data;
 
 /**
  * Class DataProvider for Emagento Comments
@@ -44,17 +43,14 @@ class DataProvider extends AbstractDataProvider
 
     /**
      * Получение данных. Здесь фильтр по типу комментария
-     *
      * @return array
      */
     public function getData(): array
     {
         $collection = $this->getCollection();
         $collection
-            ->addFieldToFilter('entity_id', \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
+            ->addFieldToFilter('entity_id', Data::REVIEW_ENTITY_TYPE_STORE)
             ->addStoreData();
-        //echo $collection->getSelect(); exit;
-        //$data['items'] = [];
         $data = $collection->toArray(); //var_dump($data); exit;
         /*
         foreach ($data['items'] as $key => $item) {
@@ -66,15 +62,4 @@ class DataProvider extends AbstractDataProvider
 
         return $data;
     }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param Filter $filter
-     * /
-    public function addFilter(Filter $filter)
-    {
-        parent::addFilter($filter);
-    }
-    */
 }

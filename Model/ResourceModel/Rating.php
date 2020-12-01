@@ -38,29 +38,4 @@ class Rating extends MagentoRating
 
         return $this;
     }
-
-    /**
-     * @inheritdoc
-     */
-    public static function getDependencies()
-    {
-        return [];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function getVersion()
-    {
-        // патч выполнится, если версия модуля из module.xml не больше этого значения
-        return '2.0.0';
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getAliases()
-    {
-        return [];
-    }
 }

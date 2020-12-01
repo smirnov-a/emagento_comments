@@ -2,25 +2,28 @@
 
 namespace Emagento\Comments\Block;
 
+use Magento\Framework\View\Element\Template;
+use Magento\Customer\Model\Session;
+
 /**
  * Class
  */
-class ReviewList extends \Magento\Framework\View\Element\Template
+class ReviewList extends Template
 {
     /**
-     * @var \Magento\Customer\Model\Session
+     * @var Session
      */
     protected $_customerSession;
 
     /**
      * ReviewList constructor.
-     * @param \Magento\Framework\View\Element\Template\Context $contex
+     * @param Template\Context $contex
      * @param array $data
-     * @param \Magento\Customer\Model\Session $session
+     * @param Session $session
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Magento\Customer\Model\Session $session,
+        Template\Context $context,
+        Session $session,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -28,13 +31,12 @@ class ReviewList extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * Возвращает имя пользователя (если не залогинен, то из сессии)
+     * Return username (if not logged then from session)
      * @return string
      */
     public function getUserName()
     {
         $username = '';
-        //$data = $this->_session->getData(); var_dump($data); exit;
         // сперва попробовать взять с клиента
         if ($this->_customerSession->isLoggedIn()) {
             $username = $this->_customerSession;

@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace Emagento\Comments\Console\Command;
 
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magento\Framework\App\ObjectManagerFactory;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\StoreManager;
+use Magento\Framework\Console\Cli;
 
 class JobCommand extends SymfonyCommand
 {
@@ -52,18 +52,9 @@ class JobCommand extends SymfonyCommand
             )
         ];
         $this->setName('local:do_review_job')
-            ->setDescription('Retrive remote comments (Yandex, Flamp etc)')
+            ->setDescription('Retrieve remote comments (Yandex/Flamp etc)')
             ->setDefinition($options);
-            /*
-            ->setDefinition([
-                new InputArgument(
-                    self::TYPE_ARGUMENT,
-                    InputArgument::OPTIONAL,
-                    'Type',
-                    'all'
-                ),
-            ]);
-            */
+
         parent::configure();
     }
 
@@ -82,7 +73,7 @@ class JobCommand extends SymfonyCommand
         $type = $input->getOption(self::TYPE_ARGUMENT); //var_dump($type); exit;
         if (!in_array($type, $types)) {
             $output->writeln('Error argument "' . self::TYPE_ARGUMENT . '": [' . implode('/', $types) . ']');
-            return \Magento\Framework\Console\Cli::RETURN_FAILURE;
+            return Cli::RETURN_FAILURE;
         }
         $types = array_filter(
             $types,
@@ -96,32 +87,12 @@ class JobCommand extends SymfonyCommand
         );
         $cnt = 0;
         foreach ($types as $t) {
-            $class = 'Emagento\Comments\Model\Remote\\' . ucfirst($t);  //var_dump($class); exit;
-            echo $class."\n";
+            $class = 'Emagento\Comments\Model\Remote\\' . ucfirst($t);  // echo $class . "\n";
             $obj = $objectManager->create($class);
             $cnt += $obj->getComments();
         }
         $output->writeln('<info>Success. Processed ' . $cnt . ' review(s)');
-        return \Magento\Framework\Console\Cli::RETURN_SUCCESS;
-        /*
-        die('qqq');
-        $factory = $objectManager->create(\Magento\Review\Model\ReviewFactory::class);
-        $review = $factory->create()->load(6);
-        $review
-            ->setParentId(2)
-            ->save();
-        die('here');
-        $collectionFactory = $objectManager->create(\Emagento\Comments\Model\ResourceModel\Review\CollectionFactory::class);
-        $collection = $collectionFactory->create();
-        $reviewCollection = $collection->getItems();
-        foreach ($reviewCollection as $review) {
-            echo $review->getId()."\n";
-            $review->setPath('1/1/1')->save();
-            die('qqq');
-        }
-        $output->writeln('<info>Type ' . $type . '!</info>');
 
-        return \Magento\Framework\Console\Cli::RETURN_SUCCESS;
-        */
+        return Cli::RETURN_SUCCESS;
     }
 }
