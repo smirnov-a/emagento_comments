@@ -1,17 +1,16 @@
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 # Magento 2 Local Comments module (Russian)
-Данный модуль расширяет стандартный модуль Magento_Reviews и позволяет пользователям оставлять комментарии к магазину. Также он может загружать отзывы к магазину из внешних источников (на данный момент из 2gis и Yandex)
-## Table of contents
- * [General info](#general-info)
- * [Technologies](#technologies)
- * [Installation](#installation)
+
+## Содержание
+ * [Общая информация](#general-info)
+ * [Установка](#installation)
  
-## General info
-This module 
+## Общая информация
+Данный модуль расширяет стандартный модуль Magento_Reviews и позволяет пользователям оставлять комментарии к магазину. Также он может загружать отзывы к магазину из внешних источников 
+(на данный момент из Flamp и Yandex) 
 
-## Technologies
-Module requires Magento 2
-
-## Installation
+## Установка
 Add repository into composer.json:
 ```
 "repositories": [
@@ -31,10 +30,19 @@ $ bin/magento setup:upgrade
 ![local_comments_review_entity](https://user-images.githubusercontent.com/61776819/100909958-2820d300-34ef-11eb-9dfe-cab2ce15255b.png?raw=true "New entity code")
 
 
-Дальше нужно разрешить в админке модуль и указать настройки внешних комментариев
+Дальше нужно разрешить в backend'е модуль и указать настройки внешних истоников
 **Stores -> Configuration -> Local Comments**:
 
 ![local_comments_admin_settings2](https://user-images.githubusercontent.com/61776819/100909372-74b7de80-34ee-11eb-99e5-e628ea129fd7.png?raw=true "Backend Local comments configuration")
+
+Затем нужно перейти в настройки рейтинга: **Stores -> Rating**, выбрать рейтинг с типом *Store*, указать видимость на складах и сохранить:
+![local_comments_rating_setup](https://user-images.githubusercontent.com/61776819/101064319-ad6ebb00-35b5-11eb-8993-e950eb7085af.png?raw=true "Rating setup")
+
+Комментарии к магазину можно посмотреть по пути: **Marketing -> Store comments**
+![local_comments_store_comments2](https://user-images.githubusercontent.com/61776819/101064993-6c2adb00-35b6-11eb-8103-ef86185ee95d.png?raw=true "Store comments")
+
+Список выглядит так:
+![local_comments_store_comments](https://user-images.githubusercontent.com/61776819/101064572-f45cb080-35b5-11eb-9dcd-047189c5f9d6.png?raw=true "Store comments grid")
 
 Вот как выглядит пример работы модуля:
 
@@ -44,3 +52,8 @@ $ bin/magento setup:upgrade
 Внешний вид можно подстроить под себя в собственной теме
 
 Пример работы модуля пожно посмотреть [на странице](https://emagento.ru/demo-comments).
+
+
+## License
+
+GPL

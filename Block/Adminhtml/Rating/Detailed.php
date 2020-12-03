@@ -8,6 +8,13 @@ namespace Emagento\Comments\Block\Adminhtml\Rating;
 class Detailed extends \Magento\Review\Block\Adminhtml\Rating\Detailed
 {
     /**
+     * Rating detail template name
+     *
+     * @var string
+     */
+    protected $_template = 'Emagento_Comments::rating/detailed.phtml';
+
+    /**
      * Get collection of ratings
      *
      * @return RatingCollection
@@ -16,6 +23,7 @@ class Detailed extends \Magento\Review\Block\Adminhtml\Rating\Detailed
     {
         if (!$this->getRatingCollection()) {
             if ($this->_coreRegistry->registry('review_data')) {
+                $data = $this->_coreRegistry->registry('review_data'); //var_dump($data->getData()); exit;
                 $stores = $this->_coreRegistry->registry('review_data')->getStores();
 
                 $stores = array_diff($stores, [0]);
@@ -31,10 +39,11 @@ class Detailed extends \Magento\Review\Block\Adminhtml\Rating\Detailed
                 $this->_voteCollection = $this->_votesFactory->create()->setReviewFilter(
                     $this->getReviewId()
                 )->addOptionInfo()->load()->addRatingOptions();
+                //var_dump($this->_voteCollection->getData()); exit;
             } elseif (!$this->getIsIndependentMode()) {
-                $ratingCollection = $this->_ratingsFactory->create()->addEntityFilter(
+                $ratingCollection = $this->_ratingsFactory->create()/*->addEntityFilter(
                     'product'
-                )->setStoreFilter(
+                    )*/->setStoreFilter(
                     null
                 )->setPositionOrder()->load()->addOptionToItems();
             } else {
