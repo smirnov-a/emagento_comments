@@ -11,8 +11,9 @@ class Detailed extends \Magento\Review\Block\Adminhtml\Rating\Detailed
      * Rating detail template name
      *
      * @var string
-     */
+     * /
     protected $_template = 'Emagento_Comments::rating/detailed.phtml';
+    */
 
     /**
      * Get collection of ratings
@@ -39,13 +40,15 @@ class Detailed extends \Magento\Review\Block\Adminhtml\Rating\Detailed
                 $this->_voteCollection = $this->_votesFactory->create()->setReviewFilter(
                     $this->getReviewId()
                 )->addOptionInfo()->load()->addRatingOptions();
+                //echo $this->_voteCollection->getSelect(); exit;
                 //var_dump($this->_voteCollection->getData()); exit;
             } elseif (!$this->getIsIndependentMode()) {
                 $ratingCollection = $this->_ratingsFactory->create()/*->addEntityFilter(
                     'product'
-                    )*/->setStoreFilter(
-                    null
-                )->setPositionOrder()->load()->addOptionToItems();
+                    )*/
+                    ->setStoreFilter(
+                        null
+                    )->setPositionOrder()->load()->addOptionToItems();
             } else {
                 $stores = $this->getRequest()->getParam('select_stores') ?: $this->getRequest()->getParam('stores');
                 $ratingCollection = $this->_ratingsFactory->create()->addEntityFilter(

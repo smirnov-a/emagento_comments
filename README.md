@@ -6,15 +6,15 @@
  * [Общая информация](#general-info)
  * [Установка](#installation)
  
-## Общая информация
+## <a name="general-info"></a>Общая информация
 Данный модуль расширяет стандартный модуль Magento_Reviews и позволяет пользователям оставлять комментарии к магазину. Также он может загружать отзывы к магазину из внешних источников 
 (на данный момент из Flamp и Yandex) 
 
-## Установка
+## <a name="installation"></a>Установка
 Add repository into composer.json:
 ```
 "repositories": [
-    "name": "local/module-comments",
+    "name": "emagento/module-comments",
     "type": "git",
     "url": "https://github.com/smirnov-a/emagento_comments.git"
 ]
@@ -42,7 +42,7 @@ $ bin/magento setup:upgrade
 ![local_comments_store_comments2](https://user-images.githubusercontent.com/61776819/101064993-6c2adb00-35b6-11eb-8103-ef86185ee95d.png?raw=true "Store comments")
 
 Список выглядит так:
-![local_comments_store_comments](https://user-images.githubusercontent.com/61776819/101064572-f45cb080-35b5-11eb-9dcd-047189c5f9d6.png?raw=true "Store comments grid")
+![local_comments_grid](https://user-images.githubusercontent.com/61776819/101272991-1c653300-37b3-11eb-9c80-5b3b127815bd.png?raw=true "Store Comments grid")
 
 Вот как выглядит пример работы модуля:
 

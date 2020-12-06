@@ -7,13 +7,12 @@ namespace Emagento\Comments\Model\Remote;
  */
 class Flamp extends AbstractRemote
 {
-    private const TYPE = 'flamp';
-
+    const TYPE = 'flamp';
     /**
      * Work with flamp comments
      * @return int
      */
-    public function getComments()
+    public function getComments() : int
     {
         if (!$this->isGlobalEnabled() || !$this->isEnabled()) {
             return 0;
@@ -28,21 +27,15 @@ class Flamp extends AbstractRemote
             return 0;
         }
         $this->_logger->info('Flamp. Found ' . count($work['reviews']) . ' comments');
-        // params for _processItem()
-        $params = [
-            'store_id' => $this->getStoreId(),
-            'stores' => $this->getStores(),
-            'rating_id' => $this->getConfigCommonValue('rating_id')
-        ];
+        //
         foreach ($work['reviews'] as $item) {
-            // если есть текст комментария
             if (empty($item['text'])) {
                 continue;
             }
             try {
-                $res = $this->_processItem($item, $params);
+                $res = $this->_processItem($item);
                 if ($res) {
-                    $cnt++;
+                    $cnt += $res;
                 }
             } catch (\Exception $e) {
                 $this->_logger->critical($e->getMessage());
@@ -55,16 +48,12 @@ class Flamp extends AbstractRemote
     /**
      * Process item
      * @param array $item
-     * @param array $params
-     * @return bool
+     * @return int
      * @throws \Exception
      */
-    private function _processItem($item, $params)
+    private function _processItem($item) : int
     {
-        $ret = false;
-        $storeId = $params['store_id'];
-        $stores = $params['stores'];
-        $ratingId = $params['rating_id'];
+        $ret = 0;
         // clean html in comment and username
         $msgReview = $this->_escaper->escapeHtml($this->_filterManager->removeTags($item['text']));
         $nick = !empty($item['user']['name'])
@@ -78,6 +67,8 @@ class Flamp extends AbstractRemote
             ['source' => self::TYPE, 'source_id' => $item['id']]
         );
 
+        $productId = 0;
+        $customerId = null;
         if (!$review->getId()) {
             // have no review. add with "Store review" and "Approved"
             $review
@@ -86,26 +77,29 @@ class Flamp extends AbstractRemote
                 ->setSourceId($item['id'])
                 ->setCreatedAt($item['date_created'] ?? $this->dateTime->timestamp())
                 ->setUpdatedAt($item['date_edited'] ?? null)
-                ->setEntityPkValue(0)       // в контексте отзыва о магазине это код магазина
+                ->setEntityPkValue($productId)       // в контексте отзыва о магазине это код магазина
+                ->setCustomerId($customerId)
                 ->setStatusId(\Magento\Review\Model\Review::STATUS_APPROVED)
                 ->setTitle('_robot_')
                 ->setDetail($msgReview)
                 ->setNickname($nick)
-                ->setStoreId($storeId)
-                ->setStores($stores)
+                ->setStoreId($this->_storeId)
+                ->setStores($this->_stores)
                 ->save();
             // добавить рейтинг, если есть
-            if (!empty($item['rating'])) {        // 1..5
-                $this->_ratingFactory->create()
-                    ->setRatingId($ratingId)
-                    ->setReviewId($review->getId())
-                    //->setCustomerId(Mage::getSingleton('customer/session')->getCustomerId())
-                    ->addOptionVote((int)$item['rating'], $storeId);
+            if (!empty($item['rating'])) {        // там число от 1 до 5
+                $_vote = $this->_ratingOptions[$this->_ratingId][$item['rating'] - 1] ?? null;
+                if ($_vote) {
+                    $this->_ratingFactory->create()
+                        ->setRatingId($this->_ratingId)
+                        ->setReviewId($review->getId())
+                        //->setCustomerId(Mage::getSingleton('customer/session')->getCustomerId())
+                        ->addOptionVote($_vote, $productId);
+                }
             }
             $review->aggregate();
-            $ret = true;
-            // log
             $this->_logger->info('Flamp: save comment id: ' . $item['id']);
+            $ret++;
         } else {
             // have review
             // check if review changed
@@ -123,8 +117,8 @@ class Flamp extends AbstractRemote
                         ->setDetail($msgReview)
                         ->setNickname($nick)
                         ->save();
-                    $ret = true;
                     $this->_logger->info('Flamp: update comment id: ' . $review->getId());
+                    $ret++;
                 }
             }
         }
@@ -161,20 +155,20 @@ class Flamp extends AbstractRemote
                         )
                         ->setUpdatedAt($item['official_answer']['date_edited'] ?? null)
                         // в контексте отзыва о магазине это код магазина
-                        ->setEntityPkValue(0)
+                        ->setEntityPkValue($productId)
+                        ->setCustomerId($customerId)
                         ->setStatusId(\Magento\Review\Model\Review::STATUS_APPROVED)
                         ->setTitle('_robot_')
                         ->setDetail($msgReply)
                         ->setNickname($nickReply)
-                        ->setStoreId($storeId)
-                        ->setStores($stores)
+                        ->setStoreId($this->_storeId)
+                        ->setStores($this->_stores)
                         ->save();
-                    $ret = true;
-                    // log
                     $this->_logger->info(
                         'Flamp: save reply id: ' . $item['official_answer']['id'] .
                         ' on parent comment id: ' . $reviewId
                     );
+                    $ret++;
                 } else {
                     // check if date changed
                     if (!empty($item['official_answer']['date_edited'])) {
@@ -190,10 +184,10 @@ class Flamp extends AbstractRemote
                                 ->setDetail($msgReply)
                                 ->setNickname($nickReply)
                                 ->save();
-                            $ret = true;
                             $this->_logger->info(
                                 'Flamp: update reply comment id: ' . $reply->getId()
                             );
+                            $ret++;
                         }
                     }
                 }
@@ -205,10 +199,9 @@ class Flamp extends AbstractRemote
 
     /**
      * Строит ссылку на flamp
-     *
      * @return string
      */
-    public function getUrl()
+    public function getUrl() : string
     {
         // get id from store config
         $id = $this->getConfigValue('flamp_id');
@@ -221,7 +214,7 @@ class Flamp extends AbstractRemote
      *
      * @return array
      */
-    public function getParams()
+    public function getParams() : array
     {
         return [
             'limit' => 24,
@@ -229,27 +222,5 @@ class Flamp extends AbstractRemote
             'fields' => 'meta.providers,meta.branch_rating,meta.branch_reviews_count,' .
                         'meta.org_rating,meta.org_reviews_count',
         ];
-    }
-
-    /**
-     * Включен ли Flamp в админке 'local_comments/flamp/is_enabled'
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return (bool)$this->getConfigValue('is_enabled');
-    }
-
-    /**
-     * Get value from core_config
-     * @param string $item
-     * @return int|null|string
-     */
-    public function getConfigValue($item)
-    {
-        return $this->_scopeConfig->getValue(
-            'local_comments/flamp/' . $item,
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
     }
 }

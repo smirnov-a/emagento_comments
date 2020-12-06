@@ -62,25 +62,6 @@
         <paging name="listing_paging"/>
     </listingToolbar>
 
-    <!--
-    <button name="qqq">
-        <argument name="data" xsi:type="array">
-            <item name="config" xsi:type="array">
-                <item name="actions" xsi:type="array">
-                    <item name="0" xsi:type="array">
-                        <item name="targetName" xsi:type="string">TARGET</item>
-                        <item name="actionName" xsi:type="string">ACTION</item>
-                    </item>
-                </item>
-            </item>
-        </argument>
-        <settings>
-            <displayAslink>false</displayAslink>
-            <title><![CDATA[TEST]]></title>
-        </settings>
-    </button>
-    -->
-
     <columns name="local_comments_columns" class="Magento\Ui\Component\Listing\Columns">
         <settings>
             <childDefaults>
@@ -179,9 +160,17 @@
                 <bodyTmpl>ui/grid/cells/html</bodyTmpl>
             </settings>
         </column>
+        <!--
         <column name="type" class="Magento\Review\Ui\Component\Listing\Columns\Type" sortOrder="70">
             <settings>
                 <label translate="true">Type</label>
+            </settings>
+        </column>
+        -->
+        <column name="level" class="Emagento\Comments\Ui\Component\Listing\Columns\Level" sortOrder="70">
+            <settings>
+                <label translate="true">Level</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
             </settings>
         </column>
 

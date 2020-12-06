@@ -56,7 +56,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
      */
     protected function _prepareForm()
     {
-        $review = $this->_coreRegistry->registry('review_data');
+        $review = $this->_coreRegistry->registry('review_data');    //echo serialize($review); exit;
 
         $formActionParams = [
             'id' => $this->getRequest()->getParam('id'),
@@ -118,6 +118,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
                 'required' => true,
                 'text' => '<div id="rating_detail">' . $this->getLayout()->createBlock(
                     \Emagento\Comments\Block\Adminhtml\Rating\Detailed::class
+                    //\Magento\Review\Block\Adminhtml\Rating\Detailed::class
                 )->toHtml() . '</div>'
             ]
         );

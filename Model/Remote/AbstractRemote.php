@@ -12,6 +12,7 @@ use Magento\Framework\Stdlib\DateTime\DateTime;
  */
 abstract class AbstractRemote
 {
+    const TYPE = '';     // flamp/yandex/etc
     /**
      * @var LoggerInterface
      */
@@ -49,6 +50,10 @@ abstract class AbstractRemote
      */
     protected $_ratingFactory;
     /**
+     * @var \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory
+     */
+    protected $_optionFactory;
+    /**
      * @var \Magento\Store\Model\StoreManagerInterface
      */
     protected $_storeManager;
@@ -56,8 +61,22 @@ abstract class AbstractRemote
      * @var DateTime
      */
     protected $dateTime;
-
-    //private $_globalEnabled;
+    /**
+     * @var array
+     */
+    protected $_ratingOptions;
+    /**
+     * @var int
+     */
+    protected $_ratingId;
+    /**
+     * @var int
+     */
+    protected $_storeId;
+    /**
+     * @var array
+     */
+    protected $_stores;
 
     /**
      * AbstractRemote constructor.
@@ -72,6 +91,7 @@ abstract class AbstractRemote
      * @param \Magento\Review\Model\ReviewFactory $reviewFactory
      * @param \Magento\Review\Model\RatingFactory $ratingFactory
      * @param DateTime $dateTime
+     * @param \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory $optionFactory
      */
     public function __construct(
         LoggerInterface $logger,
@@ -84,7 +104,8 @@ abstract class AbstractRemote
         \Emagento\Comments\Model\ReviewFactory $reviewFactory,
         \Magento\Review\Model\RatingFactory $ratingFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        DateTime $dateTime
+        DateTime $dateTime,
+        \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory $optionFactory
     ) {
         $this->_logger = $logger;
         $this->_scopeConfig = $scopeConfig;
@@ -97,11 +118,20 @@ abstract class AbstractRemote
         $this->_ratingFactory = $ratingFactory;
         $this->_storeManager = $storeManager;
         $this->dateTime = $dateTime;
-        // активность взять из конфига
-        //$this->_globalEnabled = $this->_scopeConfig->getValue(
-        //    'local_comments/settings/is_enabled',
-        //    \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        //);
+        $this->_optionFactory = $optionFactory;
+        //
+        $this->_storeId = $this->getStoreId();
+        $this->_stores = $this->getStores();
+        // rating_id из конфига
+        $this->_ratingId = $this->getConfigCommonValue('rating_id');     // 6
+        // заполнить ratingOptions для этого рейтинга
+        $collection = $this->_optionFactory->create();
+        $collection
+            ->addRatingFilter($this->_ratingId)
+            ->setPositionOrder();
+        foreach ($collection as $option) {
+            $this->_ratingOptions[$this->_ratingId][] = $option->getId();     // [6 => [21, 22, 23, 24, 25]]
+        }
     }
 
     /**
@@ -109,7 +139,7 @@ abstract class AbstractRemote
      *
      * @return int кол-во загруженных комментариев
      */
-    public function getComments()
+    public function getComments() : int
     {
         return 0;
     }
@@ -119,7 +149,7 @@ abstract class AbstractRemote
      *
      * @return string
      */
-    public function getUrl()
+    public function getUrl() : string
     {
         return '';
     }
@@ -129,7 +159,7 @@ abstract class AbstractRemote
      *
      * @return array
      */
-    public function getParams()
+    public function getParams() : array
     {
         return [];
     }
@@ -139,20 +169,9 @@ abstract class AbstractRemote
      *
      * @return bool
      */
-    public function isGlobalEnabled()
+    public function isGlobalEnabled() : bool
     {
         return (bool)$this->getConfigCommonValue('is_enabled');
-        //return (bool)$this->_globalEnabled;
-    }
-
-    /**
-     * Включен опеределенный канал комментариев или нет
-     *
-     * @return bool
-     */
-    public function isEnabled()
-    {
-        return false;
     }
 
     /**
@@ -196,9 +215,9 @@ abstract class AbstractRemote
      * Get store identifier
      *
      * @return int
-     * @throws Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Exception
      */
-    public function getStoreId()
+    public function getStoreId() : int
     {
         return $this->_storeManager->getStore()->getId();
     }
@@ -208,7 +227,7 @@ abstract class AbstractRemote
      *
      * @return array
      */
-    public function getStores()
+    public function getStores() : array
     {
         $stores = [];
         foreach ($this->_storeManager->getStores() as $store) {
@@ -230,5 +249,27 @@ abstract class AbstractRemote
             'local_comments/settings/' . $item,
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
+    }
+
+    /**
+     * Get value from core_config
+     * @param string $item
+     * @return int|null|string
+     */
+    public function getConfigValue($item)
+    {
+        return $this->_scopeConfig->getValue(
+            'local_comments/' . static::TYPE . '/' . $item,             // 'local_comments/flamp/enabled'
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Включен опеределенный канал комментариев или нет в админке 'local_comments/flamp/is_enabled'
+     * @return bool
+     */
+    public function isEnabled() : bool
+    {
+        return (bool)$this->getConfigValue('is_enabled');
     }
 }
