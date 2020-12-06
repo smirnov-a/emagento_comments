@@ -1,6 +1,3 @@
-/**
- *
- */
 define([
     'jquery'
 ], function ($) {

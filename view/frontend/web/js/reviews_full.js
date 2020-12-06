@@ -50,7 +50,6 @@ define([
             self = this;
             this._super();
             self.perPage = params.count;
-            //console.log('here');
         },
         loadReviewsFull: function (url, page) {
             //console.log('load reviews full. url: '+url+'; page: '+page); return;
@@ -82,7 +81,7 @@ define([
                     //console.log(data.responseJSON);
                     var json = JSON.parse(data.responseJSON);   //console.log(json);
                     //var reviews = [];
-                    self.totalRecords(json.totalRecords);  //console.log(self.totalRecords()); return;
+                    self.totalRecords(json.totalRecords);
                     //self.reviewsFull(json.items); //data.responseJSON);
                     // добалять в цикле
                     $.each(json.items, function (index, review) {
@@ -91,11 +90,9 @@ define([
                     });
                     //self.reviewsFull(reviews);
                     self.totalPages(Math.round(json.totalRecords / self.perPage));
-                    console.log(self.curPage());
-                    console.log(self.totalPages());
-                    console.log(self.perPage);
-                    //console.log(self.reviewsFull());
-                    //console.log(self.totalRecords());
+                    //console.log(self.curPage());
+                    //console.log(self.totalPages());
+                    //console.log(self.perPage);
                     $('#reviews-popup-full')
                         //.html(data.responseText)
                         .modal(options)
@@ -109,7 +106,7 @@ define([
             });
         },
         loadMoreReview: function () {
-            console.log('loadMoreReview');
+            //console.log('loadMoreReview');
             this.loadReviewsFull(self.urlLoadReviews, self.curPage() + 1);
         }
     });

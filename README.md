@@ -44,7 +44,7 @@ $ bin/magento setup:upgrade
 Список выглядит так:
 ![local_comments_grid](https://user-images.githubusercontent.com/61776819/101272991-1c653300-37b3-11eb-9c80-5b3b127815bd.png?raw=true "Store Comments grid")
 
-Вот как выглядит пример работы модуля:
+А так выглядит пример работы модуля на фронтенде:
 
 ![local_comments_demo_page](https://user-images.githubusercontent.com/61776819/100910507-e80e2000-34ef-11eb-99c5-ccde0a894343.png?raw=true "Example Ui Component")
 

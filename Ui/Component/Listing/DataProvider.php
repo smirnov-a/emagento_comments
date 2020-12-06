@@ -10,7 +10,6 @@ use Emagento\Comments\Helper\Data;
 
 /**
  * Class DataProvider for Emagento Comments
- * @api
  *
  * @method Collection getCollection
  */
@@ -51,7 +50,7 @@ class DataProvider extends AbstractDataProvider
         $collection
             ->addFieldToFilter('entity_id', Data::REVIEW_ENTITY_TYPE_STORE)
             ->addStoreData();
-        $data = $collection->toArray(); //var_dump($data); exit;
+        $data = $collection->toArray();
         /*
         foreach ($data['items'] as $key => $item) {
             if (isset($item['country_id']) && !isset($item['country'])) {

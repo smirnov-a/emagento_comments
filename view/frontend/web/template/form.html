@@ -7,7 +7,9 @@
             <label for="nickname_field" class="label"><span>Ваше имя</span></label>
             <div class="control">
                 <input type="text" class="input-text required"
-                       name="nickname" id="nickname_field"  data-msg-required="Пожалуйста, представьтесь" data-bind="value: nickname()" />
+                       name="nickname" id="nickname_field"
+                       data-msg-required="Пожалуйста, представьтесь"
+                       data-bind="value: nickname()" />
             </div>
         </div>
         <fieldset class="field required review-field-ratings">
@@ -45,22 +47,8 @@
         <div class="field review-field-text required">
             <label for="review_field" class="label"><span>Ваш отзыв</span></label>
             <div class="control">
-                <textarea name="detail" id="review_field" cols="5" rows="3" class="required" data-msg-required="Заполните ваш отзыв"></textarea> <!-- data-bind="value: review().detail"></textarea -->
+                <textarea name="detail" id="review_field" cols="5" rows="3" class="required" data-msg-required="Заполните ваш отзыв"></textarea>
             </div>
         </div>
     </fieldset>
-    <!--
-    <div class="actions-toolbar">
-        <div class="primary">
-            <button type="submit" class="action" name="send">
-                <span>Добавить</span>
-            </button>
-        </div>
-        <div class="secondary">
-            <button type="button" class="secondary">
-                <span>Отмена</span>
-            </button>
-        </div>
-    </div>
-    -->
 </form>

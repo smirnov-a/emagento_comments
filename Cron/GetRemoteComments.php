@@ -3,7 +3,7 @@
 namespace Emagento\Comments\Cron;
 
 /**
- * Retrive comments from Yandex, Flamp etc
+ * Retrieve comments from Yandex/Flamp/etc
  */
 class GetRemoteComments
 {
@@ -37,6 +37,5 @@ class GetRemoteComments
 
             $cnt += $job->getComments();
         }
-        //echo "Processed $cnt reviews\n";
     }
 }

@@ -12,7 +12,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         $setup->startSetup();
-        if (version_compare($context->getVersion(), '0.0.2') < 0) {
+        if (version_compare($context->getVersion(), '1.0.0') < 0) {
             // Get module table
             $tableName = $setup->getTable('review');
 

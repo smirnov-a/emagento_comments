@@ -29,10 +29,6 @@ define([
 ) {
     'use strict';
 
-    //function getText() {
-    //    return 'getText()';
-    //}
-
     var popUp = null;
     var self;
 
@@ -58,7 +54,6 @@ define([
             */
             count: 0,
             urlLoadReviews: 'local_reviews/ajax/getlist',   // settings.url_getlist
-            //heading: 'Default Heading Text'
         },
 
         initialize: function (params) {
@@ -68,17 +63,9 @@ define([
             var userName = this._getUserName();
             //console.log(userName);
             self.nickname(userName);    //params.username);
-            //this.incrementTime();
-            // грузить с сервера
+            // load
             self.count = params.count;
             self.loadReviews(params.count);
-            /*
-            this.time = Date();
-            //time is defined as observable
-            this.observe(['time']);
-            //periodically updater every second
-            setInterval(this.flush.bind(this), 1000);
-            */
             // подписаться на смену статуса попап
             self.isFormPopupVisible.subscribe(function (value) {
                 if (value) {
@@ -94,22 +81,13 @@ define([
         getFormatDate: function (timestamp) {
             return moment(timestamp).format('DD.MM.YYYY');
         },
-        /* test
-        incrementTime: function () {
-            setInterval(function() {
-                self.time( Date() );
-            }, 1000);
-        },
-        */
         showFormPopup: function() {
-            //alert('popup');
             this.isFormPopupVisible(true);
         },
         getPopUp: function () {
             var self = this;
             if (!popUp) {
                 //var data = $('#form-local-comment').serializeArray();
-                //data['form_key'] = $.mage.cookies.get('form_key');
                 popUp = modal({
                     type: 'popup',
                     responsive: true,
@@ -150,16 +128,12 @@ define([
 
             return popUp;
         },
-        //flush: function(){
-        //    this.time(Date());
-        //},
         getCount: function () {
             return this.count;
         },
         loadReviews: function (count) {
             //console.log('loadReviews');
             //var reviews = ko.observableArray([]);
-            // post(url, data, global, contentType, headers)
             $.ajax({
                 url: this.urlLoadReviews,   //'local_reviews/ajax/getlist',
                 type: 'POST',
@@ -252,10 +226,6 @@ define([
                     globalMessageList.addErrorMessage({
                         'message': 'Произошла ошибка. Попробуйте позже' //$t('Could not get review list')
                     });
-                    //alert({
-                    //    title: '',
-                    //    content: 'Произошла ошибка. Попробуйте позже',  //data,
-                    //});
                 });
             }
         },

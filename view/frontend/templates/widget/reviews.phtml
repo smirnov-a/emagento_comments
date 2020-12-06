@@ -3,7 +3,7 @@
  * @var \Emagento\Comments\Block\Widget\Reviews $block
  * @var \Magento\Framework\Escaper $escaper
  */
-$reviews = $block->getReviews();    //var_dump($reviews); exit;
+$reviews = $block->getReviews();
 if ($reviews): ?>
 <!-- <div data-mage-init='{"localReviews": {}}' class="local-reviews"> -->
 <div class="local-reviews">
@@ -17,7 +17,8 @@ if ($reviews): ?>
     <button id="local-reviews-button">Кнопка</button>
 </div>
 <?php endif; ?>
-<?php /*
+<?php
+/*
 <?php if ($block->getData('reviews')): ?>
     <h2 class='reviews'><?= $escaper->escapeHtml($block->getData('reviews')) ?></h2>
     <p>This is sample widget. Perform your code here.</p>

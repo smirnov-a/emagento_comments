@@ -41,34 +41,6 @@
         </arguments>
     </type>
 
-    <!--
-    <preference for="Emagento\Comments\Api\Data\ReviewSearchResultsInterface" type="Emagento\Comments\Model\ReviewSearchResults" />
-    <preference for="Emagento\Comments\Api\ReviewRepositoryInterface" type="Emagento\Comments\Model\ReviewRepository" />
-
-    <virtualType name="Emagento\Comments\Model\Api\SearchCriteria\ReviewCollectionProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor">
-        <arguments>
-            <argument name="processors" xsi:type="array">
-                <item name="filters" xsi:type="object">Emagento\Comments\Model\Api\SearchCriteria\CollectionProcessor\ReviewFilterProcessor</item>
-                <item name="sorting" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\SortingProcessor</item>
-                <item name="pagination" xsi:type="object">Magento\Framework\Api\SearchCriteria\CollectionProcessor\PaginationProcessor</item>
-            </argument>
-        </arguments>
-    </virtualType>
-
-    <virtualType name="Emagento\Comments\Model\Api\SearchCriteria\CollectionProcessor\ReviewFilterProcessor" type="Magento\Framework\Api\SearchCriteria\CollectionProcessor\FilterProcessor">
-        <arguments>
-            <argument name="customFilters" xsi:type="array">
-                <item name="store_id" xsi:type="object">Emagento\Comments\Model\Api\SearchCriteria\CollectionProcessor\FilterProcessor\ReviewStoreFilter</item>
-            </argument>
-        </arguments>
-    </virtualType>
-
-    <type name="Emagento\Comments\Model\ReviewRepository">
-        <arguments>
-            <argument name="collectionProcessor" xsi:type="object">Emagento\Comments\Model\Api\SearchCriteria\ReviewCollectionProcessor</argument> <!- - virtual see below - ->
-        </arguments>
-    </type>
-    -->
     <!-- local_comments logger -->
     <virtualType name="Emagento\Comments\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>

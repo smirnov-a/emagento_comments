@@ -103,7 +103,7 @@ class Getlist extends \Magento\Framework\App\Action\Action implements HttpPostAc
             return $this->_limit;
         }
 
-        $limits = $this->getAvailableLimit();   //var_dump($limits); exit;
+        $limits = $this->getAvailableLimit();
         if ($limit = $this->getRequest()->getParam($this->getLimitVarName())) {
             if (isset($limits[$limit])) {
                 return $limit;

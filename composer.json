@@ -1,19 +1,19 @@
 {
-    "name": "local/module-comments",
-    "description": "Magento 2 Local store reviews extension",
+    "name": "emagento/module-comments",
+    "description": "Magento 2 Local Store Reviews extension",
     "require": {
         "magento/framework": "*"
     },
     "type": "magento2-module",
     "license": [
-        "OSL-3.0"
+        "GPL"
     ],
     "autoload": {
         "files": [
             "registration.php"
         ],
         "psr-4": {
-            "Local\\Comments\\": ""
+            "Emagento\\Comments\\": ""
         }
     }
 }
