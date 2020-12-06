@@ -11,15 +11,8 @@
 (на данный момент из Flamp и Yandex) 
 
 ## <a name="installation"></a>Установка
-Add repository into composer.json:
-```
-"repositories": [
-    "name": "emagento/module-comments",
-    "type": "git",
-    "url": "https://github.com/smirnov-a/emagento_comments.git"
-]
-```
-Установка производится с помощью команд:
+
+Установить можно с помощью команд:
 ```
 $ composer require emagento/module-comments
 $ bin/magento module:enable Emagento_Comments
