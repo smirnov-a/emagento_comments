@@ -6,7 +6,7 @@
     },
     "type": "magento2-module",
     "license": [
-        "GPL"
+        "GPL-3.0-or-later"
     ],
     "autoload": {
         "files": [

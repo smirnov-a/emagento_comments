@@ -56,4 +56,4 @@ $ bin/magento setup:upgrade
 
 ## License
 
-GPL
+GPL-3.0-or-later
