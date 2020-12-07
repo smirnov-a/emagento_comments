@@ -5,6 +5,7 @@
 ## Содержание
  * [Общая информация](#general-info)
  * [Установка](#installation)
+ * [Удаление](#unisntall)
  
 ## <a name="general-info"></a>Общая информация
 Данный модуль расширяет стандартный модуль Magento_Reviews и позволяет пользователям оставлять комментарии к магазину. Также он может загружать отзывы к магазину из внешних источников 
@@ -46,6 +47,11 @@ $ bin/magento setup:upgrade
 
 Пример работы модуля пожно посмотреть [на странице](https://emagento.ru/demo-comments).
 
+## <a name="uninstall"></a>Удаление
+```
+php bin/magento module:uninstall -r Emagento_Comments
+php bin/magento setup:upgrade
+```
 
 ## License
 
