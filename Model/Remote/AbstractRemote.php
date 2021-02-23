@@ -20,7 +20,7 @@ abstract class AbstractRemote
     /**
      * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
-    protected $_scopeConfig;
+    public $_scopeConfig;
     /**
      * @var ZendClientFactory
      */
@@ -77,6 +77,10 @@ abstract class AbstractRemote
      * @var array
      */
     protected $_stores;
+    /**
+     * @var array
+     */
+    protected $_workData;
 
     /**
      * AbstractRemote constructor.
@@ -88,10 +92,13 @@ abstract class AbstractRemote
      * @param \Magento\Framework\Escaper $escaper
      * @param \Magento\Framework\Filter\FilterManager $filterManager
      * @param \Emagento\Comments\Model\ResourceModel\Review $reviewResource
-     * @param \Magento\Review\Model\ReviewFactory $reviewFactory
-     * @param \Magento\Review\Model\RatingFactory $ratingFactory
+     * @param \Emagento\Comments\Model\ReviewFactory $reviewFactory
+     * @param \Emagento\Comments\Model\RatingFactory $ratingFactory
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param DateTime $dateTime
      * @param \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory $optionFactory
+     * @param int|null $storeId
+     * @param array|null $stores
      */
     public function __construct(
         LoggerInterface $logger,
@@ -102,10 +109,12 @@ abstract class AbstractRemote
         \Magento\Framework\Filter\FilterManager $filterManager,
         \Emagento\Comments\Model\ResourceModel\Review $reviewResource,
         \Emagento\Comments\Model\ReviewFactory $reviewFactory,
-        \Magento\Review\Model\RatingFactory $ratingFactory,
+        \Emagento\Comments\Model\RatingFactory $ratingFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         DateTime $dateTime,
-        \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory $optionFactory
+        \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory $optionFactory,
+        ?int $storeId = null,
+        ?array $stores = null
     ) {
         $this->_logger = $logger;
         $this->_scopeConfig = $scopeConfig;
@@ -113,25 +122,49 @@ abstract class AbstractRemote
         $this->_jsonSerializer = $jsonSerializer;
         $this->_escaper = $escaper;
         $this->_filterManager = $filterManager;
-        $this->_reviewsResource = $reviewResource;
         $this->_reviewFactory = $reviewFactory;
+        $this->_reviewsResource = $reviewResource;
         $this->_ratingFactory = $ratingFactory;
         $this->_storeManager = $storeManager;
         $this->dateTime = $dateTime;
         $this->_optionFactory = $optionFactory;
         //
-        $this->_storeId = $this->getStoreId();
-        $this->_stores = $this->getStores();
-        // rating_id из конфига
-        $this->_ratingId = $this->getConfigCommonValue('rating_id');     // 6
+        $this->_storeId = !is_null($storeId) ? $storeId : $this->getStoreId();
+        $this->_stores = !is_null($stores) ? $stores : $this->getStores();
+    }
+
+    /**
+     * Заполняет массив со значениями рейтинга
+     * @param null|array при тестах этот массив может прийти параметром
+     */
+    public function fillRatingOptions($options = [])
+    {
+        if ($options) {
+            $this->_ratingOptions = $options;
+            return;
+        }
+        // rating_id попробовать взять из конфига
+        $this->_ratingId = $this->getConfigCommonValue('rating_id');  //var_dump($this->_ratingId); exit;
+        if (!$this->_ratingId) {
+            $connection = $this->_ratingFactory->create()->getResource()->getConnection();
+            $select = $connection
+                ->select()
+                ->from('rating', ['rating_id'])
+                ->where('entity_id=?', \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
+                ->limit(1);
+            $this->_ratingId = $connection->fetchOne($select);
+        }
         // заполнить ratingOptions для этого рейтинга
-        $collection = $this->_optionFactory->create();
-        $collection
+        /** @var \Magento\Review\Model\ResourceModel\Rating\Option\Collection $collectionOptions */
+        $collectionOptions = $this->_optionFactory->create();  //var_dump($collection); exit;
+        $collectionOptions
             ->addRatingFilter($this->_ratingId)
             ->setPositionOrder();
-        foreach ($collection as $option) {
+
+        foreach ($collectionOptions as $option) {
             $this->_ratingOptions[$this->_ratingId][] = $option->getId();     // [6 => [21, 22, 23, 24, 25]]
         }
+        //var_dump($this->_ratingOptions); exit;
     }
 
     /**
@@ -142,6 +175,15 @@ abstract class AbstractRemote
     public function getComments() : int
     {
         return 0;
+    }
+
+    /**
+     * Рабочие данные
+     * @param array $data
+     */
+    public function setWorkData($data)
+    {
+        $this->_workData = $data;
     }
 
     /**
@@ -171,19 +213,18 @@ abstract class AbstractRemote
      */
     public function isGlobalEnabled() : bool
     {
+        // local_comments/settings/is_enabled
         return (bool)$this->getConfigCommonValue('is_enabled');
     }
 
     /**
-     * Отправляет запрос
-     *
+     * Работа с запросом на никзом уровне
      * @param string $type тип GET/POST
-     *
      * @return bool|array массив с отзывами
      */
     public function doRequest($type = ZendClient::GET)
     {
-        $client = $this->_httpClientFactory->create();
+        $client = $this->_httpClientFactory->create();  //var_dump($client); exit;
         $url = $this->getUrl();
         $params = $this->getParams();
         try {
@@ -201,6 +242,7 @@ abstract class AbstractRemote
             //$client->setParameterPost($params); //json
             $responseBody = $client->request()
                 ->getBody();
+            //$q = $this->_jsonSerializer->unserialize($responseBody); var_dump($q); exit;
             // строку json в массив
             return $this->_jsonSerializer->unserialize($responseBody);
 
@@ -220,6 +262,11 @@ abstract class AbstractRemote
     public function getStoreId() : int
     {
         return $this->_storeManager->getStore()->getId();
+        //$store = $this->_storeManager->getStore();
+        //if ($store) {
+        //    return $store->getId();
+        //}
+        //return 0;
     }
 
     /**
@@ -233,7 +280,13 @@ abstract class AbstractRemote
         foreach ($this->_storeManager->getStores() as $store) {
             $stores[] = $store->getId();
         }
-
+        //$stores = [];
+        //$_stores = $this->_storeManager->getStores();
+        //if ($_stores) {
+        //    foreach ($_stores as $store) {
+        //        $stores[] = $store->getId();
+        //    }
+        //}
         return $stores;
     }
 
@@ -270,6 +323,7 @@ abstract class AbstractRemote
      */
     public function isEnabled() : bool
     {
+        // local_comments/flamp/is_enabled
         return (bool)$this->getConfigValue('is_enabled');
     }
 }

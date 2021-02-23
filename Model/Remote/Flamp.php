@@ -17,18 +17,24 @@ class Flamp extends AbstractRemote
         if (!$this->isGlobalEnabled() || !$this->isEnabled()) {
             return 0;
         }
+        // заполнить массив с рейтигом если надо
+        $this->fillRatingOptions();
         $cnt = 0;
         // download comments
-        $work = $this->doRequest();
-        if (!$work || !isset($work['reviews'])) {
-            if (isset($work['error_code']) && $work['message']) {
-                $this->_logger->info('Error loading Flamp reviews: ' . $work['message']);
+        if (!$this->_workData) {
+            $this->setWorkData($this->doRequest());
+        }
+        //var_dump($this->_workData); exit;
+        $this->_logger->info('_workData: ' . serialize($this->_workData));
+        if (!$this->_workData || !isset($this->_workData['reviews'])) {
+            if (isset($this->_workData['error_code']) && $this->_workData['message']) {
+                $this->_logger->info('Error loading Flamp reviews: ' . $this->_workData['message']);
             }
             return 0;
         }
-        $this->_logger->info('Flamp. Found ' . count($work['reviews']) . ' comments');
+        $this->_logger->info('Flamp. Found ' . count($this->_workData['reviews']) . ' comments');
         //
-        foreach ($work['reviews'] as $item) {
+        foreach ($this->_workData['reviews'] as $item) {
             if (empty($item['text'])) {
                 continue;
             }
@@ -61,7 +67,7 @@ class Flamp extends AbstractRemote
                 : 'Anonymous';
         // get by flamp id
         /** @var \Magento\Review\Model\Review $review */
-        $review = $this->_reviewFactory->create();
+        $review = $this->_reviewFactory->create();  //echo get_class($review); exit;
         $this->_reviewsResource->loadByAttributes(
             $review,
             ['source' => self::TYPE, 'source_id' => $item['id']]

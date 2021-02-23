@@ -18,4 +18,21 @@ class Rating extends MagentoRating
         $this->_getResource()->loadByAttributes($this, $attributes);
         return $this;
     }
+
+    /**
+     * Это для прохождения unit-теста
+     * @param mixed $value
+     * @return $this
+     */
+    public function setRatingId($value)
+    {
+        $this->setData('rating_id', $value);
+        return $this;
+    }
+
+    public function setReviewId($value)
+    {
+        $this->setData('review_id', $value);
+        return $this;
+    }
 }

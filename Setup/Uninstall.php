@@ -26,7 +26,12 @@ class Uninstall implements UninstallInterface
         foreach (['source', 'source_id', 'updated_at', 'parent_id', 'level', 'path'] as $col) {
             $defaultConnection->dropColumn($reviewTable, $col);
         }
-
+        // удалить из review_entity (из остальных таблиц удалит каскадно)
+        $defaultConnection->delete(
+            $setup->getTable('review_entity'),
+            ['entity_id = ?', \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE]
+        );
+        /*
         // удалить сами отзывы
         $defaultConnection->delete(
             $reviewTable,
@@ -37,7 +42,7 @@ class Uninstall implements UninstallInterface
             $setup->getTable('rating'),
             ['entity_id = ?', \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE]
         );
-
+        */
         // удалить настройки
         $defaultConnection->delete(
             $setup->getTable('core_config_data'),

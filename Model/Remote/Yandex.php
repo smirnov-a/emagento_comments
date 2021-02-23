@@ -18,16 +18,20 @@ class Yandex extends \Emagento\Comments\Model\Remote\AbstractRemote
         if (!$this->isGlobalEnabled() || !$this->isEnabled()) {
             return 0;
         }
+        // заполнить массив с рейтигом если надо
+        $this->fillRatingOptions();
         $cnt = 0;
         // download comments
-        $work = $this->doRequest();
-        if (!empty($work['errors'])) {
-            $this->_logger->error('Error loading Yandex reviews: ' . $work['errors'][0]);
+        if (!$this->_workData) {
+            $this->setWorkData($this->doRequest());
+        }
+        if (!empty($this->_workData['errors'])) {
+            $this->_logger->error('Error loading Yandex reviews: ' . $this->_workData['errors'][0]);
             return 0;
         }
-        $this->_logger->info('Yandex: Found ' . count($work['shopOpinions']['opinion']) . ' comments');
+        $this->_logger->info('Yandex: Found ' . count($this->_workData['shopOpinions']['opinion']) . ' comments');
         //
-        foreach ($work['shopOpinions']['opinion'] as $item) {
+        foreach ($this->_workData['shopOpinions']['opinion'] as $item) {
             if (empty($item['text'])) {
                 continue;
             }
