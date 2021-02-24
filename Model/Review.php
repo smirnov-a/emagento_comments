@@ -5,8 +5,6 @@ namespace Emagento\Comments\Model;
 use Magento\Review\Model\Review as MagentoReview;
 
 /**
- * Class Review
- * @package Emagento\Comments\Model
  * @method mixed getUpdatedAt()
  */
 class Review extends MagentoReview

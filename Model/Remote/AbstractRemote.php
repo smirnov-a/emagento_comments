@@ -129,8 +129,8 @@ abstract class AbstractRemote
         $this->dateTime = $dateTime;
         $this->_optionFactory = $optionFactory;
         //
-        $this->_storeId = !is_null($storeId) ? $storeId : $this->getStoreId();
-        $this->_stores = !is_null($stores) ? $stores : $this->getStores();
+        $this->_storeId = $storeId !== null ? $storeId : $this->getStoreId();
+        $this->_stores = $stores !== null ? $stores : $this->getStores();
     }
 
     /**

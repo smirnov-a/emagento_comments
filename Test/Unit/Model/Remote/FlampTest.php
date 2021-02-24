@@ -110,7 +110,6 @@ class FlampTest extends TestCase
             ->getMock();
         // https://magento.stackexchange.com/questions/120209/how-to-properly-use-getcollectionmock
         $this->optionCollectionFactoryMock = $this->getMockBuilder(OptionCollectionFactory::class)
-            //->setMethods(['create'])
             ->disableOriginalConstructor()
             ->getMock();
         $this->optionCollectionMock = $objectManager->getCollectionMock(OptionCollection::class, []);
@@ -168,7 +167,6 @@ class FlampTest extends TestCase
      */
     public function testGetComments($a)
     {
-        //var_dump($a); exit;
         $this->flampModel->setWorkData($a);
         $this->flampModel->fillRatingOptions([6 => [21, 22, 23, 24, 25]]);
         $this->assertEquals(2, $this->flampModel->getComments());

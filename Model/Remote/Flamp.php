@@ -24,8 +24,8 @@ class Flamp extends AbstractRemote
         if (!$this->_workData) {
             $this->setWorkData($this->doRequest());
         }
-        //var_dump($this->_workData); exit;
-        $this->_logger->info('_workData: ' . serialize($this->_workData));
+        //$this->_logger->info('_workData: ' .
+        //          \Magento\Framework\Serialize\SerializerInterface::serialize($this->_workData));
         if (!$this->_workData || !isset($this->_workData['reviews'])) {
             if (isset($this->_workData['error_code']) && $this->_workData['message']) {
                 $this->_logger->info('Error loading Flamp reviews: ' . $this->_workData['message']);

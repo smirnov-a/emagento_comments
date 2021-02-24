@@ -32,7 +32,7 @@ class CommentsTest extends AbstractController
     public function testCommentsAction()
     {
         /** @var \Emagento\Comments\Model\Remote\Flamp */
-        $flamp = $this->_objectManager->create('Emagento\Comments\Model\Remote\Flamp');   //echo get_class($flamp); exit;
+        $flamp = $this->_objectManager->create('Emagento\Comments\Model\Remote\Flamp');
         $cnt = $flamp->getComments();
         $this->assertGreaterThan(0, $cnt);
     }
