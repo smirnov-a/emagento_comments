@@ -4,7 +4,7 @@ namespace Emagento\Comments\Controller\Adminhtml\Reviews;
 
 //use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Framework\App\Action\Context;
+//use Magento\Framework\App\Action\Context;
 
 class Load extends \Magento\Backend\App\Action //implements HttpPostActionInterface
 {
@@ -18,7 +18,7 @@ class Load extends \Magento\Backend\App\Action //implements HttpPostActionInterf
     protected $_objectManager;
 
     public function __construct(
-        Context $context,
+        \Magento\Backend\App\Action\Context $context,
         JsonFactory $resultJsonFactory,
         \Magento\Framework\ObjectManagerInterface $objectmanager
     ) {
