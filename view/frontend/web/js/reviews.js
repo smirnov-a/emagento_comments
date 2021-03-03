@@ -242,7 +242,7 @@ define([
             }
         },
         rendered: function () {
-            console.log('rendered');
+            //console.log('rendered');
             // подгрузить рейтинги для формы
             $.ajax({
                 url: 'local_reviews/ajax/getratings',
@@ -250,7 +250,7 @@ define([
                 dataType: 'json',
             })
             .done(function (data) {
-                console.log(data);
+                //console.log(data);
                 self.rating(data.rating_id);
                 self.ratings(data.options);
             })
