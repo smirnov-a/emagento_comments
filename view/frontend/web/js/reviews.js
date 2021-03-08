@@ -53,7 +53,7 @@ define([
             ],
             */
             count: 0,
-            urlLoadReviews: 'local_reviews/ajax/getlist',   // settings.url_getlist
+            urlLoadReviews: '/local_reviews/ajax/getlist',   // settings.url_getlist
         },
 
         initialize: function (params) {
@@ -185,7 +185,7 @@ define([
                     sessionStorage.setItem('review_user_name', $('#nickname_field').val());
                 }
                 $.ajax({
-                    url: 'local_reviews/review/save',
+                    url: '/local_reviews/review/save',
                     data: $('#form-local-comment').serializeArray(),
                     method: 'POST',
                     dataType: 'json',
@@ -245,7 +245,7 @@ define([
             //console.log('rendered');
             // подгрузить рейтинги для формы
             $.ajax({
-                url: 'local_reviews/ajax/getratings',
+                url: '/local_reviews/ajax/getratings',
                 type: 'POST',
                 dataType: 'json',
             })
