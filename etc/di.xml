@@ -62,4 +62,6 @@
             <argument name="logger" xsi:type="object">Emagento\Comments\Logger\Logger</argument>
         </arguments>
     </type>
+    <!-- Api -->
+    <preference for="Emagento\Comments\Api\ReviewRepositoryInterface" type="Emagento\Comments\Model\ReviewRepository" />
 </config>
