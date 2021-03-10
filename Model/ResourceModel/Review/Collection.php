@@ -8,7 +8,6 @@ class Collection extends MagentoCollection
 {
     /**
      * Устанавливает фильт по типу комментариев
-     *
      * @return $this
      */
     public function addStoreReviewFilter()
@@ -45,30 +44,30 @@ class Collection extends MagentoCollection
             //->setPageSize($count)
             // дальше руками
             ->getSelect()
-                // ответы магазина на втором уровне (если цепочка комментарий-ответ ниже то сюда не попадет)
-                ->joinLeft(
-                    ['main_table2' => 'review'],
-                    'main_table.review_id = main_table2.parent_id AND main_table2.level=2',
-                    [
-                        'r_review_id' => 'review_id',
-                        'r_level' => 'level',
-                    ]
-                )
-                ->joinLeft(
-                    ['detail2' => 'review_detail'],
-                    'main_table2.review_id = detail2.review_id',
-                    [
-                        'r_detail_d' => 'detail_id',        // брать колонки из review_detail и добавлять в имя 'r_'
-                        'r_title' => 'title',
-                        'r_detail' => 'detail',
-                        'r_nickname' => 'nickname',
-                        'r_customer_id' => 'customer_id',
-                    ]
-                )
-                ->limit($limit, $offset);
+            // ответы магазина на втором уровне (если цепочка комментарий-ответ ниже то сюда не попадет)
+            ->joinLeft(
+                ['main_table2' => 'review'],
+                'main_table.review_id = main_table2.parent_id AND main_table2.level=2',
+                [
+                    'r_review_id' => 'review_id',
+                    'r_level' => 'level',
+                ]
+            )
+            ->joinLeft(
+                ['detail2' => 'review_detail'],
+                'main_table2.review_id = detail2.review_id',
+                [
+                    'r_detail_d' => 'detail_id',        // брать колонки из review_detail и добавлять в имя 'r_'
+                    'r_title' => 'title',
+                    'r_detail' => 'detail',
+                    'r_nickname' => 'nickname',
+                    'r_customer_id' => 'customer_id',
+                ]
+            )
+            ->limit($limit, $offset);
+
         if ($isRand) {
             $this->getSelect()->orderRand('review_id');
-            //echo $this->getSelect(); exit;
         } else {
             $this->setOrder('review_id', 'DESC');
         }

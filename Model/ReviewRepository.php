@@ -60,8 +60,7 @@ class ReviewRepository implements ReviewRepositoryInterface
         CollectionFactory $collectionFactory,
         SearchResultsFactory $searchResultsFactory,
         CollectionProcessorInterface $collectionProcessor = null
-    )
-    {
+    ) {
         $this->reviewFactory = $reviewFactory;
         $this->reviewResourceModel = $reviewResourceModel;
         $this->collectionFactory = $collectionFactory;
@@ -118,7 +117,7 @@ class ReviewRepository implements ReviewRepositoryInterface
     public function getById($reviewId, $editMode = false, $storeId = null, $forceReload = false)
     {
         $review = $this->reviewFactory->create();
-        $this->reviewResourceModel->load($post, $reviewId);
+        $this->reviewResourceModel->load($review, $reviewId);
         if (!$review->getId()) {
             throw new NoSuchEntityException(__('Requested item doesn\'t exist'));
         }
