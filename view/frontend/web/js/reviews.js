@@ -54,6 +54,7 @@ define([
             */
             count: 0,
             urlLoadReviews: '/local_reviews/ajax/getlist',   // settings.url_getlist
+            storeId: 1,
         },
 
         initialize: function (params) {
@@ -63,8 +64,12 @@ define([
             var userName = this._getUserName();
             //console.log(userName);
             self.nickname(userName);    //params.username);
+            if (params.storeId) {
+                self.storeId = params.storeId;
+            }
             // load
             self.count = params.count;
+            self.urlLoadReviews = '/rest/V1/ecomments/list/' +self.storeId+ '/' +1+ '/' +self.count; //  '/rest/V1/ecomments/list/1/5'
             self.loadReviews(params.count);
             // подписаться на смену статуса попап
             self.isFormPopupVisible.subscribe(function (value) {
@@ -134,6 +139,7 @@ define([
         loadReviews: function (count) {
             //console.log('loadReviews');
             //var reviews = ko.observableArray([]);
+            /*
             $.ajax({
                 url: this.urlLoadReviews,   //'local_reviews/ajax/getlist',
                 type: 'POST',
@@ -142,6 +148,14 @@ define([
                     p: 1,
                 },
                 //dataType: 'json', no it's not json!
+                global: false
+            })
+            */
+            $.ajax({
+                url: this.urlLoadReviews,   // '/rest/V1/ecomments/list/1/5'
+                type: 'GET',
+                dataType: 'json',
+                contentType: 'application/json',
                 global: false
             })
             /*
@@ -237,16 +251,24 @@ define([
                 var context = ko.contextFor($node[0]);
                 //console.log(context);
                 if (context) {
-                    context.$data.loadReviewsFull(this.urlLoadReviews, 1);
+                    //context.$data.loadReviewsFull(this.urlLoadReviews, 1);
+                    context.$data.loadReviewsFull();
                 }
             }
         },
         rendered: function () {
             //console.log('rendered');
             // подгрузить рейтинги для формы
+            /*
             $.ajax({
                 url: '/local_reviews/ajax/getratings',
                 type: 'POST',
+                dataType: 'json',
+            })
+            */
+            $.ajax({
+                url: '/rest/V1/ecomments/ratings',
+                type: 'GET',
                 dataType: 'json',
             })
             .done(function (data) {

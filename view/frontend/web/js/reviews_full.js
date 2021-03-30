@@ -44,6 +44,7 @@ define([
         defaults: {
             template: 'Emagento_Comments/reviews_full_template',        // .html
             urlLoadReviews: '',
+            storeId: 1,
         },
 
         initialize: function (params) {
@@ -51,10 +52,12 @@ define([
             this._super();
             self.perPage = params.count;
         },
-        loadReviewsFull: function (url, page) {
+        loadReviewsFull: function (/*url,*/ page) {
             //console.log('load reviews full. url: '+url+'; page: '+page); return;
-            self.urlLoadReviews = url;
+            //self.urlLoadReviews = url;
+            page = page || 1;
             self.curPage(page);
+            self.urlLoadReviews = self._getReviewUrl();
 
             var options = {
                 type: 'popup',
@@ -69,14 +72,16 @@ define([
                 }],
             };
             $.ajax({
-                url: url,
-                type: 'POST',
+                url: self.urlLoadReviews,
+                type: 'GET',    //'POST',
                 showLoader: true,
-                //dataType: 'json',
+                dataType: 'json',
+                /*
                 data: {
                     limit: self.perPage,
                     p: page,
                 },
+                */
                 complete: function (data) {
                     //console.log(data.responseJSON);
                     var json = JSON.parse(data.responseJSON);   //console.log(json);
@@ -107,7 +112,12 @@ define([
         },
         loadMoreReview: function () {
             //console.log('loadMoreReview');
-            this.loadReviewsFull(self.urlLoadReviews, self.curPage() + 1);
+            //this.loadReviewsFull(self.urlLoadReviews, self.curPage() + 1);
+            this.loadReviewsFull(self.curPage() + 1);
+        },
+        // строит ссылку на rest api '/rest/V1/ecomments/list/' +self.storeId+ '/' +1+ '/' +self.count
+        _getReviewUrl: function () {
+            return '/rest/V1/ecomments/list/' +self.storeId+ '/' +self.curPage()+ '/' +self.perPage;
         }
     });
 });

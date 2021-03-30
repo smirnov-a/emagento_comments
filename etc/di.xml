@@ -63,5 +63,6 @@
         </arguments>
     </type>
     <!-- Api -->
-    <preference for="Emagento\Comments\Api\ReviewRepositoryInterface" type="Emagento\Comments\Model\ReviewRepository" />
+    <!-- preference for="Emagento\Comments\Api\ReviewRepositoryInterface" type="Emagento\Comments\Model\ReviewRepository" / -->
+    <preference for="Emagento\Comments\Api\ReviewManagementInterface" type="Emagento\Comments\Model\ReviewManagement" />
 </config>

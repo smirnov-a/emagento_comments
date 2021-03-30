@@ -57,7 +57,7 @@ class Collection extends MagentoCollection
                 ['detail2' => 'review_detail'],
                 'main_table2.review_id = detail2.review_id',
                 [
-                    'r_detail_d' => 'detail_id',        // брать колонки из review_detail и добавлять в имя 'r_'
+                    'r_detail_id' => 'detail_id',        // брать колонки из review_detail и добавлять в имя 'r_'
                     'r_title' => 'title',
                     'r_detail' => 'detail',
                     'r_nickname' => 'nickname',
