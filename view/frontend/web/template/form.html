@@ -1,53 +1,56 @@
-<form class="form" method="post" autocomplete="off"
+<form class="form review-form" method="post" autocomplete="off" data-role="product-review-form"
+      id="form-local-comment"
       data-mage-init='{"validation": {}}'
-      data-bind="event: { submit: submitForm }" id="form-local-comment">
+      data-bind="event: { submit: submitForm }"
+>
     <input type="hidden" name="form_key" data-bind="value: formKey" />
     <fieldset class="fieldset review-fieldset">
         <div class="field review-field-nickname required">
-            <label for="nickname_field" class="label"><span>Ваше имя</span></label>
+            <label for="nickname_field" class="label">
+                <span data-bind="i18n: 'Your name'"></span>
+            </label>
             <div class="control">
-                <input type="text" class="input-text required"
-                       name="nickname" id="nickname_field"
-                       data-msg-required="Пожалуйста, представьтесь"
-                       data-bind="value: nickname()" />
+                <input type="text" name="nickname" id="nickname_field" class="input-text required"
+                       data-bind="attr: { 'data-msg-required': $t('Please identify yourself'), value: nickname() }"
+                />
             </div>
         </div>
         <fieldset class="field required review-field-ratings">
-            <legend class="label"><span>Ваша оценка</span></legend><br/>
+            <legend class="label">
+                <span data-bind="i18n: 'Your rating'"></span>
+            </legend>
+            <br/>
             <div class="control">
                 <div class="nested" id="product-review-table">
                     <div class="field choice review-field-rating">
-                        <!--
-                        <label class="label" id="1_rating_label">
-                            <span>Качество</span>
-                        </label>
-                        -->
                         <div class="control review-control-vote">
                             <!-- ko foreach: ratings -->
-                            <input data-bind="attr: { id: code+'_'+value, name: 'ratings['+$parent.rating()+']' }, value: code"
+                            <input data-bind="attr: {
+                                    id: 'Store_'+value,
+                                    name: 'ratings['+$parent.rating()+']',
+                                    value: code,
+                                    'aria-labelledby': 'Store_rating_label Store_'+value+'_label',
+                                    'data-msg-required': $t('Please select your rating') }"
                                 type="radio"
-                                class="radio required" data-msg-required="Выберите оценку"/>
-                            <label data-bind="attr: { title: label, for: code+'_'+value, class: 'rating-'+value }">
-                                <span>звезд</span>
+                                class="radio"
+                                data-validate="{'rating-required': true}"
+                            />
+                            <label data-bind="attr: { class: 'rating-'+value, for: 'Store_'+value, id: 'Store_'+value+'_label', title: value+' '+$t('star(s)') }">
+                                <span data-bind="text: value +' '+ $t('star(s)')"></span>
                             </label>
                             <!-- /ko -->
                         </div>
                     </div>
                 </div>
+                <input type="hidden" name="validate_rating" class="validate-rating" value="" />
             </div>
         </fieldset>
-        <!--
-        <div class="field review-field-summary required">
-            <label for="summary_field" class="label"><span>Кратко</span></label>
-            <div class="control">
-                <input type="text" name="title" id="summary_field" class="input-text" data-validate="{required:true}" data-bind="value: review().title" />
-            </div>
-        </div>
-        -->
         <div class="field review-field-text required">
-            <label for="review_field" class="label"><span>Ваш отзыв</span></label>
+            <label for="review_field" class="label"><span data-bind="i18n: 'Your review'"></span></label>
             <div class="control">
-                <textarea name="detail" id="review_field" cols="5" rows="3" class="required" data-msg-required="Заполните ваш отзыв"></textarea>
+                <textarea name="detail" id="review_field" cols="5" rows="3" class="required"
+                          data-bind="attr: { 'data-msg-required': $t('Please fill your review') }">
+                </textarea>
             </div>
         </div>
     </fieldset>

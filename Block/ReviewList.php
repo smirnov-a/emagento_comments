@@ -17,7 +17,7 @@ class ReviewList extends Template
 
     /**
      * ReviewList constructor.
-     * @param Template\Context $contex
+     * @param Template\Context $context
      * @param array $data
      * @param Session $session
      */
@@ -37,11 +37,10 @@ class ReviewList extends Template
     public function getUserName()
     {
         $username = '';
-        // сперва попробовать взять с клиента
+
         if ($this->_customerSession->isLoggedIn()) {
             $username = $this->_customerSession;
         } elseif ($this->_session->getReviewUserName()) {
-            // иначе попробоавть из сессии (туда попадет из контроллера при сохранении отзыва)
             $username = $this->_session->getReviewUserName();
         }
 

@@ -12,7 +12,7 @@ use Magento\Framework\Stdlib\DateTime\DateTime;
  */
 abstract class AbstractRemote
 {
-    const TYPE = '';     // flamp/yandex/etc
+    const TYPE = '';
     /**
      * @var LoggerInterface
      */
@@ -83,8 +83,6 @@ abstract class AbstractRemote
     protected $_workData;
 
     /**
-     * AbstractRemote constructor.
-     *
      * @param LoggerInterface $logger
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param ZendClientFactory $httpClientFactory
@@ -134,8 +132,9 @@ abstract class AbstractRemote
     }
 
     /**
-     * Заполняет массив со значениями рейтинга
-     * @param null|array при тестах этот массив может прийти параметром
+     * Fill ratting arra
+     *
+     * @param null|array
      */
     public function fillRatingOptions($options = [])
     {
@@ -143,20 +142,20 @@ abstract class AbstractRemote
             $this->_ratingOptions = $options;
             return;
         }
-        // rating_id попробовать взять из конфига
-        $this->_ratingId = $this->getConfigCommonValue('rating_id');  //var_dump($this->_ratingId); exit;
+
+        $this->_ratingId = $this->getConfigCommonValue('rating_id');
         if (!$this->_ratingId) {
             $connection = $this->_ratingFactory->create()->getResource()->getConnection();
             $select = $connection
                 ->select()
                 ->from('rating', ['rating_id'])
-                ->where('entity_id=?', \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
+                ->where('entity_id = ?', \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
                 ->limit(1);
             $this->_ratingId = $connection->fetchOne($select);
         }
-        // заполнить ratingOptions для этого рейтинга
+        // fill ratingOptions for this rating
         /** @var \Magento\Review\Model\ResourceModel\Rating\Option\Collection $collectionOptions */
-        $collectionOptions = $this->_optionFactory->create();  //var_dump($collection); exit;
+        $collectionOptions = $this->_optionFactory->create();
         $collectionOptions
             ->addRatingFilter($this->_ratingId)
             ->setPositionOrder();
@@ -164,11 +163,10 @@ abstract class AbstractRemote
         foreach ($collectionOptions as $option) {
             $this->_ratingOptions[$this->_ratingId][] = $option->getId();     // [6 => [21, 22, 23, 24, 25]]
         }
-        //var_dump($this->_ratingOptions); exit;
     }
 
     /**
-     * Собственно загрузка комментариев
+     * Get Comments
      *
      * @return int кол-во загруженных комментариев
      */
@@ -178,7 +176,8 @@ abstract class AbstractRemote
     }
 
     /**
-     * Рабочие данные
+     * Set Work data
+     *
      * @param array $data
      */
     public function setWorkData($data)
@@ -187,7 +186,7 @@ abstract class AbstractRemote
     }
 
     /**
-     * Возвразщает ссылку на сервис для загрузки комментариев
+     * Get Api Url
      *
      * @return string
      */
@@ -197,7 +196,7 @@ abstract class AbstractRemote
     }
 
     /**
-     * Вовзаращает парметры для http запроса
+     * Get params for query
      *
      * @return array
      */
@@ -207,7 +206,7 @@ abstract class AbstractRemote
     }
 
     /**
-     * Глобально выключены или нет комментари к магазину в админке
+     * Check reviews enabled by store
      *
      * @return bool
      */
@@ -218,32 +217,27 @@ abstract class AbstractRemote
     }
 
     /**
-     * Работа с запросом на никзом уровне
-     * @param string $type тип GET/POST
-     * @return bool|array массив с отзывами
+     * Do remote request
+     *
+     * @param string $type GET/POST
+     * @return bool|array
      */
     public function doRequest($type = ZendClient::GET)
     {
-        $client = $this->_httpClientFactory->create();  //var_dump($client); exit;
+        $client = $this->_httpClientFactory->create();
         $url = $this->getUrl();
         $params = $this->getParams();
+
         try {
             $client->setUri($url);
             $client->setConfig(['maxredirects' => 0, 'timeout' => 30]);
-            //$client->setRawData($this->json->serialize($request), 'application/json');
             $client->setMethod($type);
             if ($params) {
                 $client->setParameterGet($params);
             }
-            //$client->setMethod(\Zend_Http_Client::PUT);
-            //$client->setHeaders(\Zend_Http_Client::CONTENT_TYPE, 'application/json');
-            //$client->setHeaders('Accept','application/json');
-            //$client->setHeaders("Authorization","Bearer 1212121212121");
-            //$client->setParameterPost($params); //json
             $responseBody = $client->request()
                 ->getBody();
-            //$q = $this->_jsonSerializer->unserialize($responseBody); var_dump($q); exit;
-            // строку json в массив
+
             return $this->_jsonSerializer->unserialize($responseBody);
 
         } catch (\Exception $e) {
@@ -262,11 +256,6 @@ abstract class AbstractRemote
     public function getStoreId() : int
     {
         return $this->_storeManager->getStore()->getId();
-        //$store = $this->_storeManager->getStore();
-        //if ($store) {
-        //    return $store->getId();
-        //}
-        //return 0;
     }
 
     /**
@@ -280,13 +269,7 @@ abstract class AbstractRemote
         foreach ($this->_storeManager->getStores() as $store) {
             $stores[] = $store->getId();
         }
-        //$stores = [];
-        //$_stores = $this->_storeManager->getStores();
-        //if ($_stores) {
-        //    foreach ($_stores as $store) {
-        //        $stores[] = $store->getId();
-        //    }
-        //}
+
         return $stores;
     }
 
@@ -318,7 +301,8 @@ abstract class AbstractRemote
     }
 
     /**
-     * Включен опеределенный канал комментариев или нет в админке 'local_comments/flamp/is_enabled'
+     * Check remote is enabled
+     *
      * @return bool
      */
     public function isEnabled() : bool

@@ -2,13 +2,6 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
-        <!-- это добавить меню первого уровня
-        <add id="Emagento_Comments::comments"
-             title="Store Comments" module="Emagento_Comments"
-             sortOrder="10"
-             resource="Magento_Backend::content"
-        />
-        -->
         <add id="Emagento_Comments::comments_list"
              module="Emagento_Comments"
              parent="Magento_Backend::marketing_user_content"

@@ -78,22 +78,15 @@ class Getlist extends \Magento\Framework\App\Action\Action implements HttpPostAc
      */
     public function execute()
     {
-        // кол-во может прийти параметром (по умолчанию 5)
-        //$post = $this->getRequest()->getPost(); $this->logger->info('post: '.serialize($post));
-        //$post = $this->getRequest()->getParams();   //var_dump($post); exit;
-        //$this->logger->info(__METHOD__.'; post: '.serialize($post));
-        //$count = (int)$this->getRequest()->getParam('count', 5); //var_dump($count); exit;
-        //$count = $this->getRequest()->getParam('count', 5);
         $limit = $this->getLimit();
-        $page = $this->getCurrentPage();    //var_dump($page); var_dump($limit);
-        $collection = $this->reviewsHelper->getReviewList($page, $limit);   //echo $collection->getSelect(); exit;
-        //$size = $collection->getSize();
+        $page = $this->getCurrentPage();
+        $collection = $this->reviewsHelper->getReviewList($page, $limit);
         //$this->logger->info('size: '.$size);
-        //$data = $this->reviewsHelper->getReviewList($limit)->toArray();   //var_dump($data); exit;
-        $response = $this->serializer->serialize($collection->toArray());    //var_dump($response); exit;
+        $response = $this->serializer->serialize($collection->toArray());
 
         /** @var \Magento\Framework\Controller\Result\Json $resultJson */
         $resultJson = $this->resultJsonFactory->create();
+
         return $resultJson->setData($response);
     }
 

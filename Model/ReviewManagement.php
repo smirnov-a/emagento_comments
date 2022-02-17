@@ -1,41 +1,49 @@
 <?php
-/**
- *
- */
+
 namespace Emagento\Comments\Model;
 
 use Emagento\Comments\Api\ReviewManagementInterface;
+use Emagento\Comments\Model\ResourceModel\Review\CollectionFactory;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory as RatingOptionCollectionFactory;
 
 class ReviewManagement extends AbstractManagement implements ReviewManagementInterface
 {
     /**
-     * @var \Emagento\Comments\Model\ResourceModel\Review\CollectionFactory
+     * @var CollectionFactory
      */
     protected $_itemCollectionFactory;
     /**
-     * @var \Magento\Framework\App\Config\ScopeConfigInterface
+     * @var ScopeConfigInterface
      */
     protected $_scopeConfig;
     /**
-     * @var \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory
+     * @var RatingOptionCollectionFactory
      */
     protected $_optionFactory;
+    /**
+     * @var \Magento\Framework\Json\Helper\Data
+     */
+    protected $_jsonHelper;
 
     /**
      * Initialize dependencies.
      *
-     * @param \Emagento\Comments\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory
-     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
-     * @param \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory $optionFactory
+     * @param CollectionFactory $reviewCollectionFactory
+     * @param ScopeConfigInterface $scopeConfig
+     * @param RatingOptionCollectionFactory $optionFactory
+     * @param \Magento\Framework\Json\Helper\Data $jsonHelper
      */
     public function __construct(
-        \Emagento\Comments\Model\ResourceModel\Review\CollectionFactory $reviewCollectionFactory,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory $optionFactory
+        CollectionFactory $reviewCollectionFactory,
+        ScopeConfigInterface $scopeConfig,
+        RatingOptionCollectionFactory $optionFactory,
+        \Magento\Framework\Json\Helper\Data $jsonHelper
     ) {
         $this->_itemCollectionFactory = $reviewCollectionFactory;
         $this->_scopeConfig = $scopeConfig;
         $this->_optionFactory = $optionFactory;
+        $this->_jsonHelper = $jsonHelper;
     }
 
     /**
@@ -43,47 +51,36 @@ class ReviewManagement extends AbstractManagement implements ReviewManagementInt
      */
     public function getRaings()
     {
-        $response = [
-            'rating_id' => null,
-            'options' => [],
-        ];
-        /* нужно вернуть json в таком виде
-        {code: 1, label: 'очень плохо'},
-        {code: 2, label: 'плохо'},
-        {code: 3, label: 'средне'},
-        {code: 4, label: 'хорошо'},
-        {code: 5, label: 'отлично'}
-        */
+        $response = [];
         $values = [
-            1 => 'очень плохо',
-            2 => 'плохо',
-            3 => 'средне',
-            4 => 'хорошо',
-            5 => 'отлично',
+            1 => __('very bad'),
+            2 => __('bad'),
+            3 => __('medium'),
+            4 => __('good'),
+            5 => __('very good'),
         ];
-        // взять код рейтинга для магазина из конфига (6)
+        // get rating code from config (6)
         $ratingId = $this->_scopeConfig->getValue(
             'local_comments/settings/rating_id',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
         $response['rating_id'] = $ratingId;
-        // и опции для него из rating_options
+        // get options for rating
         /** @var \Magento\Review\Model\ResourceModel\Rating\Option\Collection $collection */
         $collection = $this->_optionFactory->create();
         $collection
             ->addRatingFilter($ratingId)
-            ->setPositionOrder()
-            ->load();
-        //echo $collection->getSelect(); exit;
+            ->setPositionOrder();
+
         foreach ($collection as $option) {
             $response['options'][] = [
-                'code' => $option->getId(),
+                'code'  => $option->getId(),
                 'label' => $values[$option->getValue()] ?? '__',
                 'value' => $option->getValue(),
             ];
         }
-        //var_dump($response); exit;
-        return json_encode($response);
+
+        return $this->_jsonHelper->jsonEncode($response);
     }
 
     /**
@@ -92,7 +89,7 @@ class ReviewManagement extends AbstractManagement implements ReviewManagementInt
      * @param  int $storeId
      * @param  int $page
      * @param  int $limit
-     * @return string
+     * @return string|bool
      */
     public function getList($storeId, $page, $limit)
     {
@@ -102,25 +99,25 @@ class ReviewManagement extends AbstractManagement implements ReviewManagementInt
                 ->addReviewReplyOneLevel($page, $limit);
             $collection->load()
                 ->addRateVotes();
-            // коллекцию рейтингов привести к массиву
+
             foreach ($collection as $item) {
                 $item->setRatingVotes($item->getRatingVotes()->toArray());
             }
-            //echo $collection->getSelect(); exit;
 
             $reviews = [];
             foreach ($collection as $item) {
                 $reviews[] = $this->getDynamicData($item);
             }
 
-            $result = [
-                'items' => $reviews,
+            $response = [
+                'items'        => $reviews,
                 'totalRecords' => $collection->getSize(),
-                'currentPage' => $collection->getCurPage(),
-                'lastPage' => $collection->getLastPageNumber(),
+                'currentPage'  => $collection->getCurPage(),
+                'lastPage'     => $collection->getLastPageNumber(),
             ];
 
-            return json_encode($result);
+            return $this->_jsonHelper->jsonEncode($response);
+
         } catch (\Exception $e) {
             return false;
         }

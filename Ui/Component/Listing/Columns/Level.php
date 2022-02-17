@@ -13,14 +13,12 @@ class Level extends Column
         if (empty($dataSource['data']['items'])) {
             return $dataSource;
         }
-        //var_dump($dataSource); exit;
+
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                //$product = $this->productloader>create()->load((int)$item[$this->getData('name')]);
-                $item['level'] = $this->renderLevelColumn($item);   //'level111';    //$product->getName();
+                $item['level'] = $this->renderLevelColumn($item);
             }
         }
-        //var_dump($dataSource); exit;
 
         return $dataSource;
     }
@@ -31,9 +29,8 @@ class Level extends Column
      */
     protected function renderLevelColumn($item)
     {
-        //var_dump($item); exit;
         $level = $item['level'] ?? 1;
-        $ret = (string)$level;
+        $ret = (string) $level;
         if ($level > 1) {
             if (!empty($item['parent_id'])) {
                 $ret .= '<br /><nobr>(reply on: <b>' . $item['parent_id'] . '</b>)</nobr>';

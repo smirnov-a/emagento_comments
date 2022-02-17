@@ -112,11 +112,11 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
     public function execute()
     {
         $result = [
-            'error' => 'Произошла ошибка. Попробуйте позже',
+            'error' => __('Please try again later'),
         ];
         if ($this->formKeyValidator->validate($this->getRequest())) {
             $data = $this->getRequest()->getPostValue();
-            $rating = $this->getRequest()->getParam('ratings', []);     // ratings[6]=23
+            $rating = $this->getRequest()->getParam('ratings', []);
 
             $review = $this->reviewFactory->create()->setData($data);
             $review->unsetData('review_id')
@@ -124,12 +124,10 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
             $validate = $review->validate();
             if ($validate === true) {
                 $nickname = trim($data['nickname']);
-                // записать его в сессию (не надо это в storage на стороне клиента)
-                //$this->_coreSession->setReviewUserName($nickname);
                 $productId = 0;
                 $customerId = null;
                 try {
-                    $review->setEntityPkValue($productId)    // код товара в данном случае 0
+                    $review->setEntityPkValue($productId)
                         ->setEntityId(\Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE)
                         ->setStatusId(\Magento\Review\Model\Review::STATUS_PENDING)
                         ->setCustomerId($customerId)
@@ -137,28 +135,21 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
                         ->setStoreId($this->storeManager->getStore()->getId())
                         ->setStores([$this->storeManager->getStore()->getId()])
                         ->save();
-                    // дальше рейтинг
+
                     $ratingOptions = [];
-                    // код рейтинга из конфига (6)
                     $ratingId = $this->_scopeConfig->getValue(
                         'local_comments/settings/rating_id',
                         \Magento\Store\Model\ScopeInterface::SCOPE_STORE
                     );
-                    // получить его опции
+
                     /** @var \Magento\Review\Model\ResourceModel\Rating\Option\Collection $collection */
                     $collection = $this->_optionFactory->create();
                     $collection
                         ->addRatingFilter($ratingId)
                         ->setPositionOrder();
                     foreach ($collection as $option) {
-                        $ratingOptions[$ratingId][] = $option->getId();     // [6 => [21, 22, 23, 24, 25]]
+                        $ratingOptions[$ratingId][] = $option->getId();
                     }
-                    //$ratingOptions = [
-                    //    1 => [1, 2, 3, 4, 5], // <== Look at your database table `rating_option` for these vals
-                    //    //2 => [6, 7, 8, 9, 10],
-                    //    //3 => [11, 12, 13, 14, 15]
-                    //];
-                    //foreach ($ratingOptions as $ratingId => $optionIds) {
                     if (isset($rating[$ratingId]) && in_array($rating[$ratingId], $ratingOptions[$ratingId])) {
                         $_vote = $rating[$ratingId];
                         try {
@@ -167,17 +158,17 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
                                 ->setReviewId($review->getId())
                                 ->setCustomerId($customerId)
                                 ->addOptionVote($_vote, $productId);
-                        } catch (Exception $e) {
+                        } catch (\Exception $e) {
                             $this->logger->error('Error append rating: '.$e->getMessage());
                         }
                     }
-                    //}
+
                     $review->aggregate();
-                    $result['message'] = 'Спасибо! Ваш отзыв ожидает проверки модератором';
+                    $result['message'] = __('Thank you. Your review is awaiting moderator review');
                     unset($result['error']);
                 } catch (\Exception $e) {
-                    $result['error'] = $e->getMessage();    //'Ошибка данных. Попробуйте позже';
-                    $this->logger->error('Error append review: '.$e->getMessage());
+                    $result['error'] = $e->getMessage();
+                    $this->logger->error('Error append review: ' . $e->getMessage());
                 }
             } else {
                 $msg = '';
@@ -187,16 +178,15 @@ class Save extends \Magento\Framework\App\Action\Action implements HttpPostActio
                         break;
                     }
                 } else {
-                    $msg = 'Ошибка данных. Попробуйте позже';
+                    $msg = __('Please try again later');
                 }
                 $result['error'] = $msg;
                 $this->logger->error($msg);
             }
         } else {
-            $result['error'] = 'Ошибка формы. Попробуйте позже';
+            $result['error'] = __('Form error. Please try again later');
             $this->logger->error('formKeyValidator error');
         }
-        //$response = $this->serializer->serialize($result);
 
         /** @var \Magento\Framework\Controller\Result\Json $resultJson */
         $resultJson = $this->resultJsonFactory->create();

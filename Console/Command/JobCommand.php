@@ -64,13 +64,13 @@ class JobCommand extends SymfonyCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $types = ['yandex', 'flamp', 'all'];
-        $omParams = []; // filter_input(INPUT_SERVERR, 'var') $_SERVER;
+        $omParams = [];
         $omParams['REMOTE_ADDR'] = '127.0.0.1';
         $omParams[StoreManager::PARAM_RUN_CODE] = 'admin';
-        $omParams[Store::CUSTOM_ENTRY_POINT_PARAM] = true;  //var_dump($omParams); exit;
+        $omParams[Store::CUSTOM_ENTRY_POINT_PARAM] = true;
         $objectManager = $this->objectManagerFactory->create($omParams);
 
-        $type = $input->getOption(self::TYPE_ARGUMENT); //var_dump($type); exit;
+        $type = $input->getOption(self::TYPE_ARGUMENT);
         if (!in_array($type, $types)) {
             $output->writeln('Error argument "' . self::TYPE_ARGUMENT . '": [' . implode('/', $types) . ']');
             return Cli::RETURN_FAILURE;
@@ -87,7 +87,7 @@ class JobCommand extends SymfonyCommand
         );
         $cnt = 0;
         foreach ($types as $t) {
-            $class = 'Emagento\Comments\Model\Remote\\' . ucfirst($t);  // echo $class . "\n";
+            $class = 'Emagento\Comments\Model\Remote\\' . ucfirst($t);
             $obj = $objectManager->create($class);
             $cnt += $obj->getComments();
         }

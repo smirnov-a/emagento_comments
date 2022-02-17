@@ -96,6 +96,7 @@ class Save extends Action
             }
         }
         $resultRedirect->setPath('review/rating/');
+
         return $resultRedirect;
     }
 }

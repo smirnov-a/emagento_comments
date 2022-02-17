@@ -27,40 +27,27 @@ class Form
         $form = $subject->getForm();
         if (is_object($form)) {
             $ratingData = $this->registry->registry('rating_data');
-            $fieldset = $form->getElement('rating_form');  //echo get_class($fieldset); exit;
+            $fieldset = $form->getElement('rating_form');
             if ($fieldset) {
                 $fieldset->addField(
                     'entity_id',
-                    'select',   // 'text',
+                    'select',
                     [
-                        'name' => 'entity_id',
-                        'label' => __('Entity Type'),
-                        'title' => __('Entity Type'),
+                        'name'     => 'entity_id',
+                        'label'    => __('Entity Type'),
+                        'title'    => __('Entity Type'),
                         'required' => true,
-                        'value' => $ratingData['entity_id'],
-                        'class' => 'required-entry',
-                        'values' => [
+                        'value'    => $ratingData['entity_id'],
+                        'class'    => 'required-entry',
+                        'values'   => [
                             ['label' => 'Product', 'value' => 1],
-                            ['label' => 'Store', 'value' => 4],
+                            ['label' => 'Store',   'value' => 4],
                         ]
                     ]
                 );
-
-                //if ($ratingData) {
-                //    $form->setValues($ratingData);
-                //}
             }
         }
 
         return $proceed();
     }
-    /*
-    public function aroundAddRatingFiledSet(
-        \Magento\Review\Block\Adminhtml\Rating\Edit\Tab\Form $subject,
-        \Closure $proceed
-    ) {
-
-        return $proceed();
-    }
-    */
 }

@@ -52,9 +52,8 @@ define([
             this._super();
             self.perPage = params.count;
         },
-        loadReviewsFull: function (/*url,*/ page) {
-            //console.log('load reviews full. url: '+url+'; page: '+page); return;
-            //self.urlLoadReviews = url;
+
+        loadReviewsFull: function (page) {
             page = page || 1;
             self.curPage(page);
             self.urlLoadReviews = self._getReviewUrl();
@@ -73,33 +72,17 @@ define([
             };
             $.ajax({
                 url: self.urlLoadReviews,
-                type: 'GET',    //'POST',
+                type: 'GET',
                 showLoader: true,
                 dataType: 'json',
-                /*
-                data: {
-                    limit: self.perPage,
-                    p: page,
-                },
-                */
                 complete: function (data) {
-                    //console.log(data.responseJSON);
-                    var json = JSON.parse(data.responseJSON);   //console.log(json);
-                    //var reviews = [];
+                    var json = JSON.parse(data.responseJSON);
                     self.totalRecords(json.totalRecords);
-                    //self.reviewsFull(json.items); //data.responseJSON);
-                    // добалять в цикле
                     $.each(json.items, function (index, review) {
-                        //reviews.push(new Review(review));
                         self.reviewsFull.push(new Review(review));
                     });
-                    //self.reviewsFull(reviews);
                     self.totalPages(Math.round(json.totalRecords / self.perPage));
-                    //console.log(self.curPage());
-                    //console.log(self.totalPages());
-                    //console.log(self.perPage);
                     $('#reviews-popup-full')
-                        //.html(data.responseText)
                         .modal(options)
                         .modal('openModal');
                 },
@@ -110,12 +93,11 @@ define([
                 }
             });
         },
+
         loadMoreReview: function () {
-            //console.log('loadMoreReview');
-            //this.loadReviewsFull(self.urlLoadReviews, self.curPage() + 1);
             this.loadReviewsFull(self.curPage() + 1);
         },
-        // строит ссылку на rest api '/rest/V1/ecomments/list/' +self.storeId+ '/' +1+ '/' +self.count
+
         _getReviewUrl: function () {
             return '/rest/V1/ecomments/list/' +self.storeId+ '/' +self.curPage()+ '/' +self.perPage;
         }

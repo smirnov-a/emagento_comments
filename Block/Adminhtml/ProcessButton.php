@@ -32,13 +32,13 @@ class ProcessButton implements ButtonProviderInterface
         $html .= '</div>';
 
         return [
-            'label' => __('Load reviews'),
-            'class' => 'save primary',
-            'on_click' => '',
+            'label'      => __('Load reviews'),
+            'class'      => 'save primary',
+            'on_click'   => '',
             'data_attribute' => [
                 'mage-init' => [
                     'Emagento_Comments/js/button' => [
-                        'url' =>  $this->_backendUrlBuilder->getUrl(
+                        'url'        =>  $this->_backendUrlBuilder->getUrl(
                             'local_comments/reviews/load'
                         ),
                         'html_templ' => $html,

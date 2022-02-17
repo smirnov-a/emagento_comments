@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <!-- command -->
+
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
@@ -9,24 +9,7 @@
             </argument>
         </arguments>
     </type>
-    <!-- plugin
-    плагином не получилось
-    пришлось подписаться на review_save_after и оттуда прямым запросом
-    <type name="Magento\Review\Model\Review">
-        <plugin name="local_comments_before_save" type="Emagento\Comments\Plugin\Review" sortOrder="10" disabled="false" />
-    </type>
-    -->
-    <!--
-    <type name="Emagento\Comments\Ui\Component\DataProvider">
-        <arguments>
-            <argument name="additionalFilterPool" xsi:type="array">
-                <item name="fulltext" xsi:type="object">Magento\Cms\Ui\Component\Page\FulltextFilter</item>
-            </argument>
-        </arguments>
-    </type>
-    -->
 
-    <!-- https://www.hungersoft.com/info/not-a-registered-handle-data-source-magento2-admin-grid -->
     <virtualType name="Emagento\Comments\Model\ResourceModel\Review\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
             <argument name="mainTable" xsi:type="string">review</argument>
@@ -63,6 +46,5 @@
         </arguments>
     </type>
     <!-- Api -->
-    <!-- preference for="Emagento\Comments\Api\ReviewRepositoryInterface" type="Emagento\Comments\Model\ReviewRepository" / -->
     <preference for="Emagento\Comments\Api\ReviewManagementInterface" type="Emagento\Comments\Model\ReviewManagement" />
 </config>

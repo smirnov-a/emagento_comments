@@ -23,7 +23,8 @@ class Review extends MagentoReview
     }
 
     /**
-     * Это для прохождения unit-теста
+     * This is for unit test
+     *
      * @param string|null $value
      * @return $this
      */

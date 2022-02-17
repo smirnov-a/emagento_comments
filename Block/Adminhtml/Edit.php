@@ -55,7 +55,7 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
     {
         parent::_construct();
 
-        $this->_objectId = 'id';
+        $this->_objectId   = 'id';
         $this->_blockGroup = 'Emagento_Comments';
         $this->_controller = 'adminhtml';
 
@@ -70,11 +70,11 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
             $this->addButton(
                 'previous',
                 [
-                    'label' => __('Previous'),
+                    'label'   => __('Previous'),
                     'onclick' => 'setLocation(\'' . $this->getUrl(
                         'review/*/*',
                         [
-                             'id' => $prevId,
+                             'id'  => $prevId,
                              'ret' => $this->getRequest()->getParam('ret'),
                         ]
                     ) . '\')'
@@ -91,11 +91,11 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
                     'data_attribute' => [
                         'mage-init' => [
                             'button' => [
-                                'event' => 'save',
-                                'target' => '#edit_form',
+                                'event'     => 'save',
+                                'target'    => '#edit_form',
                                 'eventData' => ['action' => ['args' => [
                                     'next_item' => $prevId,
-                                    'ret' => $this->getRequest()->getParam('ret'),
+                                    'ret'       => $this->getRequest()->getParam('ret'),
                                 ]]],
                             ],
                         ],
@@ -114,11 +114,11 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
                     'data_attribute' => [
                         'mage-init' => [
                             'button' => [
-                                'event' => 'save',
+                                'event'  => 'save',
                                 'target' => '#edit_form',
                                 'eventData' => ['action' => ['args' => [
                                     'next_item' => $nextId,
-                                    'ret' => $this->getRequest()->getParam('ret'),
+                                    'ret'       => $this->getRequest()->getParam('ret'),
                                 ]]],
                             ],
                         ],
@@ -131,11 +131,11 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
             $this->addButton(
                 'next',
                 [
-                    'label' => __('Next'),
+                    'label'   => __('Next'),
                     'onclick' => 'setLocation(\'' . $this->getUrl(
                         'review/*/*',
                         [
-                            'id' => $nextId,
+                            'id'  => $nextId,
                             'ret' => $this->getRequest()->getParam('ret'),
                         ]
                     ) . '\')'
@@ -153,7 +153,6 @@ class Edit extends \Magento\Backend\Block\Widget\Form\Container
             $this->_coreRegistry->register('review_data', $reviewData);
         }
 
-        // исходники явы
         $this->_formInitScripts[] = '
             var review = {
                 updateRating: function() {

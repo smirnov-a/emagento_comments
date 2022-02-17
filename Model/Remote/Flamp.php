@@ -3,13 +3,15 @@
 namespace Emagento\Comments\Model\Remote;
 
 /**
- * Class for work with Flamp
+ * Work with Flamp
  */
 class Flamp extends AbstractRemote
 {
     const TYPE = 'flamp';
+
     /**
      * Work with flamp comments
+     *
      * @return int
      */
     public function getComments() : int
@@ -17,15 +19,14 @@ class Flamp extends AbstractRemote
         if (!$this->isGlobalEnabled() || !$this->isEnabled()) {
             return 0;
         }
-        // заполнить массив с рейтигом если надо
+
         $this->fillRatingOptions();
         $cnt = 0;
+
         // download comments
         if (!$this->_workData) {
             $this->setWorkData($this->doRequest());
         }
-        //$this->_logger->info('_workData: ' .
-        //          \Magento\Framework\Serialize\SerializerInterface::serialize($this->_workData));
         if (!$this->_workData || !isset($this->_workData['reviews'])) {
             if (isset($this->_workData['error_code']) && $this->_workData['message']) {
                 $this->_logger->info('Error loading Flamp reviews: ' . $this->_workData['message']);
@@ -33,7 +34,7 @@ class Flamp extends AbstractRemote
             return 0;
         }
         $this->_logger->info('Flamp. Found ' . count($this->_workData['reviews']) . ' comments');
-        //
+
         foreach ($this->_workData['reviews'] as $item) {
             if (empty($item['text'])) {
                 continue;
@@ -53,6 +54,7 @@ class Flamp extends AbstractRemote
 
     /**
      * Process item
+     *
      * @param array $item
      * @return int
      * @throws \Exception
@@ -67,7 +69,7 @@ class Flamp extends AbstractRemote
                 : 'Anonymous';
         // get by flamp id
         /** @var \Magento\Review\Model\Review $review */
-        $review = $this->_reviewFactory->create();  //echo get_class($review); exit;
+        $review = $this->_reviewFactory->create();
         $this->_reviewsResource->loadByAttributes(
             $review,
             ['source' => self::TYPE, 'source_id' => $item['id']]
@@ -83,7 +85,7 @@ class Flamp extends AbstractRemote
                 ->setSourceId($item['id'])
                 ->setCreatedAt($item['date_created'] ?? $this->dateTime->timestamp())
                 ->setUpdatedAt($item['date_edited'] ?? null)
-                ->setEntityPkValue($productId)       // в контексте отзыва о магазине это код магазина
+                ->setEntityPkValue($productId)
                 ->setCustomerId($customerId)
                 ->setStatusId(\Magento\Review\Model\Review::STATUS_APPROVED)
                 ->setTitle('_robot_')
@@ -92,14 +94,13 @@ class Flamp extends AbstractRemote
                 ->setStoreId($this->_storeId)
                 ->setStores($this->_stores)
                 ->save();
-            // добавить рейтинг, если есть
-            if (!empty($item['rating'])) {        // там число от 1 до 5
+
+            if (!empty($item['rating'])) {        // 1...5
                 $_vote = $this->_ratingOptions[$this->_ratingId][$item['rating'] - 1] ?? null;
                 if ($_vote) {
                     $this->_ratingFactory->create()
                         ->setRatingId($this->_ratingId)
                         ->setReviewId($review->getId())
-                        //->setCustomerId(Mage::getSingleton('customer/session')->getCustomerId())
                         ->addOptionVote($_vote, $productId);
                 }
             }
@@ -108,15 +109,14 @@ class Flamp extends AbstractRemote
             $ret++;
         } else {
             // have review
-            // check if review changed
-            // (yes user can modify review)
+            // check if review changed (remote owner can modify review)
             if (!empty($item['date_edited'])) {
                 // '2017-09-01T12:48:35.0+07:00' convert to time
                 $time = $this->dateTime->timestamp($item['date_edited']);
                 // если дата редактирования с нашей стороны пустая либо пришедшая дата больше нашей
-                if (empty($review->getUpdatedAt()) ||
-                    $time > $this->dateTime->timestamp($review->getUpdatedAt())) {
-                    // update
+                if (empty($review->getUpdatedAt())
+                    || $time > $this->dateTime->timestamp($review->getUpdatedAt())
+                ) {
                     $review
                         ->setCreatedAt($item['date_created'])
                         ->setUpdatedAt($item['date_edited'])
@@ -128,10 +128,10 @@ class Flamp extends AbstractRemote
                 }
             }
         }
+
         // check store answer on review
         if (!empty($item['official_answer'])) {
             // add with parent id
-            // parent id for review
             $reviewId = $review->getId();
             // content
             $msgReply = $this->_escaper->escapeHtml(
@@ -156,11 +156,9 @@ class Flamp extends AbstractRemote
                         ->setSourceId($item['official_answer']['id'])
                         ->setParentId($reviewId)
                         ->setCreatedAt(
-                            $item['official_answer']['date_created']
-                            ?? $this->dateTime->timestamp()
+                            $item['official_answer']['date_created']  ?? $this->dateTime->timestamp()
                         )
                         ->setUpdatedAt($item['official_answer']['date_edited'] ?? null)
-                        // в контексте отзыва о магазине это код магазина
                         ->setEntityPkValue($productId)
                         ->setCustomerId($customerId)
                         ->setStatusId(\Magento\Review\Model\Review::STATUS_APPROVED)
@@ -171,8 +169,8 @@ class Flamp extends AbstractRemote
                         ->setStores($this->_stores)
                         ->save();
                     $this->_logger->info(
-                        'Flamp: save reply id: ' . $item['official_answer']['id'] .
-                        ' on parent comment id: ' . $reviewId
+                        'Flamp: save reply id: ' . $item['official_answer']['id']
+                        . ' on parent comment id: ' . $reviewId
                     );
                     $ret++;
                 } else {
@@ -180,10 +178,9 @@ class Flamp extends AbstractRemote
                     if (!empty($item['official_answer']['date_edited'])) {
                         // '2017-09-01T12:48:35.0+07:00' convert to time
                         $time = $this->dateTime->timestamp($item['official_answer']['date_edited']);
-                        // если дата редакт. с нашей стороны пустая либо пришедшая дата больше нашей
-                        if (empty($reply->getUpdatedAt()) ||
-                            $time > $this->dateTime->timestamp($reply->getUpdatedAt())) {
-                            // update
+                        if (empty($reply->getUpdatedAt())
+                            || $time > $this->dateTime->timestamp($reply->getUpdatedAt())
+                        ) {
                             $reply
                                 ->setCreatedAt($item['official_answer']['date_created'])
                                 ->setUpdatedAt($item['official_answer']['date_edited'])
@@ -204,15 +201,14 @@ class Flamp extends AbstractRemote
     }
 
     /**
-     * Строит ссылку на flamp
+     * Get Flamp Api url
+     *
      * @return string
      */
     public function getUrl() : string
     {
-        // get id from store config
-        $id = $this->getConfigValue('flamp_id');
         // https://api.reviews.2gis.com/2.0/branches/1267165676751243/reviews?limit=24&is_advertiser=false&fields=meta.providers,meta.branch_rating,meta.branch_reviews_count,meta.org_rating,meta.org_reviews_count
-        return sprintf('https://api.reviews.2gis.com/2.0/branches/%s/reviews', $id);
+        return sprintf('https://api.reviews.2gis.com/2.0/branches/%s/reviews', $this->getConfigValue('flamp_id'));
     }
 
     /**
@@ -223,10 +219,9 @@ class Flamp extends AbstractRemote
     public function getParams() : array
     {
         return [
-            'limit' => 24,
+            'limit'         => 24,
             'is_advertiser' => 'false',
-            'fields' => 'meta.providers,meta.branch_rating,meta.branch_reviews_count,' .
-                        'meta.org_rating,meta.org_reviews_count',
+            'fields'        => 'meta.providers,meta.branch_rating,meta.branch_reviews_count,meta.org_rating,meta.org_reviews_count',
         ];
     }
 }

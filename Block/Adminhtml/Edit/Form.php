@@ -56,10 +56,10 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
      */
     protected function _prepareForm()
     {
-        $review = $this->_coreRegistry->registry('review_data');    //echo serialize($review); exit;
+        $review = $this->_coreRegistry->registry('review_data');
 
         $formActionParams = [
-            'id' => $this->getRequest()->getParam('id'),
+            'id'  => $this->getRequest()->getParam('id'),
             'ret' => $this->_coreRegistry->registry('ret')
         ];
 
@@ -67,7 +67,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
         $form = $this->_formFactory->create(
             [
                 'data' => [
-                    'id' => 'edit_form',
+                    'id'     => 'edit_form',
                     'action' => $this->getUrl(
                         'local_comments/*/save',
                         $formActionParams
@@ -93,7 +93,8 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
             );
         } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
             $customerText = ($review->getStoreId() == \Magento\Store\Model\Store::DEFAULT_STORE_ID)
-                ? __('Administrator') : __('Guest');
+                ? __('Administrator')
+                : __('Guest');
         }
 
         $fieldset->addField('customer', 'note', ['label' => __('Author'), 'text' => $customerText]);
@@ -103,9 +104,8 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
             'note',
             [
                 'label' => __('Summary Rating'),
-                'text' => $this->getLayout()->createBlock(
+                'text'  => $this->getLayout()->createBlock(
                     \Magento\Review\Block\Adminhtml\Rating\Summary::class
-                    //\Emagento\Comments\Block\Adminhtml\Rating\Summary::class
                 )->toHtml()
             ]
         );
@@ -114,11 +114,10 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
             'detailed-rating',
             'note',
             [
-                'label' => __('Detailed Rating'),
+                'label'    => __('Detailed Rating'),
                 'required' => true,
-                'text' => '<div id="rating_detail">' . $this->getLayout()->createBlock(
+                'text'     => '<div id="rating_detail">' . $this->getLayout()->createBlock(
                     \Emagento\Comments\Block\Adminhtml\Rating\Detailed::class
-                    //\Magento\Review\Block\Adminhtml\Rating\Detailed::class
                 )->toHtml() . '</div>'
             ]
         );
@@ -127,10 +126,10 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
             'status_id',
             'select',
             [
-                'label' => __('Status'),
+                'label'    => __('Status'),
                 'required' => true,
-                'name' => 'status_id',
-                'values' => $this->_reviewData->getReviewStatusesOptionArray()
+                'name'     => 'status_id',
+                'values'   => $this->_reviewData->getReviewStatusesOptionArray()
             ]
         );
 
@@ -142,10 +141,10 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
                 'select_stores',
                 'multiselect',
                 [
-                    'label' => __('Visibility'),
+                    'label'    => __('Visibility'),
                     'required' => true,
-                    'name' => 'stores[]',
-                    'values' => $this->_systemStore->getStoreValuesForForm()
+                    'name'     => 'stores[]',
+                    'values'   => $this->_systemStore->getStoreValuesForForm()
                 ]
             );
             $renderer = $this->getLayout()->createBlock(

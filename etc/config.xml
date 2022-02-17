@@ -3,16 +3,14 @@
     <default>
         <local_comments>
             <settings>
-                <!-- общее значение -->
+                <!-- global value -->
                 <is_enabled>1</is_enabled>
             </settings>
             <flamp>
-                <!-- разрешен ли Flamp -->
                 <is_enabled>0</is_enabled>
                 <flamp_id>XXX</flamp_id>
             </flamp>
             <yandex>
-                <!-- разрешен ли Yandex -->
                 <is_enabled>0</is_enabled>
                 <shop_id>ID</shop_id>
                 <auth_key>XXX</auth_key>

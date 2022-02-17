@@ -23,12 +23,12 @@ class Rating extends MagentoRating
         $connection = $this->getConnection();
         $select = $connection->select()
             ->from(
-                $this->getMainTable(),      // rating
-                ['rating_id']               // pk
+                $this->getMainTable(),
+                ['rating_id']
             )
             ->where(implode(' AND ', $where));
         $bind = $attributes;
-        // взять код строки
+
         $ratingId = $connection->fetchOne($select, $bind);
         if ($ratingId) {
             $this->load($rating, $ratingId);

@@ -7,7 +7,6 @@ use Magento\Review\Model\ResourceModel\Review\Collection as MagentoCollection;
 class Collection extends MagentoCollection
 {
     /**
-     * Устанавливает фильт по типу комментариев
      * @return $this
      */
     public function addStoreReviewFilter()
@@ -21,46 +20,42 @@ class Collection extends MagentoCollection
     }
 
     /**
-     * Добавляет в запрос ответы на отзывы. По одному отзыву для первого уровня
+     * Add replies on reviews. One per review
+     *
      * @param int $page
-     * @param int $limit кол-во комментариев
-     * @param bool $isRand в случайном порядке (по умолчанию по дате в обратном порядке)
+     * @param int $limit
+     * @param bool $isRand default by id DESC
      * @return Collection
      */
     public function addReviewReplyOneLevel($page = 1, $limit = 5, $isRand = false)
     {
         $offset = $limit * ($page - 1);
-        // нужно заджойнить таблицу на себя по полю parent_id
-        // в колонках r_xxx будут данные ответа на отзыв (если есть не пустые)
-        $this->addStoreReviewFilter()   // а надо ли фильтровать по складу
+        // self join table, use fields 'r_XXX'
+        $this->addStoreReviewFilter()
             ->addFieldToFilter(
                 'main_table.status_id',
                 \Magento\Review\Model\Review::STATUS_APPROVED
             )
-            // комментарии пользователей на первом уровне
+            // reviews on 1st level
             ->addFieldToFilter('main_table.level', 1)
-            //->setCurPage($page)
-            //->setOrder('review_id', 'ASC')
-            //->setPageSize($count)
-            // дальше руками
             ->getSelect()
-            // ответы магазина на втором уровне (если цепочка комментарий-ответ ниже то сюда не попадет)
+            // replies on second level
             ->joinLeft(
                 ['main_table2' => 'review'],
-                'main_table.review_id = main_table2.parent_id AND main_table2.level=2',
+                'main_table.review_id = main_table2.parent_id AND main_table2.level = 2',
                 [
                     'r_review_id' => 'review_id',
-                    'r_level' => 'level',
+                    'r_level'     => 'level',
                 ]
             )
             ->joinLeft(
                 ['detail2' => 'review_detail'],
                 'main_table2.review_id = detail2.review_id',
                 [
-                    'r_detail_id' => 'detail_id',        // брать колонки из review_detail и добавлять в имя 'r_'
-                    'r_title' => 'title',
-                    'r_detail' => 'detail',
-                    'r_nickname' => 'nickname',
+                    'r_detail_id'   => 'detail_id',
+                    'r_title'       => 'title',
+                    'r_detail'      => 'detail',
+                    'r_nickname'    => 'nickname',
                     'r_customer_id' => 'customer_id',
                 ]
             )
@@ -71,7 +66,7 @@ class Collection extends MagentoCollection
         } else {
             $this->setOrder('review_id', 'DESC');
         }
-        //echo $this->getSelect(); exit;
+
         return $this;
     }
 }

@@ -6,7 +6,6 @@ declare(strict_types=1);
 
 namespace Emagento\Comments\Test\Unit\Model\Remote;
 
-//use Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory;
 use Psr\Log\LoggerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -144,20 +143,20 @@ class FlampTest extends TestCase
         $this->flampModel = $objectManager->getObject(
             Flamp::class,
             [
-                'logger' => $this->logger,
-                'scopeConfig' => $this->scopeConfig,
+                'logger'            => $this->logger,
+                'scopeConfig'       => $this->scopeConfig,
                 'httpClientFactory' => $this->zendClient,
-                'jsonSerializer' => $this->jsonSerializer,
-                'escaper' => $this->escaper,
-                'filterManager' => $this->filterManager,
-                'reviewResource' => $this->reviewResource,
-                'reviewFactory' => $this->reviewFactory,
-                'ratingFactory' => $this->ratingFactory,
-                'storeManager' => $this->storeManager,
-                'dateTime' => $this->dateTime,
-                'optionFactory' => $this->optionCollectionFactoryMock,
-                'storeId' => 0,
-                'stores' => [0],
+                'jsonSerializer'    => $this->jsonSerializer,
+                'escaper'           => $this->escaper,
+                'filterManager'     => $this->filterManager,
+                'reviewResource'    => $this->reviewResource,
+                'reviewFactory'     => $this->reviewFactory,
+                'ratingFactory'     => $this->ratingFactory,
+                'storeManager'      => $this->storeManager,
+                'dateTime'          => $this->dateTime,
+                'optionFactory'     => $this->optionCollectionFactoryMock,
+                'storeId'           => 0,
+                'stores'            => [0],
             ]
         );
     }

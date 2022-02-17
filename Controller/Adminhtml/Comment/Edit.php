@@ -27,8 +27,8 @@ class Edit extends ProductController implements HttpGetActionInterface
         $resultPage->setActiveMenu('Magento_Review::catalog_reviews_ratings_reviews_all');
         $resultPage->getConfig()->getTitle()->prepend(__('Customer Reviews'));
         $resultPage->getConfig()->getTitle()->prepend(__('Edit Review'));
-        //$resultPage->addContent($resultPage->getLayout()->createBlock(\Magento\Review\Block\Adminhtml\Edit::class));
         $resultPage->addContent($resultPage->getLayout()->createBlock(\Emagento\Comments\Block\Adminhtml\Edit::class));
+
         return $resultPage;
     }
 

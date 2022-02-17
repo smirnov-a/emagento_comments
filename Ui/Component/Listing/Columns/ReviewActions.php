@@ -12,7 +12,7 @@ class ReviewActions extends Column
      */
     public function prepareDataSource(array $dataSource)
     {
-        $dataSource = parent::prepareDataSource($dataSource);   //var_dump($dataSource); exit;
+        $dataSource = parent::prepareDataSource($dataSource);
 
         if (empty($dataSource['data']['items'])) {
             return $dataSource;
@@ -21,11 +21,11 @@ class ReviewActions extends Column
         foreach ($dataSource['data']['items'] as &$item) {
             //var_dump($item); exit;
             $item[$this->getData('name')]['edit'] = [
-                'href' => $this->context->getUrl(
+                'href'  => $this->context->getUrl(
                     'local_comments/comment/edit',
-                    ['id' => $item['review_id']]    //, 'source_id' => $item['entity_pk_value']]
+                    ['id' => $item['review_id']]
                 ),
-                'label' => __('Edit'),
+                'label'  => __('Edit'),
                 'hidden' => false,
             ];
         }

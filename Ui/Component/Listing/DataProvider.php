@@ -41,7 +41,8 @@ class DataProvider extends AbstractDataProvider
     }
 
     /**
-     * Получение данных. Здесь фильтр по типу комментария
+     * Get working data. Filter by type
+     *
      * @return array
      */
     public function getData(): array
@@ -50,15 +51,7 @@ class DataProvider extends AbstractDataProvider
         $collection
             ->addFieldToFilter('entity_id', Data::REVIEW_ENTITY_TYPE_STORE)
             ->addStoreData();
-        $data = $collection->toArray();
-        /*
-        foreach ($data['items'] as $key => $item) {
-            if (isset($item['country_id']) && !isset($item['country'])) {
-                $data['items'][$key]['country'] = $this->countryDirectory->loadByCode($item['country_id'])->getName();
-            }
-        }
-        */
 
-        return $data;
+        return $collection->toArray();
     }
 }

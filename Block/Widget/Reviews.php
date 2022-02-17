@@ -30,7 +30,7 @@ class Reviews extends Template implements BlockInterface
     }
 
     /**
-     * Возвращает комментарии к магазину
+     * Get reviews
      */
     public function getReviews()
     {

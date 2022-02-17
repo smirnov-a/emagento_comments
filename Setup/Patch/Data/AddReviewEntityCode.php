@@ -38,42 +38,30 @@ class AddReviewEntityCode implements DataPatchInterface, PatchVersionInterface
     public function apply()
     {
         $connection = $this->moduleDataSetup->getConnection();
-        // добавить тип комментария к магазину ('store') в review_entity и rating_entity
+
+        // add store type int review_entity and rating_entity tables
         foreach (['review_entity', 'rating_entity'] as $tableName) {
             $table = $this->moduleDataSetup->getTable($tableName);
             $select = $connection->select()
                 ->from($table)
                 ->reset(\Magento\Framework\DB\Select::COLUMNS)
                 ->columns('entity_id')
-                ->where('entity_code=?', 'store');
-            //echo $select; exit;
-            $entityId = $connection->fetchOne($select); //var_dump($entityId); exit;
-            if (!$entityId) {
-                $connection->insertForce(
-                    $table,
-                    [
-                        'entity_id' => \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
-                        'entity_code' => 'store'
-                    ]
-                );
+                ->where('entity_code = ?', 'store');
+
+            $entityId = $connection->fetchOne($select);
+            if ($entityId) {
+                continue;
             }
+
+            $connection->insertForce(
+                $table,
+                [
+                    'entity_id'   => \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
+                    'entity_code' => 'store'
+                ]
+            );
         }
-        /*
-        // то же самое rating/rating_entity
-        $table = $this->moduleDataSetup->getTable('rating_entity');
-        $select = $connection->select()
-            ->from($table)
-            ->reset(\Magento\Framework\DB\Select::COLUMNS)
-            ->columns('entity_id')
-            ->where('entity_code=?', 'store');
-        $connection->insertForce(
-            $table,
-            [
-                'entity_id' => \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
-                'entity_code' => 'store'
-            ]
-        );
-        */
+
         $this->logger->info('Patch applied');
     }
 
@@ -90,7 +78,6 @@ class AddReviewEntityCode implements DataPatchInterface, PatchVersionInterface
      */
     public static function getVersion()
     {
-        // патч выполнится, если версия модуля из module.xml не больше этого значения
         return '2.0.0';
     }
 

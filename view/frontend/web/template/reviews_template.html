@@ -1,20 +1,9 @@
-<!-- это для теста выводить раз в секунду вермя яваскриптом; time обявлена как observable
-<p data-bind="text: time"></p>
--->
-<div class="left-reviews" data-bind="if: reviews().totalRecords">
-    <!-- ko template: { afterRender: rendered } --><!-- /ko -->
-    <h3>Отзывы об интернет-магазине:</h3>
-    <!-- span data-bind="text: reviews().totalRecords"></span> комментариев -->
+<div class="left-reviews">
+    <h3 data-bind="i18n: 'Store reviews:'"></h3>
     <!-- ko if: reviews().totalRecords -->
-    <!-- knockout magento style -->
     <each args="data: reviews().items, as: 'item'">
         <div class="review-content" data-bind="attr: { 'data-id': item.review_id, 'data-source-id': item.source_id }">
-            <!-- ko if: item.source == 'flamp' -->
-            <img src="/media/wysiwyg/flamp_80x20.png" alt="Flamp logo" />
-            <!-- /ko -->
-            <!-- ko if: item.source == 'yandex' -->
-            <img src="/media/wysiwyg/yandex_87x23.png" alt="Yandex logo" />
-            <!-- /ko -->
+            <img data-bind="attr: { src: $parent.getLogoImage(item), alt: item.source + ' logo' }" />
             <div class="product-reviews-summary short">
                 <!-- ko if: item.rating_votes.items.length -->
                 <!-- span data-bind="text: item.rating_votes.items[0].percent"></span -->
@@ -33,50 +22,34 @@
                 <span class="nickname"><b data-bind="text: item.nickname"></b></span>
             </div>
         </div>
-        <!-- ответ на отзыв -->
-        <if args="item.r_review_id">
-            <div class="reply">
-                <p class="shorten review-content reply">
-                    <img src="/media/wysiwyg/company_20x20.jpg" alt="Company logo" align="top" />
-                    <span class="reply">Ответ:</span>
-                    <text args="item.r_detail"></text>
-                </p>
-            </div>
-        </if>
+        <!-- reply on review -->
+        <!-- ko if: item.r_review_id -->
+        <div class="reply">
+            <p class="shorten review-content reply">
+                <img data-bind="attr: { src: $parent.getLogoImage(item) }" alt="Company logo" align="top" />
+                <!-- img src="/media/wysiwyg/company_20x20.jpg" alt="Company logo" align="top" / -->
+                <span class="reply" data-bind="i18n: 'Reply:'"></span>
+                <text args="item.r_detail"></text>
+            </p>
+        </div>
+        <!-- /ko -->
     </each>
     <!-- /ko -->
     <!-- ko ifnot: reviews().totalRecords -->
-    <div>You don't have any review</div>
+    <div data-bind="i18n: 'You do not have any review'"></div>
     <!-- /ko -->
     <button type="button" class="action action-show-popup" click="showFormPopup">
-        <span>Написать отзыв</span>
+        <span data-bind="i18n: 'Write review'"></span>
     </button>
 </div>
-<!-- кнопка для добавления отзыва в модальном окне
-<button type="button" class="action" data-trigger="trigger">
-    <span>Add comment</span>
-</button>
-<div data-bind="mageInit: {
-        'Magento_Ui/js/modal/modal': {
-            'type': 'popup',
-            'title': 'Popup title',
-            'trigger': '[data-trigger=trigger]',
-            'responsive': true,
-            'buttons': [{
-                text: jQuery.mage.__('Submit'),
-                class: 'action'
-            }]
-    }}">
-    <div class="content">frm here</div>
-</div>
--->
+
 <!-- ko if: reviews().totalRecords > getCount() -->
 <button type="button" class="action action-show-popup" data-bind="click: showAllReviews">
-    <span>Показать больше</span>
+    <span data-bind="i18n: 'Show more'"></span>
 </button>
 <!-- /ko -->
 
-<!-- сама форма review. шаблон в файле view/frontend/web/template/form.html -->
+<!-- review form. template in view/frontend/web/template/form.html -->
 <div id="local-review-form" data-bind="visible: isFormPopupVisible()">
     <!-- ko template: 'Emagento_Comments/form' --><!-- /ko -->
 </div>

@@ -1,7 +1,5 @@
 <?php
-/**
- * Добавляет рейтинг для магазина в таблицу 'rating'
- */
+
 namespace Emagento\Comments\Setup\Patch\Data;
 
 use Magento\Framework\Setup\ModuleDataSetupInterface;
@@ -43,16 +41,16 @@ class AddRatingEntityCode implements DataPatchInterface, PatchVersionInterface
             ->from($table)
             ->reset(\Magento\Framework\DB\Select::COLUMNS)
             ->columns('rating_id')
-            ->where('entity_id=?', \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE);
-        //echo $select; exit;
-        $ratingId = $connection->fetchOne($select); //var_dump($ratingId); exit;
+            ->where('entity_id = ?', \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE);
+
+        $ratingId = $connection->fetchOne($select);
         if (!$ratingId) {
             $connection->insert(
                 $table,
                 [
-                    'entity_id' => \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
+                    'entity_id'   => \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
                     'rating_code' => 'Store',
-                    'position' => 0,
+                    'position'    => 0,
                 ]
             );
             //Fill table rating/rating_option
@@ -63,30 +61,25 @@ class AddRatingEntityCode implements DataPatchInterface, PatchVersionInterface
             ->from($table)
             ->reset(\Magento\Framework\DB\Select::COLUMNS)
             ->columns('COUNT(*)')
-            ->where('rating_id=?', $ratingId);
-        //echo $select; exit;
+            ->where('rating_id = ?', $ratingId);
+
         $cnt = $connection->fetchOne($select);
         if (!$cnt) {
             $optionData = [];
             for ($i = 1; $i <= 5; $i++) {
                 $optionData[] = [
                     'rating_id' => $ratingId,
-                    'code' => (string)$i,
-                    'value' => $i,
-                    'position' => $i
+                    'code'      => (string) $i,
+                    'value'     => $i,
+                    'position'  => $i
                 ];
             }
             $connection->insertMultiple(
-                $table, //  'rating_option'
+                $table,
                 $optionData
             );
         }
-        /* добавить строки по складам в rating_store. нет это в админке нужно отредактировать Stores -> Rating
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 
-        $rating = $objectManager->create('Magento\Review\Model\Rating')->create();
-        $rating->setStores()
-        */
         $this->logger->info('Patch applied');
     }
 
@@ -105,7 +98,6 @@ class AddRatingEntityCode implements DataPatchInterface, PatchVersionInterface
      */
     public static function getVersion()
     {
-        // патч выполнится, если версия модуля из module.xml не больше этого значения
         return '2.0.0';
     }
 

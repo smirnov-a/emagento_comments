@@ -32,12 +32,16 @@ class Summary extends \Magento\Review\Block\Adminhtml\Rating\Summary
     public function getRating()
     {
         if (!$this->getRatingCollection()) {
-            $ratingCollection = $this->_votesFactory->create()->setReviewFilter(
-                $this->getReviewId()
-            )->addRatingInfo()->load();
-            $this->setRatingCollection($ratingCollection->getSize() ? $ratingCollection : false);
+            $ratingCollection = $this->_votesFactory->create()
+                ->setReviewFilter($this->getReviewId())
+                ->addRatingInfo()
+                ->load();
+            $this->setRatingCollection($ratingCollection->getSize()
+                ? $ratingCollection
+                : false
+            );
         }
-        //echo $this->getRatingCollection()->getSelect(); exit;
+
         return $this->getRatingCollection();
     }
 
@@ -49,7 +53,10 @@ class Summary extends \Magento\Review\Block\Adminhtml\Rating\Summary
     public function getRatingSummary()
     {
         if (!$this->getRatingSummaryCache()) {
-            $this->setRatingSummaryCache($this->_ratingFactory->create()->getReviewSummary($this->getReviewId()));
+            $this->setRatingSummaryCache(
+                $this->_ratingFactory->create()
+                    ->getReviewSummary($this->getReviewId())
+            );
         }
 
         return $this->getRatingSummaryCache();

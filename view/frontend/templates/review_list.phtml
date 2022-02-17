@@ -1,42 +1,16 @@
 <?php
 /** @var $block Emagento\Comments\Block\ReviewList */
 ?>
-<!-- <div id="review_list" data-mage-init='{"reviews":{"count":10,"param2":234}}'>reviews here...</div> -->
 <div id="reviews-list" data-bind="scope: 'reviews'">
-    <!-- heading можно передать из xml
-    <h3 data-bind="text: heading"></h3>
-    -->
     <!-- ko template: getTemplate() --><!-- /ko -->
 </div>
 <script type="text/x-magento-init">
 {
     "#reviews-list": {
-      "Magento_Ui/js/core/app": <?= /* @escapeNotVerified */ $block->getJsLayout() ?>
+        "Magento_Ui/js/core/app": <?= /* @escapeNotVerified */ $block->getJsLayout() ?>
     }
 }
 </script>
-<?php
-/*
-?>
-<script type="text/x-magento-init">
-    {
-        "#reviews-list": {
-            "Magento_Ui/js/core/app": {
-                "components": {
-                    "reviews": {
-                        "component": "Emagento_Comments/js/reviews",
-                        "config": {
-                            "template": "Emagento_Comments/reviews_template",
-                            "count": 2,
-                            "username": "<?= $block->getUserName() ?>"
-                        }
-                    }
-                }
-            }
-        }
-    }
-</script>
-*/ ?>
 
 <div id="reviews-popup-full" class="reviews-popup-full" data-bind="scope: 'reviews_full'">
     <!-- ko template: getTemplate() --><!-- /ko -->

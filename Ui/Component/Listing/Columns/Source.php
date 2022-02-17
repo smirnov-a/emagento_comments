@@ -33,12 +33,6 @@ class Source extends Column implements OptionSourceInterface
         parent::__construct($context, $uiComponentFactory, $components, $data);
         $this->source = $source;
     }
-    /*
-    public function prepareDataSource(array $dataSource)
-    {
-        return parent::prepareDataSource($dataSource);
-    }
-    */
 
     /**
      * @return array

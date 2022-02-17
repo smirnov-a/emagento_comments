@@ -4,7 +4,7 @@ namespace Emagento\Comments\Controller\Adminhtml\Reviews;
 
 use Magento\Framework\Controller\Result\JsonFactory;
 
-class Load extends \Magento\Backend\App\Action //implements \Magento\Framework\App\Action\\HttpPostActionInterface
+class Load extends \Magento\Backend\App\Action
 {
     /**
      * @var JsonFactory

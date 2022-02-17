@@ -44,6 +44,7 @@ class Save extends ProductController implements HttpPostActionInterface
                         ->addOptionInfo()
                         ->load()
                         ->addRatingOptions();
+
                     foreach ($arrRatingId as $ratingId => $optionId) {
                         if ($vote = $votes->getItemByColumnValue('rating_id', $ratingId)) {
                             $this->ratingFactory->create()
@@ -72,6 +73,7 @@ class Save extends ProductController implements HttpPostActionInterface
             }
         }
         $resultRedirect->setPath('local_comments/grid/');
+
         return $resultRedirect;
     }
 

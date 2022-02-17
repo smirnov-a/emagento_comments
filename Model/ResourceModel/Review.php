@@ -24,12 +24,12 @@ class Review extends MagentoReview
         $connection = $this->getConnection();
         $select = $connection->select()
             ->from(
-                $this->getMainTable(),      // review
-                ['review_id']               // pk
+                $this->getMainTable(),
+                ['review_id']
             )
             ->where(implode(' AND ', $where));
         $bind = $attributes;
-        // взять код строки
+
         $reviewId = $connection->fetchOne($select, $bind);
         if ($reviewId) {
             $this->load($review, $reviewId);
@@ -44,15 +44,15 @@ class Review extends MagentoReview
      * Update direct
      *
      * @param int $reviewId
-     * @param array $data данные должны быть подготовлены
+     * @param array $data
      * @return $this
      */
     public function updatePathAndLevel($reviewId, $data)
     {
         $this->getConnection()->update(
-            $this->_reviewTable,                // table
-            $data,                              // data to update
-            ["review_id = ?" => $reviewId]      // condition
+            $this->_reviewTable,
+            $data,
+            ["review_id = ?" => $reviewId]
         );
 
         return $this;

@@ -1,37 +1,25 @@
 <?xml version="1.0"?>
 
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <!-- список отзывов -->
+    <!-- review list -->
     <route method="GET" url="/V1/ecomments/list/:store_id/:page/:limit">
-        <service class="Emagento\Comments\Api\ReviewManagementInterface" method="getList"/>
+        <service class="Emagento\Comments\Api\ReviewManagementInterface" method="getList" />
         <resources>
-            <!-- resource ref="Emagento_Comments::custom"/ -->
             <resource ref="anonymous"/>
         </resources>
     </route>
-    <!-- спр-к рейтингов -->
+    <!-- rating list -->
     <route method="GET" url="/V1/ecomments/ratings">
-        <service class="Emagento\Comments\Api\ReviewManagementInterface" method="getRaings"/>
+        <service class="Emagento\Comments\Api\ReviewManagementInterface" method="getRaings" />
         <resources>
             <resource ref="anonymous"/>
         </resources>
     </route>
-    <!-- запись локального отзыва -->
+    <!-- store local review -->
     <route method="POST" url="/V1/ecomments/review">
-        <service class="Emagento\Comments\Api\ReviewManagementInterface" method="create"/>
+        <service class="Emagento\Comments\Api\ReviewManagementInterface" method="create" />
         <resources>
-            <resource ref="self"/>
+            <resource ref="self" />
         </resources>
     </route>
-    <!--
-    <route url="/V1/customers/me/billingAddress" method="GET">
-        <service class="Magento\Customer\Api\AccountManagementInterface" method="getDefaultBillingAddress"/>
-        <resources>
-            <resource ref="self"/>
-        </resources>
-        <data>
-            <parameter name="customerId" force="true">%customer_id%</parameter>
-        </data>
-    </route>
-    -->
 </routes>

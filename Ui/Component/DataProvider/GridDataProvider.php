@@ -2,7 +2,6 @@
 
 namespace Emagento\Comments\Ui\Component\DataProvider;
 
-//use Emagento\Comments\Api\ReviewRepositoryInterface;
 use Magento\Framework\Api\Filter;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\SearchCriteriaBuilder;
@@ -10,10 +9,6 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\AuthorizationInterface;
 use Magento\Framework\View\Element\UiComponent\DataProvider\Reporting;
-
-//use Magento\Ui\DataProvider\AbstractDataProvider;
-//use Magento\Review\Model\ResourceModel\Review\Product\CollectionFactory;
-
 
 class GridDataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider
 {
@@ -78,6 +73,7 @@ class GridDataProvider extends \Magento\Framework\View\Element\UiComponent\DataP
         if ($this->authorization === null) {
             $this->authorization = ObjectManager::getInstance()->get(AuthorizationInterface::class);
         }
+
         return $this->authorization;
     }
 
@@ -92,36 +88,4 @@ class GridDataProvider extends \Magento\Framework\View\Element\UiComponent\DataP
             parent::addFilter($filter);
         }
     }
-
-    /**
-     * {@inheritdoc}
-     * @since 100.1.0
-     * /
-    public function getData()
-    {
-        $searchCriteria = $this->searchCriteriaBuilder
-            ->addFilter('entity_id', 4, 'eq')
-            ->create();     //var_dump($searchCriteria); exit;
-        $items = $this->reviewRepository->getList($searchCriteria)->getItems();     //var_dump($items); exit;
-        foreach ($items as $item) {
-            $arrItems['items'][] = $item->toArray([]);
-        }
-        / *
-        $this->getCollection()
-            //->addEntityFilter($this->request->getParam('current_product_id', 0))
-            ->addStoreData();
-
-        $arrItems = [
-            'totalRecords' => $this->getCollection()->getSize(),    // sizeof($items),
-            'items' => [],
-        ];
-        foreach ($this->getCollection() as $item) {
-            $arrItems['items'][] = $item->toArray([]);
-        }
-        * /
-        //var_dump($arrItems); exit;
-
-        return $arrItems;
-    }
-    */
 }

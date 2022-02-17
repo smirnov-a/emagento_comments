@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!--
-добавить колонки в таблицу с отзывами
+add columns into review table
 bin/magento setup:db-declaration:generate-whitelist - -module-name=Emagento_Comments
 bin/magento setup:upgrade
 -->

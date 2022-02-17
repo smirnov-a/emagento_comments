@@ -60,45 +60,38 @@ class GetRatings extends \Magento\Framework\App\Action\Action implements HttpPos
     {
         $response = [
             'rating_id' => null,
-            'options' => [],
+            'options'   => [],
         ];
-        /* нужно вернуть json в таком виде
-        {code: 1, label: 'очень плохо'},
-        {code: 2, label: 'плохо'},
-        {code: 3, label: 'средне'},
-        {code: 4, label: 'хорошо'},
-        {code: 5, label: 'отлично'}
-        */
+
         $values = [
-            1 => 'очень плохо',
-            2 => 'плохо',
-            3 => 'средне',
-            4 => 'хорошо',
-            5 => 'отлично',
+            1 => __('very bad'),
+            2 => __('bad'),
+            3 => __('medium'),
+            4 => __('good'),
+            5 => __('very good'),
         ];
-        // взять код рейтинга для магазина из конфига (6)
+
         $ratingId = $this->_scopeConfig->getValue(
             'local_comments/settings/rating_id',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
         $response['rating_id'] = $ratingId;
-        // и опции для него из rating_options
+
         /** @var \Magento\Review\Model\ResourceModel\Rating\Option\Collection $collection */
         $collection = $this->_optionFactory->create();
         $collection
             ->addRatingFilter($ratingId)
             ->setPositionOrder()
             ->load();
-        //echo $collection->getSelect(); exit;
 
         foreach ($collection as $option) {
             $response['options'][] = [
-                'code' => $option->getId(),
+                'code'  => $option->getId(),
                 'label' => $values[$option->getValue()] ?? '__',
                 'value' => $option->getValue(),
             ];
         }
-        //var_dump($response); exit;
+
         /** @var \Magento\Framework\Controller\Result\Json $resultJson */
         $resultJson = $this->resultJsonFactory->create();
         return $resultJson->setData($response);

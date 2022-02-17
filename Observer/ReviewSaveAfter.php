@@ -44,29 +44,26 @@ class ReviewSaveAfter implements \Magento\Framework\Event\ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        //$this->_logger->info('Starting review observer...');
         $dataObject = $observer->getEvent()->getDataObject();
-        // после сохранения отзыва нужно проверить его тип entity_id
-        // если \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE, то прописать/обновить path и level
-        // работать если еще не заполнено (т.е. сработает при добавлении отзыва)
-        if (!$dataObject->getPath() &&
-            $dataObject->getEntityId() == \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE) {
-            // обновить поле path и level прямым запросом
-            $path = $dataObject->getId();
-            $level = 1;
-            // если у отзыва есть родитель, то взять с него path и построить новый
-            if ($dataObject->getParentId()) {
-                $parent = $this->_reviewFactory->create()->load($dataObject->getParentId());
-                if ($parent->getId()) {
-                    // взять level и path
-                    $level = $parent->getLevel() + 1;           // 4
-                    $path = $parent->getPath() . '/' . $path;   // '3/4/5/6'
-                }
-            }
-            $data = ['path' => $path, 'level' => $level];
-            $this->_reviewResource->updatePathAndLevel($dataObject->getId(), $data);
-            //$this->_logger->info('Store Comment. id: '.$dataObject->getId().'; Path: '.$path.'; level: '.$level);
+        if ($dataObject->getPath()
+            || $dataObject->getEntityId() != \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE
+        ) {
+            return $this;
         }
+
+        // update 'path' and 'level'
+        $path  = $dataObject->getId();
+        $level = 1;
+        // try to get form parent
+        if ($dataObject->getParentId()) {
+            $parent = $this->_reviewFactory->create()->load($dataObject->getParentId());
+            if ($parent->getId()) {
+                $level = $parent->getLevel() + 1;
+                $path  = $parent->getPath() . '/' . $path;
+            }
+        }
+        $data = ['path' => $path, 'level' => $level];
+        $this->_reviewResource->updatePathAndLevel($dataObject->getId(), $data);
 
         return $this;
     }
