@@ -2,69 +2,102 @@
 
 namespace Emagento\Comments\Observer;
 
-use Psr\Log\LoggerInterface;
+use Emagento\Comments\Api\ReviewRepositoryInterface;
+use Magento\Framework\DataObject;
+use Magento\Framework\Event\Observer;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Review\Model\ReviewFactory;
+use Magento\Review\Model\Review;
+use Emagento\Comments\Helper\Data as EmagentoHelper;
 
-class ReviewSaveAfter implements \Magento\Framework\Event\ObserverInterface
+class ReviewSaveAfter implements ObserverInterface
 {
-    /**
-     * @var \Magento\Review\Model\ReviewFactory
-     */
-    protected $_reviewFactory;
-    /**
-     * @var \Emagento\Comments\Model\ResourceModel\Review
-     */
-    protected $_reviewResource;
-    /**
-     * @var LoggerInterface
-     */
-    protected $_logger;
+    /** @var ReviewRepositoryInterface */
+    private ReviewRepositoryInterface $reviewRepository;
+    /** @var ReviewFactory */
+    private ReviewFactory $reviewFactory;
+    /** @var EmagentoHelper */
+    private EmagentoHelper $helper;
 
     /**
-     * Constructor
-     *
-     * @param \Magento\Review\Model\ReviewFactory $reviewFactory
-     * @param \Emagento\Comments\Model\ResourceModel\Review $reviewResource
-     * @param LoggerInterface $logger
+     * @param ReviewRepositoryInterface $reviewRepository
+     * @param ReviewFactory $reviewFactory
+     * @param EmagentoHelper $helper
      */
     public function __construct(
-        \Magento\Review\Model\ReviewFactory $reviewFactory,
-        \Emagento\Comments\Model\ResourceModel\Review $reviewResource,
-        LoggerInterface $logger
+        ReviewRepositoryInterface $reviewRepository,
+        ReviewFactory $reviewFactory,
+        EmagentoHelper $helper
     ) {
-        $this->_reviewFactory = $reviewFactory;
-        $this->_reviewResource = $reviewResource;
-        $this->_logger = $logger;
+        $this->reviewRepository = $reviewRepository;
+        $this->reviewFactory = $reviewFactory;
+        $this->helper = $helper;
     }
 
     /**
-     * Observer
+     * Execute
      *
-     * @param \Magento\Framework\Event\Observer $observer
-     * @return $this
+     * @param Observer $observer
+     * @return void
      */
-    public function execute(\Magento\Framework\Event\Observer $observer)
+    public function execute(Observer $observer)
     {
         $dataObject = $observer->getEvent()->getDataObject();
         if ($dataObject->getPath()
-            || $dataObject->getEntityId() != \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE
+            || !$this->isStoreReviewEntityId($dataObject)
         ) {
-            return $this;
+            return;
         }
 
-        // update 'path' and 'level'
-        $path  = $dataObject->getId();
+        $this->updateLevelAndPath($dataObject);
+    }
+
+    /**
+     * Update Review Levele and Path
+     *
+     * @param DataObject $dataObject
+     * @return void
+     */
+    private function updateLevelAndPath(DataObject $dataObject)
+    {
+        $reviewId  = (int) $dataObject->getId();
+        $path = $reviewId;
         $level = 1;
-        // try to get form parent
-        if ($dataObject->getParentId()) {
-            $parent = $this->_reviewFactory->create()->load($dataObject->getParentId());
-            if ($parent->getId()) {
-                $level = $parent->getLevel() + 1;
-                $path  = $parent->getPath() . '/' . $path;
+        if ($parentId = $dataObject->getParentId()) {
+            $parentReview = $this->getParentReview($parentId);
+            if ($parentReview->getId()) {
+                $level = $parentReview->getLevel() + 1;
+                $path  = $parentReview->getPath() . '/' . $reviewId;
             }
         }
         $data = ['path' => $path, 'level' => $level];
-        $this->_reviewResource->updatePathAndLevel($dataObject->getId(), $data);
+        $this->reviewRepository->updatePathAndLevel($reviewId, $data);
+    }
 
-        return $this;
+    /**
+     * Get Parent Review by ID
+     *
+     * @param int $parentId
+     * @return Review
+     */
+    private function getParentReview(int $parentId): Review
+    {
+        try {
+            $review = $this->reviewRepository->getById($parentId);
+        } catch (\Exception $e) {
+            $review = $this->reviewFactory->create();
+        }
+        return $review;
+    }
+
+    /**
+     * Check if Entity ID is Store Review
+     *
+     * @param DataObject $dataObject
+     * @return bool
+     */
+    private function isStoreReviewEntityId(DataObject $dataObject): bool
+    {
+        return $dataObject->getEntityId() == $this->helper->getStoreReviewEntityId();
     }
 }

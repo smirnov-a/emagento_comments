@@ -1,8 +1,8 @@
 {
     "name": "emagento/module-comments",
-    "description": "Magento 2 Local Store Reviews extension",
+    "description": "Magento 2 Store Reviews extension",
     "require": {
-        "magento/framework": "*"
+        "magento/framework": ">=100"
     },
     "type": "magento2-module",
     "license": [

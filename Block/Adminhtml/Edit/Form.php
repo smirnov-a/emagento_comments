@@ -2,59 +2,59 @@
 
 namespace Emagento\Comments\Block\Adminhtml\Edit;
 
-class Form extends \Magento\Backend\Block\Widget\Form\Generic
+use Emagento\Comments\Block\Adminhtml\Rating\Detailed;
+use Magento\Backend\Block\Store\Switcher\Form\Renderer\Fieldset\Element;
+use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Block\Widget\Form\Generic;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Framework\Data\FormFactory;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Registry;
+use Magento\Review\Block\Adminhtml\Rating\Summary;
+use Magento\Review\Helper\Data;
+use Magento\Store\Model\System\Store;
+
+class Form extends Generic
 {
-    /**
-     * Review data
-     *
-     * @var \Magento\Review\Helper\Data
-     */
-    protected $_reviewData = null;
+    /** @var Data|null */
+    protected ?Data $reviewData = null;
+    /** @var CustomerRepositoryInterface */
+    protected CustomerRepositoryInterface $customerRepository;
+    /** @var Store */
+    protected Store $systemStore;
 
     /**
-     * @var \Magento\Customer\Api\CustomerRepositoryInterface
-     */
-    protected $customerRepository;
-
-    /**
-     * Core system store model
-     *
-     * @var \Magento\Store\Model\System\Store
-     */
-    protected $_systemStore;
-
-    /**
-     * Form constructor.
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Framework\Registry $registry
-     * @param \Magento\Framework\Data\FormFactory $formFactory
-     * @param \Magento\Store\Model\System\Store $systemStore
-     * @param \Magento\Customer\APi\CustomerRepositoryInterface $customerRepository
-     * @param \Magento\Review\Helper\Data $reviewData
+     * @param Context $context
+     * @param Registry $registry
+     * @param FormFactory $formFactory
+     * @param Store $systemStore
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param Data $reviewData
      * @param array $data
      */
     public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Framework\Data\FormFactory $formFactory,
-        \Magento\Store\Model\System\Store $systemStore,
-        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
-        \Magento\Review\Helper\Data $reviewData,
+        Context $context,
+        Registry $registry,
+        FormFactory $formFactory,
+        Store $systemStore,
+        CustomerRepositoryInterface $customerRepository,
+        Data $reviewData,
         array $data = []
     ) {
-        $this->_reviewData = $reviewData;
-        $this->customerRepository = $customerRepository;
-        $this->_systemStore = $systemStore;
         parent::__construct($context, $registry, $formFactory, $data);
+        $this->reviewData = $reviewData;
+        $this->customerRepository = $customerRepository;
+        $this->systemStore = $systemStore;
     }
 
     /**
-     * Prepare edit review form
+     * Prepare Form
      *
      * @return $this
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @throws NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function _prepareForm()
+    protected function _prepareForm(): static
     {
         $review = $this->_coreRegistry->registry('review_data');
 
@@ -63,19 +63,16 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
             'ret' => $this->_coreRegistry->registry('ret')
         ];
 
-        /** @var \Magento\Framework\Data\Form $form */
-        $form = $this->_formFactory->create(
-            [
-                'data' => [
-                    'id'     => 'edit_form',
-                    'action' => $this->getUrl(
-                        'local_comments/*/save',
-                        $formActionParams
-                    ),
-                    'method' => 'post',
-                ],
-            ]
-        );
+        $form = $this->_formFactory->create([
+            'data' => [
+                'id'     => 'edit_form',
+                'action' => $this->getUrl(
+                    'local_comments/*/save',
+                    $formActionParams
+                ),
+                'method' => 'post',
+            ],
+        ]);
 
         $fieldset = $form->addFieldset(
             'review_details',
@@ -87,11 +84,11 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
             $customerText = __(
                 '<a href="%1" onclick="this.target=\'blank\'">%2 %3</a> <a href="mailto:%4">(%4)</a>',
                 $this->getUrl('customer/index/edit', ['id' => $customer->getId(), 'active_tab' => 'review']),
-                $this->escapeHtml($customer->getFirstname()),
-                $this->escapeHtml($customer->getLastname()),
-                $this->escapeHtml($customer->getEmail())
+                $this->_escaper->escapeHtml($customer->getFirstname()),
+                $this->_escaper->escapeHtml($customer->getLastname()),
+                $this->_escaper->escapeHtml($customer->getEmail())
             );
-        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+        } catch (NoSuchEntityException $e) {
             $customerText = ($review->getStoreId() == \Magento\Store\Model\Store::DEFAULT_STORE_ID)
                 ? __('Administrator')
                 : __('Guest');
@@ -105,8 +102,8 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
             [
                 'label' => __('Summary Rating'),
                 'text'  => $this->getLayout()->createBlock(
-                    \Magento\Review\Block\Adminhtml\Rating\Summary::class
-                )->toHtml()
+                    Summary::class
+                )->toHtml(),
             ]
         );
 
@@ -117,8 +114,8 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
                 'label'    => __('Detailed Rating'),
                 'required' => true,
                 'text'     => '<div id="rating_detail">' . $this->getLayout()->createBlock(
-                    \Emagento\Comments\Block\Adminhtml\Rating\Detailed::class
-                )->toHtml() . '</div>'
+                    Detailed::class
+                )->toHtml() . '</div>',
             ]
         );
 
@@ -129,13 +126,10 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
                 'label'    => __('Status'),
                 'required' => true,
                 'name'     => 'status_id',
-                'values'   => $this->_reviewData->getReviewStatusesOptionArray()
+                'values'   => $this->reviewData->getReviewStatusesOptionArray(),
             ]
         );
 
-        /**
-         * Check is single store mode
-         */
         if (!$this->_storeManager->hasSingleStore()) {
             $field = $fieldset->addField(
                 'select_stores',
@@ -144,11 +138,11 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
                     'label'    => __('Visibility'),
                     'required' => true,
                     'name'     => 'stores[]',
-                    'values'   => $this->_systemStore->getStoreValuesForForm()
+                    'values'   => $this->systemStore->getStoreValuesForForm()
                 ]
             );
             $renderer = $this->getLayout()->createBlock(
-                \Magento\Backend\Block\Store\Switcher\Form\Renderer\Fieldset\Element::class
+                Element::class
             );
             $field->setRenderer($renderer);
             $review->setSelectStores($review->getStores());

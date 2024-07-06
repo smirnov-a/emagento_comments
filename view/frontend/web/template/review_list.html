@@ -1,0 +1,52 @@
+<div class="left-reviews local-reviews">
+    <h3 data-bind="i18n: 'Store Reviews'">:</h3>
+    <!-- ko if: reviews().length -->
+    <each args="data: reviews(), as: 'item'">
+        <div class="review-content" data-bind="attr: { 'data-id': item.review_id, 'data-source-id': item.source_id }">
+            <img data-bind="attr: { src: item.logo_image, alt: item.source + ' logo' }" />
+            <div class="product-reviews-summary short">
+                <!-- ko if: item.rating_summary -->
+                <div class="rating-summary" data-bind="attr: { title: item.rating_summary.description }">
+                    <div class="rating-result">
+                        <span data-bind="style: {width: item.rating_summary.percent + '%'}">
+                            <span data-bind="text: item.rating_summary.value"></span>
+                        </span>
+                    </div>
+                </div>
+                <!-- /ko -->
+            </div>
+            <p class="content shorten" data-bind="text: item.detail"></p>
+            <div class="local-bottom-panel">
+                <span class="left date" data-bind="text: $parent.getFormatDate(item.created_at)"></span>
+                <span class="nickname"><b data-bind="text: item.nickname"></b></span>
+            </div>
+        </div>
+        <!-- ko if: item.reply_data.detail -->
+        <div class="reply">
+            <p class="shorten review-content reply">
+                <img data-bind="attr: { src: item.reply_data.logo_image }" alt="Company logo" align="top" />
+                <span class="reply" data-bind="i18n: 'Reply:'"></span>
+                <text args="item.reply_data.detail"></text>
+            </p>
+        </div>
+        <!-- /ko -->
+    </each>
+    <!-- /ko -->
+    <!-- ko ifnot: reviews().length -->
+    <div data-bind="i18n: 'We do not have any review'"></div>
+    <!-- /ko -->
+    <button type="button" class="action action-show-popup" click="showFormPopup">
+        <span data-bind="i18n: 'Write review'"></span>
+    </button>
+</div>
+
+<!-- ko if: totalRecord() > getCount() -->
+<button type="button" class="action action-show-popup" data-bind="click: showAllReviews">
+    <span data-bind="i18n: 'Show more'"></span>
+</button>
+<!-- /ko -->
+
+<div id="local-review-form" data-bind="visible: isFormPopupVisible()">
+    <!-- ko template: 'Emagento_Comments/review_form' -->
+    <!-- /ko -->
+</div>

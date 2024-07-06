@@ -8,18 +8,14 @@ use Magento\Framework\Api\Search\SearchCriteriaBuilder;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\AuthorizationInterface;
+use Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider;
 use Magento\Framework\View\Element\UiComponent\DataProvider\Reporting;
 
-class GridDataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider
+class GridDataProvider extends DataProvider
 {
-    /**
-     * @var AuthorizationInterface
-     */
-    private $authorization;
-
-    /**
-     * @var AddFilterInterface[]
-     */
+    /** @var AuthorizationInterface */
+    private AuthorizationInterface $authorization;
+    /** @var AddFilterInterface[] */
     private $additionalFilterPool;
 
     /**
@@ -63,9 +59,8 @@ class GridDataProvider extends \Magento\Framework\View\Element\UiComponent\DataP
     }
 
     /**
-     * Get authorization info.
+     * Get AuthorizationInstance
      *
-     * @deprecated 101.0.7
      * @return AuthorizationInterface|mixed
      */
     private function getAuthorizationInstance()

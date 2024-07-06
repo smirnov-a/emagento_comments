@@ -2,13 +2,10 @@
 
 namespace Emagento\Comments\Block\Adminhtml\Rating;
 
-/**
- * Adminhtml detailed rating stars
- */
 class Detailed extends \Magento\Review\Block\Adminhtml\Rating\Detailed
 {
     /**
-     * Get collection of ratings
+     * Get Rating
      *
      * @return RatingCollection
      */
@@ -55,10 +52,10 @@ class Detailed extends \Magento\Review\Block\Adminhtml\Rating\Detailed
                         ->addRatingOptions();
                 }
             }
-            $this->setRatingCollection($ratingCollection->getSize()
-                ? $ratingCollection
-                : false
-            );
+            $this->setRatingCollection(
+                $ratingCollection->getSize()
+                    ? $ratingCollection
+                    : false); // phpcs:ignore
         }
 
         return $this->getRatingCollection();

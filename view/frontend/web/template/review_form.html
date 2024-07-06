@@ -1,0 +1,61 @@
+<?php // phpcs:disable ?>
+<form class="form review-form form-local-comment" method="post" autocomplete="off" data-role="product-review-form"
+      id="form-local-comment"
+      data-mage-init='{"validation": {}}'
+      data-bind="event: { submit: submitForm }"
+>
+    <input type="hidden" name="form_key" data-bind="value: formKey"/>
+    <fieldset class="fieldset review-fieldset">
+        <div class="field review-field-nickname required">
+            <label for="nickname_field" class="label">
+                <span data-bind="i18n: 'Your name'"></span>
+            </label>
+            <div class="control">
+                <input type="text" name="nickname" id="nickname_field" class="input-text required"
+                       data-bind="attr: { 'data-msg-required': $t('Please identify yourself'), value: nickname() }"
+                />
+            </div>
+        </div>
+        <fieldset class="field review-field-ratings" style="position: relative;">
+            <legend class="label">
+                <span data-bind="i18n: 'Your rating'"></span>
+            </legend>
+            <br>
+            <div class="control">
+                <div class="nested" id="product-review-table">
+                    <div class="field choice review-field-rating" data-bind="foreach: { data: ratings(), as: 'rating' }">
+                        <label class="label" data-bind="text: rating.rating_code"></label>
+                        <div class="control review-control-vote">
+                            <!-- ko foreach: { data: rating.options, as: 'option' } -->
+                            <input type="radio" class="radio" data-bind="attr: { id: 'radio_'+rating.rating_id+'_'+option.option_id(), checked: option.selected() }"/>
+                            <label data-bind="attr: {
+                                    class: 'rating-'+option.value(),
+                                    for: 'radio_'+rating.rating_id+'_'+option.option_id(),
+                                    id: rating.rating_id+'_'+option.option_id()+'_label',
+                                    title: option.value()+' '+$t('star(s)') },
+                                    click: function() { $parents[1].selectRating(rating.rating_id, option.option_id(), option.value()) }"
+                            >
+                                <span data-bind="text: option.value() +' '+ $t('star(s)')"></span>
+                            </label>
+                            <!-- /ko -->
+                        </div>
+                        <input data-bind="attr: {
+                                name: 'ratings[' + rating.rating_id + ']',
+                                value: rating.option_id(),
+                                'data-msg-required': $t('Please select your rating')}"
+                           type="hidden"
+                           class="validate-rating required"
+                           data-validate="{'rating-required': true}"
+                        />
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <div class="field review-field-text required">
+            <label for="review_field" class="label"><span data-bind="i18n: 'Your review'"></span></label>
+            <div class="control">
+                <textarea name="detail" id="review_field" cols="5" rows="5" class="required" data-bind="attr: { 'data-msg-required': $t('Please fill your review') }"></textarea>
+            </div>
+        </div>
+    </fieldset>
+</form>

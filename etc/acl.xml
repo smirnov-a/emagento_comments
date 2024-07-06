@@ -1,9 +1,11 @@
 <?xml version="1.0"?>
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Acl/etc/acl.xsd">
     <acl>
         <resources>
             <resource id="Magento_Backend::admin">
-                <resource id="Emagento_Comments::comments_list" title="Samples" sortOrder="10" />
+                <resource id="Emagento_Comments::store_reviews" title="Store Reviews" translate="title" sortOrder="10"/>
+                <resource id="Emagento_Comments::api" title="Store Reviews Api" translate="title" sortOrder="20"/>
             </resource>
         </resources>
     </acl>

@@ -1,33 +1,34 @@
 //
+//  Variables
+//  ---------------------------------------------
+@div-reply-span-reply-color: #555;
+
+//
 //  Common
-//  _____________________________________________
+//  ---------------------------------------------
 
 & when (@media-common = true) {
-    #form-local-comment {
+    .form-local-comment {
         label.error {
             color: @color-red10;
         }
+
         .review-control-vote label.error {
             margin-top: 35px;
         }
+
         .review-field-ratings {
             margin-bottom: 35px;
         }
-        input.error, textarea.error {
+
+        input.error,
+        textarea.error {
             border-color: @color-red10;
         }
     }
 
     div.reply span.reply {
-        color: #555;
+        color: @div-reply-span-reply-color;
         font-style: italic;
     }
 }
-
-/*
-.review-control-vote {
-    &:before {
-        position: static;
-    }
-}
-*/

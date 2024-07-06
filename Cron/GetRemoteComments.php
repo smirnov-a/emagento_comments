@@ -2,40 +2,51 @@
 
 namespace Emagento\Comments\Cron;
 
-/**
- * Retrieve comments from Yandex/Flamp/etc
- */
+use Emagento\Comments\Helper\Data as Helper;
+use Emagento\Comments\Model\Review\Remote\Processor as RemoteProcessor;
+use Psr\Log\LoggerInterface;
+
 class GetRemoteComments
 {
-    /**
-     * @var \Magento\Framework\ObjectManagerInterface
-     */
-    private $_objectManager;
+    /** @var Helper */
+    private Helper $helper;
+    /** @var RemoteProcessor */
+    private RemoteProcessor $processor;
+    /** @var LoggerInterface */
+    private LoggerInterface $logger;
 
     /**
-     * GetRemoteComments constructor.
-     *
-     * @param \Magento\Framework\ObjectManagerInterface $objectmanager
+     * @param Helper $helper
+     * @param RemoteProcessor $processor
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        \Magento\Framework\ObjectManagerInterface $objectmanager
+        Helper $helper,
+        RemoteProcessor $processor,
+        LoggerInterface $logger
     ) {
-        $this->_objectManager = $objectmanager;
+        $this->helper = $helper;
+        $this->processor = $processor;
+        $this->logger = $logger;
     }
 
     /**
-     * Cron job method to clean old cache resources
+     * Execute
      *
      * @return void
      */
-    public function execute()
+    public function execute(): void
     {
-        $cnt = 0;
-        foreach (['Flamp', 'Yandex'] as $remote) {
-            $class = 'Emagento\Comments\Model\Remote\\' . $remote;
-            $job = $this->_objectManager->create($class);
+        if (!$this->helper->isCronEnabled()) {
+            return;
+        }
 
-            $cnt += $job->getComments();
+        foreach ($this->helper->getRemoteTypes() as $type) {
+            try {
+                $this->processor->processRemoteReviews($type);
+            } catch (\Exception $e) {
+                $this->logger->error($e->getMessage());
+            }
         }
     }
 }

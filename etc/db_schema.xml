@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
-<!--
-add columns into review table
-bin/magento setup:db-declaration:generate-whitelist - -module-name=Emagento_Comments
-bin/magento setup:upgrade
--->
+
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="review" resource="default" comment="Review base information">
@@ -13,5 +9,12 @@ bin/magento setup:upgrade
         <column xsi:type="bigint" name="parent_id" nullable="true" comment="Parent comment id" />
         <column xsi:type="smallint" name="level" nullable="false" default="0" comment="Comment's level" />
         <column xsi:type="varchar" name="path" nullable="false" default="" length="255" comment="Tree path (like in catalog_category_entity)" />
+        <index referenceId="REVIEW_SOURCE_SOURCE_ID">
+            <column name="source"/>
+            <column name="source_id"/>
+        </index>
+        <index referenceId="REVIEW_PARENT_ID">
+            <column name="parent_id"/>
+        </index>
     </table>
 </schema>

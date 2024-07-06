@@ -10,19 +10,11 @@ use Magento\Framework\View\Element\UiComponent\DataProvider\Reporting;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\AuthorizationInterface;
 
-/**
- * DataProvider for grid
- */
 class DataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider
 {
-    /**
-     * @var AuthorizationInterface
-     */
+    /** @var AuthorizationInterface */
     private $authorization;
-
-    /**
-     * @var AddFilterInterface[]
-     */
+    /** @var AddFilterInterface[] */
     private $additionalFilterPool;
 
     /**
@@ -39,9 +31,9 @@ class DataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvi
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function __construct(
-        $name,
-        $primaryFieldName,
-        $requestFieldName,
+        string $name,
+        string $primaryFieldName,
+        string $requestFieldName,
         Reporting $reporting,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         RequestInterface $request,
@@ -67,9 +59,8 @@ class DataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvi
     }
 
     /**
-     * Get authorization info.
+     * Get Authorization Instance
      *
-     * @deprecated 101.0.7
      * @return AuthorizationInterface|mixed
      */
     private function getAuthorizationInstance()
@@ -89,13 +80,13 @@ class DataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvi
     {
         $metadata = [];
 
-        if (!$this->getAuthorizationInstance()->isAllowed('Emagento_Comments::save')) {
+        if (!$this->getAuthorizationInstance()->isAllowed('Emagento_Comments::store_reviews')) {
             $metadata = [
                 'cms_page_columns' => [
                     'arguments' => [
                         'data' => [
                             'config' => [
-                                'editorConfig' => [
+                                'editorConfig'  => [
                                     'enabled' => false
                                 ],
                                 'componentType' => \Magento\Ui\Component\Container::NAME
@@ -110,7 +101,10 @@ class DataProvider extends \Magento\Framework\View\Element\UiComponent\DataProvi
     }
 
     /**
-     * @inheritdoc
+     * Add Filter
+     *
+     * @param Filter $filter
+     * @return void
      */
     public function addFilter(Filter $filter)
     {

@@ -5,21 +5,15 @@ namespace Emagento\Comments\Block;
 use Magento\Framework\View\Element\Template;
 use Magento\Customer\Model\Session;
 
-/**
- * Class
- */
 class ReviewList extends Template
 {
-    /**
-     * @var Session
-     */
-    protected $_customerSession;
+    /** @var Session */
+    private Session $customerSession;
 
     /**
-     * ReviewList constructor.
      * @param Template\Context $context
-     * @param array $data
      * @param Session $session
+     * @param array $data
      */
     public function __construct(
         Template\Context $context,
@@ -27,19 +21,20 @@ class ReviewList extends Template
         array $data = []
     ) {
         parent::__construct($context, $data);
-        $this->_customerSession = $session;
+        $this->customerSession = $session;
     }
 
     /**
-     * Return username (if not logged then from session)
+     * Get Username
+     *
      * @return string
      */
-    public function getUserName()
+    public function getUserName(): string
     {
         $username = '';
 
-        if ($this->_customerSession->isLoggedIn()) {
-            $username = $this->_customerSession;
+        if ($this->customerSession->isLoggedIn()) {
+            $username = $this->customerSession;
         } elseif ($this->_session->getReviewUserName()) {
             $username = $this->_session->getReviewUserName();
         }

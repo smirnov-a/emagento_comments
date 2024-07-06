@@ -7,8 +7,10 @@ use Magento\Ui\Component\Listing\Columns\Column;
 class ReviewActions extends Column
 {
     /**
-     * {@inheritdoc}
-     * @since 100.1.0
+     * Prepare Data Source
+     *
+     * @param array $dataSource
+     * @return array
      */
     public function prepareDataSource(array $dataSource)
     {
@@ -19,9 +21,8 @@ class ReviewActions extends Column
         }
 
         foreach ($dataSource['data']['items'] as &$item) {
-            //var_dump($item); exit;
             $item[$this->getData('name')]['edit'] = [
-                'href'  => $this->context->getUrl(
+                'href'   => $this->context->getUrl(
                     'local_comments/comment/edit',
                     ['id' => $item['review_id']]
                 ),

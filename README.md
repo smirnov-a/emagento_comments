@@ -32,11 +32,11 @@ $ bin/magento setup:upgrade
 Затем нужно перейти в настройки рейтинга: **Stores -> Rating**, выбрать рейтинг с типом *Store*, указать видимость на складах и сохранить:
 ![local_comments_rating_setup](https://user-images.githubusercontent.com/61776819/101064319-ad6ebb00-35b5-11eb-8993-e950eb7085af.png?raw=true "Rating setup")
 
-Комментарии к магазину можно посмотреть по пути: **Marketing -> Store comments**
-![local_comments_store_comments2](https://user-images.githubusercontent.com/61776819/101064993-6c2adb00-35b6-11eb-8103-ef86185ee95d.png?raw=true "Store comments")
+Комментарии к магазину можно посмотреть по пути: **Marketing -> Store Reviews**
+![local_comments_store_comments2](https://user-images.githubusercontent.com/61776819/101064993-6c2adb00-35b6-11eb-8103-ef86185ee95d.png?raw=true "Store Reviews")
 
 Список выглядит так:
-![local_comments_grid](https://user-images.githubusercontent.com/61776819/101272991-1c653300-37b3-11eb-9c80-5b3b127815bd.png?raw=true "Store Comments grid")
+![local_comments_grid](https://user-images.githubusercontent.com/61776819/101272991-1c653300-37b3-11eb-9c80-5b3b127815bd.png?raw=true "Store Reviews grid")
 
 А так выглядит пример работы модуля на фронтенде:
 

@@ -1,0 +1,36 @@
+<div class="admin__field">
+    <div class="admin__field-label">
+        <label data-bind="attr: {for: uid}">
+            <span data-bind="text: label"></span>
+        </label>
+    </div>
+    <div class="admin__field-control">
+        <div data-bind="foreach: { data: Object.keys(ratings()), as: 'ratingId' }">
+            <div class="rating-row">
+                <label class="admin__field-label" data-bind="text: $parent.ratings()[ratingId].rating_code"></label>
+                <div class="rating-stars">
+                    <!-- ko foreach: { data: $parent.ratings()[ratingId].options, as: 'option' } -->
+                    <span class="star" data-bind="click: function() { $parents[1].selectRating(option, ratingId); }, css: { 'selected': option.selected }">★</span>
+                    <!-- /ko -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rating-stars {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+    }
+    .rating-stars .star {
+        cursor: pointer;
+        font-size: 30px;
+        color: #ccc;
+    }
+    .rating-stars .star.selected {
+        color: #ffcc00;
+    }
+</style>

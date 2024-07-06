@@ -9,5 +9,4 @@ use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductColl
 
 class Main extends \Magento\Backend\Block\Widget\Grid\Container
 {
-
 }

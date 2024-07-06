@@ -1,6 +1,3 @@
-/**
- * https://jason.codes/2019/07/magento-2-ui-component/
- */
 define([
     'uiComponent',
     'ko',
@@ -34,32 +31,31 @@ define([
 
     return Component.extend({
         reviews: ko.observableArray([]),
-        //time: ko.observable( Date() ),
+        totalRecord: ko.observable(0),
         isFormPopupVisible: ko.observable(false),
         nickname: ko.observable(''),
         ratings: ko.observableArray([]),
         rating: ko.observable(0),
 
         defaults: {
-            template: 'Emagento_Comments/reviews_template',        // .html
+            template: 'Emagento_Comments/review_list',
             formKey: $.cookie('form_key'),
-            count: 0,
-            urlLoadReviews: '/local_reviews/ajax/getlist',         // settings.url_getlist
+            page: 1,
+            count: 10,
+            urlLoadReviews: '/rest/V1/ecomments/get-reviews',
+            urlSaveReview: '/local_reviews/review/create',
             storeId: 1,
+            showChars: 200,
         },
 
         initialize: function (params) {
             self = this;
             this._super();
-            var userName = this._getUserName();
-            self.nickname(userName);
+            self.nickname(this.getUserName());
             if (params.storeId) {
                 self.storeId = params.storeId;
             }
-            // load
             self.count = params.count;
-            //  '/rest/V1/ecomments/list/1/5'
-            self.urlLoadReviews = '/rest/V1/ecomments/list/' +self.storeId+ '/' +1+ '/' +self.count;
             self.loadReviews(params.count);
             // subscribe on popup status
             self.isFormPopupVisible.subscribe(function (value) {
@@ -68,8 +64,8 @@ define([
                 }
             });
         },
-        // get username first from session, then from client
-        _getUserName: function () {
+
+        getUserName: function () {
             return sessionStorage.getItem('review_user_name') || customerData.get('customer')().firstname || '';
         },
 
@@ -101,14 +97,14 @@ define([
                     },
                     buttons: [
                         {
-                            text: 'Отправить',
+                            text: $t('Submit'),
                             class: 'action-primary',
                             click: function (e) {
                                 $('#form-local-comment').submit();
                             }
                         },
                         {
-                            text: 'Отмена',
+                            text: $t('Cancel'),
                             class: 'action-secondary'
                         }
                     ],
@@ -123,24 +119,24 @@ define([
         },
 
         loadReviews: function (count) {
+            var url = self.urlLoadReviews + '/' +self.page + '/' + count;
             $.ajax({
-                url: this.urlLoadReviews,   // '/rest/V1/ecomments/list/1/5'
+                url: url,
                 type: 'GET',
                 dataType: 'json',
                 contentType: 'application/json',
-                global: false
             })
             .done(function (response) {
-                var json = JSON.parse(response);
-                self.reviews(json);
-                $('.shorten').shorten({
-                    showChars: 200,
-                    moreText: 'показать полностью',
-                    lessText: 'свернуть'
+                self.totalRecord(response.reviews.total_count);
+                self.reviews(response.reviews.items);
+                self.ratings(self.parseRatings(response.ratings));
+                $('.local-reviews .shorten').shorten({
+                    showChars: self.showChars,
+                    moreText: $t('Show full'),
+                    lessText: $t('Show less')
                 });
-
-                self.getRatings();
-            }).fail(function () {
+            })
+            .fail(function () {
                 globalMessageList.addErrorMessage({
                     'message': $t('Could not get review list')
                 });
@@ -151,12 +147,12 @@ define([
             let $form = $('#form-local-comment');
             if ($form.valid()) {
                 // save name into session
-                var userName = this._getUserName();
-                if (userName == '') {
+                var userName = this.getUserName();
+                if (userName === '') {
                     sessionStorage.setItem('review_user_name', $('#nickname_field').val());
                 }
                 $.ajax({
-                    url: '/local_reviews/review/save',
+                    url: self.urlSaveReview,
                     data: $form.serializeArray(),
                     method: 'POST',
                     dataType: 'json',
@@ -170,7 +166,7 @@ define([
                                 always: function () {}
                             },
                             buttons: [{
-                                text: 'Ok',
+                                text: $t('Ok'),
                                 class: 'action',
                                 click: function () {
                                     this.closeModal(true);
@@ -183,7 +179,6 @@ define([
                         $('#form-local-comment')[0].reset();
                         $('#nickname_field').val(oldUsername);
                         self.getPopUp().closeModal();
-                        //this.closeModal(true);
                         alert({
                             title: '',
                             content: data.message,
@@ -208,38 +203,33 @@ define([
             }
         },
 
-        getRatings: function () {
-            // load ratings for form
-            $.ajax({
-                url: '/rest/V1/ecomments/ratings',
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json',
-            })
-            .done(function (data) {
-                var json = JSON.parse(data);
-                self.rating(json.rating_id);
-                self.ratings(json.options);
-            })
-            .fail(function () {
-                globalMessageList.addErrorMessage({
-                    'message': $t('Could not get ratings')
+        parseRatings: function (ratingsData) {
+            if (!ratingsData) {
+                return [];
+            }
+
+            return ratingsData.map(function (rating) {
+                rating.value = ko.observable(0);
+                rating.option_id = ko.observable(0);
+                rating.options.forEach(function (option) {
+                    option.option_id = ko.observable(option.option_id);
+                    option.value = ko.observable(Number(option.value));
+                    option.selected = ko.observable(false);
                 });
+                return rating;
             });
         },
 
-        getLogoImage: function (review) {
-            if (review.r_review_id) {
-                return '/media/wysiwyg/company_20x20.jpg';
-            }
-            switch (review.source) {
-                case 'flamp':
-                    return '/media/wysiwyg/flamp_80x20.png';
-                case 'yandex':
-                    return '/media/wysiwyg/yandex_87x23.png';
-                default:
-                    return '/media/wysiwyg/company_20x20.jpg';
-            }
+        selectRating: function (ratingId, optionId, value) {
+            self.ratings().forEach(function (rating) {
+                if (rating.rating_id === ratingId) {
+                    rating.option_id(optionId);
+                    rating.value(value);
+                    rating.options.forEach(function (option) {
+                        option.selected(option.value() <= value);
+                    });
+                }
+            });
         }
     });
 });

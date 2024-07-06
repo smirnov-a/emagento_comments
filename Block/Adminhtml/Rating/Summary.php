@@ -2,28 +2,10 @@
 
 namespace Emagento\Comments\Block\Adminhtml\Rating;
 
-/**
- * Adminhtml summary rating stars
- */
+use Magento\Review\Model\ResourceModel\Rating\Collection as RatingCollection;
+
 class Summary extends \Magento\Review\Block\Adminhtml\Rating\Summary
 {
-    /**
-     * @param \Magento\Backend\Block\Template\Context $context
-     * @param \Magento\Review\Model\ResourceModel\Rating\Option\Vote\CollectionFactory $votesFactory
-     * @param \Magento\Review\Model\RatingFactory $ratingFactory
-     * @param \Magento\Framework\Registry $registry
-     * @param array $data
-     */
-    public function __construct(
-        \Magento\Backend\Block\Template\Context $context,
-        \Magento\Review\Model\ResourceModel\Rating\Option\Vote\CollectionFactory $votesFactory,
-        \Magento\Review\Model\RatingFactory $ratingFactory,
-        \Magento\Framework\Registry $registry,
-        array $data = []
-    ) {
-        parent::__construct($context, $votesFactory, $ratingFactory, $registry);
-    }
-
     /**
      * Get collection of ratings
      *
@@ -38,8 +20,7 @@ class Summary extends \Magento\Review\Block\Adminhtml\Rating\Summary
                 ->load();
             $this->setRatingCollection($ratingCollection->getSize()
                 ? $ratingCollection
-                : false
-            );
+                : false);
         }
 
         return $this->getRatingCollection();
@@ -54,9 +35,7 @@ class Summary extends \Magento\Review\Block\Adminhtml\Rating\Summary
     {
         if (!$this->getRatingSummaryCache()) {
             $this->setRatingSummaryCache(
-                $this->_ratingFactory->create()
-                    ->getReviewSummary($this->getReviewId())
-            );
+                $this->_ratingFactory->create()->getReviewSummary($this->getReviewId())); // phpcs:ignore
         }
 
         return $this->getRatingSummaryCache();

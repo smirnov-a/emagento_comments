@@ -1,0 +1,25 @@
+<?php
+/**
+ * @var Magento\Framework\View\Element\Template $block
+ */
+?>
+<div class="modal-page">
+    <p class="page-content">
+        <span>Processing... </span><img src="<?= /* @noEscape */ $block->getImgLoaderUrl() ?>" alt="Ajax loader" />
+    </p>
+</div>
+
+<style>
+    .modal-page {
+        height: 5em;
+        position: relative;
+    }
+    .modal-page .page-content {
+        margin: 0;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%,-50%)
+    }
+</style>

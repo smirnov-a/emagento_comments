@@ -1,20 +1,37 @@
 <?xml version="1.0"?>
+
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
     <default>
         <local_comments>
-            <settings>
-                <!-- global value -->
+            <general>
+                <notification_enabled>0</notification_enabled>
+                <notification_email>test@test.com</notification_email>
+                <cron_enabled>0</cron_enabled>
+                <cron_schedule>5 * * * *</cron_schedule>
+            </general>
+            <local>
                 <is_enabled>1</is_enabled>
-            </settings>
+                <allow_guest>1</allow_guest>
+            </local>
             <flamp>
                 <is_enabled>0</is_enabled>
-                <flamp_id>XXX</flamp_id>
+                <account_id>XXX</account_id>
             </flamp>
             <yandex>
                 <is_enabled>0</is_enabled>
-                <shop_id>ID</shop_id>
+                <account_id>ID</account_id>
                 <auth_key>XXX</auth_key>
             </yandex>
         </local_comments>
+
+        <system>
+            <media_storage_configuration>
+                <allowed_resources>
+                    <media_gallery_image_folders>
+                        <review_image_folder>emagento</review_image_folder>
+                    </media_gallery_image_folders>
+                </allowed_resources>
+            </media_storage_configuration>
+        </system>
     </default>
 </config>

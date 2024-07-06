@@ -2,11 +2,22 @@
 
 namespace Emagento\Comments\Api;
 
-interface ReviewManagementInterface extends ManagementInterface
+use Emagento\Comments\Api\Data\Review\ReviewResponseInterface;
+use Emagento\Comments\Api\Data\Rating\RatingResponseInterface;
+
+interface ReviewManagementInterface
 {
     /**
-     * @api
-     * @return string
+     * Get Review List
+     *
+     * @return ReviewResponseInterface
      */
-    public function getRaings();
+    public function getReviewList(): ReviewResponseInterface;
+
+    /**
+     * Get Rating List
+     *
+     * @return RatingResponseInterface
+     */
+    public function getRatingList(): RatingResponseInterface;
 }

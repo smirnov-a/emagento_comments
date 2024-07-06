@@ -2,26 +2,21 @@
 
 namespace Emagento\Comments\Controller\Adminhtml\Grid;
 
+use Magento\Backend\App\Action;
+use Magento\Backend\Model\View\Result\Page;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-class Index extends \Magento\Backend\App\Action implements HttpGetActionInterface
+class Index extends Action implements HttpGetActionInterface
 {
-    const ACL_RESOURCE = 'Emagento_Comments::comments_list';
-    const MENU_ITEM    = 'Emagento_Comments::comments_list';
+    public const ACL_RESOURCE = 'Emagento_Comments::store_reviews';
+    public const MENU_ITEM    = 'Emagento_Comments::comments_list';
+    public const ADMIN_RESOURCE = 'Emagento_Comments::store_reviews';
 
-    /**
-     * Authorization level of a basic admin session
-     *
-     * @see _isAllowed()
-     */
-    const ADMIN_RESOURCE = 'Emagento_Comments::comments_list';
-
-    /**
-     * @var PageFactory
-     */
-    protected $resultPageFactory;
+    /** @var PageFactory */
+    protected PageFactory $resultPageFactory;
 
     /**
      * @param Context $context
@@ -36,17 +31,18 @@ class Index extends \Magento\Backend\App\Action implements HttpGetActionInterfac
     }
 
     /**
-     * @return \Magento\Framework\Controller\ResultInterface
+     * Execute
+     *
+     * @return ResultInterface
      */
-    public function execute()
+    public function execute(): ResultInterface
     {
-        /** @var \Magento\Backend\Model\View\Result\Page $resultPage */
+        /** @var Page $resultPage */
         $resultPage = $this->resultPageFactory->create();
-        //$resultPage = $this->resultFactory->create(ResultFactory::TYPE_PAGE);
         $resultPage->setActiveMenu(self::MENU_ITEM);
         $resultPage->addBreadcrumb(__('Emagento Comments'), __('Emagento Comments'));
         $resultPage->addBreadcrumb(__('Emagento Comments'), __('Emagento Comments'));
-        $resultPage->getConfig()->getTitle()->prepend(__('Store comments'));
+        $resultPage->getConfig()->getTitle()->prepend(__('Store Reviews'));
 
         return $resultPage;
     }

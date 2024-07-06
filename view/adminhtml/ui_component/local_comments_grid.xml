@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">local_comments_grid.local_comments_listing_data_source</item>
+            <item name="deps" xsi:type="string">local_comments_grid.local_comments_listing_data_source</item>
+        </item>
+    </argument>
+
+    <settings>
+        <buttons>
+            <button class="Emagento\Comments\Block\Adminhtml\ProcessButton" name="process" />
+        </buttons>
+        <spinner>local_comments_columns</spinner>
+    </settings>
+
+    <dataSource name="local_comments_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="cacheRequests" xsi:type="boolean">false</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Emagento_Comments::local_comments</aclResource>
+        <dataProvider class="Emagento\Comments\Ui\Component\Listing\DataProvider" name="local_comments_listing_data_source">
+            <settings>
+                <requestFieldName>entity_id</requestFieldName>
+                <primaryFieldName>review_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <listingToolbar name="listing_top">
+        <filters name="listing_filters">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="params" xsi:type="array">
+                        <item name="filters_modifier" xsi:type="array"/>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <statefull>
+                    <property name="applied" xsi:type="boolean">false</property>
+                </statefull>
+            </settings>
+        </filters>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+
+    <columns name="local_comments_columns" class="Magento\Ui\Component\Listing\Columns">
+        <!--
+        <settings>
+            <childDefaults>
+                <param name="fieldAction" xsi:type="array">
+                    <item name="provider" xsi:type="string">reviewsGrid</item>
+                    <item name="target" xsi:type="string">selectReview</item>
+                    <item name="params" xsi:type="array">
+                        <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
+                    </item>
+                </param>
+            </childDefaults>
+        </settings>
+        -->
+        <!--
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>review_id</indexField>
+                <resizeEnabled>false</resizeEnabled>
+                <resizeDefaultWidth>55</resizeDefaultWidth>
+            </settings>
+        </selectionsColumn>
+        -->
+        <column name="review_id" sortOrder="10">
+            <settings>
+                <!-- filter>textRange</filter -->
+                <filter>text</filter>
+                <label translate="true">ID</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date" sortOrder="10">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Created</label>
+            </settings>
+        </column>
+        <column name="source" sortOrder="20"> 
+            <settings>
+                <filter>select</filter>
+                <options class="Emagento\Comments\Ui\Component\Listing\Columns\Source" />
+                <dataType>select</dataType>
+                <label translate="true">Source</label>
+            </settings>
+        </column>
+        <column name="status_id" class="Magento\Review\Ui\Component\Listing\Columns\Status" sortOrder="20">
+            <settings>
+                <filter>select</filter>
+                <options class="Magento\Review\Ui\Component\Listing\Columns\Status"/>
+                <dataType>select</dataType>
+                <label translate="true">Status</label>
+            </settings>
+        </column>
+        <column name="nickname" sortOrder="40">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="truncate" xsi:type="number">50</item>
+                    <item name="nl2br" xsi:type="boolean">true</item>
+                    <item name="escape" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Nickname</label>
+            </settings>
+        </column>
+        <column name="detail" sortOrder="50">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="truncate" xsi:type="number">50</item>
+                    <item name="nl2br" xsi:type="boolean">true</item>
+                    <item name="escape" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Review</label>
+            </settings>
+        </column>
+        <column name="rating" class="Emagento\Comments\Ui\Component\Listing\Columns\Rating" sortOrder="60">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="bodyTmpl" xsi:type="string">Emagento_Comments/form/element/rating_summary</item>
+                    <item name="label" xsi:type="string" translate="true">Rating</item>
+                </item>
+            </argument>
+        </column>
+        <column name="visibility" class="Magento\Review\Ui\Component\Listing\Columns\Visibility" sortOrder="70">
+            <settings>
+                <label translate="true">Visibility</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+            </settings>
+        </column>
+        <!--
+        <column name="type" class="Magento\Review\Ui\Component\Listing\Columns\Type" sortOrder="70">
+            <settings>
+                <label translate="true">Type</label>
+            </settings>
+        </column>
+        -->
+        <column name="level" class="Emagento\Comments\Ui\Component\Listing\Columns\Level" sortOrder="80">
+            <settings>
+                <label translate="true">Level</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+            </settings>
+        </column>
+
+        <actionsColumn name="actions" class="Emagento\Comments\Ui\Component\Listing\Columns\ReviewActions" sortOrder="100">
+            <settings>
+                <indexField>entity_id</indexField>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

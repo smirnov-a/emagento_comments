@@ -2,43 +2,57 @@
 
 namespace Emagento\Comments\Controller\Adminhtml\Reviews;
 
+use Exception;
+use Magento\Backend\App\Action;
+use Magento\Backend\App\Action\Context;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
+use Emagento\Comments\Helper\Data as Helper;
+use Emagento\Comments\Model\Review\Remote\Processor as RemoteProcessor;
 
-class Load extends \Magento\Backend\App\Action
+class Load extends Action
 {
-    /**
-     * @var JsonFactory
-     */
-    protected $resultJsonFactory;
-    /**
-     * @var \Magento\Framework\ObjectManagerInterface
-     */
-    protected $_objectManager;
+    /** @var JsonFactory */
+    private JsonFactory $resultJsonFactory;
+    /** @var RemoteProcessor */
+    private RemoteProcessor $processor;
+    /** @var Helper */
+    private Helper $helper;
 
+    /**
+     * @param Context $context
+     * @param JsonFactory $resultJsonFactory
+     * @param RemoteProcessor $processor
+     * @param Helper $helper
+     */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
+        Context $context,
         JsonFactory $resultJsonFactory,
-        \Magento\Framework\ObjectManagerInterface $objectmanager
+        RemoteProcessor $processor,
+        Helper $helper
     ) {
         parent::__construct($context);
         $this->resultJsonFactory = $resultJsonFactory;
-        $this->_objectManager = $objectmanager;
+        $this->processor = $processor;
+        $this->helper = $helper;
     }
 
     /**
-     * @return \Magento\Framework\Controller\Result\Json
+     * Execute
+     *
+     * @throws Exception
      */
-    public function execute()
+    public function execute(): Json
     {
         $cnt = 0;
-        foreach (['Flamp', 'Yandex'] as $remote) {
-            $class = 'Emagento\Comments\Model\Remote\\' . $remote;
-            $job = $this->_objectManager->create($class);
-
-            $cnt += $job->getComments();
+        foreach ($this->helper->getRemoteTypes() as $type) {
+            $cnt += $this->processor->processRemoteReviews($type);
         }
-        $resultJson = $this->resultJsonFactory->create();
 
-        return $resultJson->setData(['success' => true, 'processed' => $cnt]);
+        $resultJson = $this->resultJsonFactory->create();
+        return $resultJson->setData([
+            'success'   => true,
+            'processed' => $cnt,
+        ]);
     }
 }

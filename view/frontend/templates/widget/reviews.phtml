@@ -2,26 +2,45 @@
 /**
  * @var \Emagento\Comments\Block\Widget\Reviews $block
  * @var \Magento\Framework\Escaper $escaper
+ * // phpcs:disable
  */
-$reviews = $block->getReviews();
-if ($reviews): ?>
-<!-- <div data-mage-init='{"localReviews": {}}' class="local-reviews"> -->
-<div class="local-reviews">
-    <?php foreach ($reviews as $review): ?>
-    <div class="review-item">
-        <div class="author"><?= $escaper->escapeHtml($review->getNickname()) ?></div>
-        <!-- <span>id: <?= $escaper->escapeHtml($review->getId()) ?></span> -->
-        <span>detail: <?= $escaper->escapeHtml($review->getDetail()) ?></span>
-    </div>
-    <?php endforeach; ?>
-    <button id="local-reviews-button">Кнопка</button>
+if ($reviews = $block->getReviews()): ?>
+<div class="left-reviews">
+    <h3><?= $escaper->escapeHtml(__('Store Reviews:')) ?></h3>
+    <?php /** @var \Emagento\Comments\Api\Data\Review\ReviewInterface $review */?>
+    <?php foreach ($reviews->getItems() as $review): ?>
+        <div class="review-content" data-review-id="<?= $escaper->escapeHtmlAttr($review->getReviewId()) ?>">
+            <img src="<?= $escaper->escapeUrl($block->getLogoImage($review)) ?>" alt="<?= $escaper->escapeHtmlAttr($review->getSource()) ?> logo" />
+            <div class="product-reviews-summary short">
+                <?php if ($ratingSummary = $review->getRatingSummary()): ?>
+                    <div class="rating-summary item"
+                         id="rating-div-<?= $escaper->escapeHtmlAttr($ratingSummary->getRatingId()) ?>"
+                         title="<?= $escaper->escapeHtmlAttr($ratingSummary->getDescription()) ?>"
+                    >
+                        <div class="rating-result">
+                            <span style="width:<?= $escaper->escapeHtml($ratingSummary->getPercent()) ?>%">
+                                <span><?= $escaper->escapeHtml($ratingSummary->getValue()) ?></span>
+                            </span>
+                        </div>
+                    </div>
+                <?php endif ?>
+            </div>
+            <p class="content shorten"><?= $escaper->escapeHtml($review->getDetail()) ?></p>
+            <div class="local-bottom-panel">
+                <?php $createdAt = new \DateTime($review->getCreatedAt()) ?>
+                <span class="left date"><?= $escaper->escapeHtml($createdAt->format('d.m.Y')) ?></span>
+                <span class="nickname"><b><?= $escaper->escapeHtml($review->getNickName()) ?></b></span>
+            </div>
+        </div>
+        <?php if ($detail = $review->getReplyData()->getDetail()): ?>
+            <div class="reply">
+                <p class="shorten review-content reply">
+                    <img src="<?= $escaper->escapeUrl($block->getLogoImage($review, 'reply')) ?>" alt="<?= $escaper->escapeHtmlAttr($review->getSource()) ?> logo" />
+                    <span class="reply"><?= $escaper->escapeHtml(__('Reply')) ?>:</span>
+                    <?= $escaper->escapeHtml($detail) ?>
+                </p>
+            </div>
+        <?php endif ?>
+    <?php endforeach ?>
 </div>
-<?php endif; ?>
-<?php
-/*
-<?php if ($block->getData('reviews')): ?>
-    <h2 class='reviews'><?= $escaper->escapeHtml($block->getData('reviews')) ?></h2>
-    <p>This is sample widget. Perform your code here.</p>
-    <p>$block->getReviews()</p>
-<?php endif; ?>
-*/
+<?php endif ?>

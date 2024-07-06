@@ -2,32 +2,36 @@
 
 namespace Emagento\Comments\Setup\Patch\Data;
 
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\DB\Select;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Magento\Framework\Setup\Patch\PatchVersionInterface;
+use Psr\Log\LoggerInterface;
+use Emagento\Comments\Helper\Data as Helper;
 
 class AddRatingEntityCode implements DataPatchInterface, PatchVersionInterface
 {
-    /**
-     * @var ModuleDataSetupInterface
-     */
-    private $moduleDataSetup;
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
-    private $logger;
+    /** @var ModuleDataSetupInterface */
+    private ModuleDataSetupInterface $moduleDataSetup;
+    /** @var LoggerInterface */
+    private LoggerInterface $logger;
+    /** @var Helper  */
+    private Helper $helper;
 
     /**
-     * PatchInitial constructor.
      * @param ModuleDataSetupInterface $moduleDataSetup
-     * @param \Psr\Log\LoggerInterface $logger
+     * @param LoggerInterface $logger
+     * @param Helper|null $helper
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
-        \Psr\Log\LoggerInterface $logger
+        LoggerInterface $logger,
+        Helper $helper = null,
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->logger = $logger;
+        $this->helper = $helper ?: ObjectManager::getInstance()->get(Helper::class);
     }
 
     /**
@@ -35,36 +39,36 @@ class AddRatingEntityCode implements DataPatchInterface, PatchVersionInterface
      */
     public function apply()
     {
+        $storeEntityId = $this->helper->getStoreReviewEntityId();
         $connection = $this->moduleDataSetup->getConnection();
-        $table = $this->moduleDataSetup->getTable('rating');
+        $tableRating = $this->moduleDataSetup->getTable('rating');
         $select = $connection->select()
-            ->from($table)
-            ->reset(\Magento\Framework\DB\Select::COLUMNS)
+            ->from($tableRating)
+            ->reset(Select::COLUMNS)
             ->columns('rating_id')
-            ->where('entity_id = ?', \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE);
+            ->where('entity_id = ?', $storeEntityId);
 
         $ratingId = $connection->fetchOne($select);
         if (!$ratingId) {
             $connection->insert(
-                $table,
+                $tableRating,
                 [
-                    'entity_id'   => \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
+                    'entity_id'   => $storeEntityId,
                     'rating_code' => 'Store',
                     'position'    => 0,
                 ]
             );
-            //Fill table rating/rating_option
-            $ratingId = $connection->lastInsertId($table);
+            $ratingId = $connection->lastInsertId($tableRating);
         }
-        $table = $this->moduleDataSetup->getTable('rating_option');
+
+        $tableRatingOption = $this->moduleDataSetup->getTable('rating_option');
         $select = $connection->select()
-            ->from($table)
-            ->reset(\Magento\Framework\DB\Select::COLUMNS)
+            ->from($tableRatingOption)
+            ->reset(Select::COLUMNS)
             ->columns('COUNT(*)')
             ->where('rating_id = ?', $ratingId);
 
-        $cnt = $connection->fetchOne($select);
-        if (!$cnt) {
+        if (!$connection->fetchOne($select)) {
             $optionData = [];
             for ($i = 1; $i <= 5; $i++) {
                 $optionData[] = [
@@ -75,7 +79,7 @@ class AddRatingEntityCode implements DataPatchInterface, PatchVersionInterface
                 ];
             }
             $connection->insertMultiple(
-                $table,
+                $tableRatingOption,
                 $optionData
             );
         }

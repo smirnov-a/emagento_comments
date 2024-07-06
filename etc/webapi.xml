@@ -1,25 +1,18 @@
 <?xml version="1.0"?>
 
-<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
-    <!-- review list -->
-    <route method="GET" url="/V1/ecomments/list/:store_id/:page/:limit">
-        <service class="Emagento\Comments\Api\ReviewManagementInterface" method="getList" />
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/ecomments/get-reviews/:page/:limit" method="GET">
+        <service class="Emagento\Comments\Api\ReviewManagementInterface" method="getReviewList"/>
         <resources>
             <resource ref="anonymous"/>
         </resources>
     </route>
-    <!-- rating list -->
-    <route method="GET" url="/V1/ecomments/ratings">
-        <service class="Emagento\Comments\Api\ReviewManagementInterface" method="getRaings" />
+
+    <route url="/V1/ecomments/get-ratings" method="GET">
+        <service class="Emagento\Comments\Api\ReviewManagementInterface" method="getRatingList"/>
         <resources>
             <resource ref="anonymous"/>
-        </resources>
-    </route>
-    <!-- store local review -->
-    <route method="POST" url="/V1/ecomments/review">
-        <service class="Emagento\Comments\Api\ReviewManagementInterface" method="create" />
-        <resources>
-            <resource ref="self" />
         </resources>
     </route>
 </routes>

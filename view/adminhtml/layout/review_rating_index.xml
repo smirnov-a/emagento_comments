@@ -1,10 +1,5 @@
 <?xml version="1.0"?>
-<!--
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
--->
+
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="adminhtml.rating.grid.columnSet">
@@ -12,20 +7,15 @@
                 <arguments>
                     <argument name="header" xsi:type="string" translate="true">Entity</argument>
                     <argument name="type" xsi:type="string">options</argument>
-                    <argument name="options" xsi:type="options" model="Emagento\Comments\Model\Source\Rating\Entity"/>
+                    <argument name="options" xsi:type="options" model="Emagento\Comments\Model\Data\Rating\Source\Entity"/>
                     <argument name="index" xsi:type="string">entity_id</argument>
-                    <!--
-                     <argument name="index" xsi:type="string">entity_id</argument>
-                     <argument name="column_css_class" xsi:type="string">col-id</argument>
-                     <argument name="header_css_class" xsi:type="string">col-id</argument>
-                    -->
                 </arguments>
             </block>
         </referenceBlock>
-        <!-- переписать блок с гридом рейтингов. указать другой класс, где не применяется фильтр по entity_id ($this->addEntityFilter) -->
+
         <referenceBlock name="adminhtml.rating.grid">
             <arguments>
-                <argument name="dataSource" xsi:type="object" shared="false">Magento\Review\Model\ResourceModel\Rating\Collection</argument>
+                <argument name="dataSource" xsi:type="object" shared="false">Emagento\Comments\Model\ResourceModel\Rating\Collection</argument>
             </arguments>
         </referenceBlock>
     </body>

@@ -5,9 +5,9 @@
         <add id="Emagento_Comments::comments_list"
              module="Emagento_Comments"
              parent="Magento_Backend::marketing_user_content"
-             resource="Emagento_Comments::comments_list"
+             resource="Emagento_Comments::store_reviews"
              translate="title"
-             title="Store comments"
+             title="Store Reviews"
              sortOrder="30"
              action="local_comments/grid"
         />

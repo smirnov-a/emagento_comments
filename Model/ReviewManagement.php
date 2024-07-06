@@ -3,170 +3,99 @@
 namespace Emagento\Comments\Model;
 
 use Emagento\Comments\Api\ReviewManagementInterface;
-use Emagento\Comments\Model\ResourceModel\Review\CollectionFactory;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Review\Model\ResourceModel\Rating\Option\CollectionFactory as RatingOptionCollectionFactory;
+use Emagento\Comments\Api\Data\Review\ReviewResponseInterface;
+use Emagento\Comments\Api\Data\Review\ReviewResponseInterfaceFactory;
+use Emagento\Comments\Api\Data\Rating\RatingResponseInterface;
+use Emagento\Comments\Api\Data\Rating\RatingResponseInterfaceFactory;
+use Psr\Log\LoggerInterface;
+use Magento\Framework\Webapi\Rest\Request;
+use Magento\Framework\Serialize\SerializerInterface;
+use Emagento\Comments\Model\DataProvider\Review as ReviewDataProvider;
+use Emagento\Comments\Model\DataProvider\Rating as RatingDataProvider;
+use Emagento\Comments\Helper\Constants;
 
-class ReviewManagement extends AbstractManagement implements ReviewManagementInterface
+class ReviewManagement implements ReviewManagementInterface
 {
-    /**
-     * @var CollectionFactory
-     */
-    protected $_itemCollectionFactory;
-    /**
-     * @var ScopeConfigInterface
-     */
-    protected $_scopeConfig;
-    /**
-     * @var RatingOptionCollectionFactory
-     */
-    protected $_optionFactory;
-    /**
-     * @var \Magento\Framework\Json\Helper\Data
-     */
-    protected $_jsonHelper;
+    /** @var ReviewResponseInterfaceFactory */
+    private ReviewResponseInterfaceFactory $reviewResponseInterfaceFactory;
+    /** @var RatingResponseInterfaceFactory */
+    private RatingResponseInterfaceFactory $ratingResponseInterfaceFactory;
+    /** @var LoggerInterface */
+    private LoggerInterface $logger;
+    /** @var Request */
+    private Request $request;
+    /** @var SerializerInterface */
+    private SerializerInterface $serializer;
+    /** @var ReviewDataProvider */
+    private ReviewDataProvider $reviewDataProvider;
+    /** @var RatingDataProvider */
+    private RatingDataProvider $ratingDataProvider;
 
     /**
-     * Initialize dependencies.
-     *
-     * @param CollectionFactory $reviewCollectionFactory
-     * @param ScopeConfigInterface $scopeConfig
-     * @param RatingOptionCollectionFactory $optionFactory
-     * @param \Magento\Framework\Json\Helper\Data $jsonHelper
+     * @param ReviewResponseInterfaceFactory $reviewResponseInterfaceFactory
+     * @param RatingResponseInterfaceFactory $ratingResponseInterfaceFactory
+     * @param LoggerInterface $logger
+     * @param Request $request
+     * @param SerializerInterface $serializer
+     * @param ReviewDataProvider $reviewDataProvider
+     * @param RatingDataProvider $ratingDataProvider
      */
     public function __construct(
-        CollectionFactory $reviewCollectionFactory,
-        ScopeConfigInterface $scopeConfig,
-        RatingOptionCollectionFactory $optionFactory,
-        \Magento\Framework\Json\Helper\Data $jsonHelper
+        ReviewResponseInterfaceFactory $reviewResponseInterfaceFactory,
+        RatingResponseInterfaceFactory $ratingResponseInterfaceFactory,
+        LoggerInterface $logger,
+        Request $request,
+        SerializerInterface $serializer,
+        ReviewDataProvider $reviewDataProvider,
+        RatingDataProvider $ratingDataProvider,
     ) {
-        $this->_itemCollectionFactory = $reviewCollectionFactory;
-        $this->_scopeConfig = $scopeConfig;
-        $this->_optionFactory = $optionFactory;
-        $this->_jsonHelper = $jsonHelper;
+        $this->reviewResponseInterfaceFactory = $reviewResponseInterfaceFactory;
+        $this->ratingResponseInterfaceFactory = $ratingResponseInterfaceFactory;
+        $this->logger = $logger;
+        $this->request = $request;
+        $this->serializer = $serializer;
+        $this->reviewDataProvider = $reviewDataProvider;
+        $this->ratingDataProvider = $ratingDataProvider;
     }
 
     /**
-     * @return string
-     */
-    public function getRaings()
-    {
-        $response = [];
-        $values = [
-            1 => __('very bad'),
-            2 => __('bad'),
-            3 => __('medium'),
-            4 => __('good'),
-            5 => __('very good'),
-        ];
-        // get rating code from config (6)
-        $ratingId = $this->_scopeConfig->getValue(
-            'local_comments/settings/rating_id',
-            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
-        );
-        $response['rating_id'] = $ratingId;
-        // get options for rating
-        /** @var \Magento\Review\Model\ResourceModel\Rating\Option\Collection $collection */
-        $collection = $this->_optionFactory->create();
-        $collection
-            ->addRatingFilter($ratingId)
-            ->setPositionOrder();
-
-        foreach ($collection as $option) {
-            $response['options'][] = [
-                'code'  => $option->getId(),
-                'label' => $values[$option->getValue()] ?? '__',
-                'value' => $option->getValue(),
-            ];
-        }
-
-        return $this->_jsonHelper->jsonEncode($response);
-    }
-
-    /**
-     * Retrieve list of post by page type, term, store, etc
+     * Get Review List
      *
-     * @param  int $storeId
-     * @param  int $page
-     * @param  int $limit
-     * @return string|bool
+     * @return ReviewResponseInterface
      */
-    public function getList($storeId, $page, $limit)
+    public function getReviewList(): ReviewResponseInterface
     {
+        $this->logger->info($this->request->getPathInfo());
+        $this->logger->info('Request: ' . $this->serializer->serialize($this->request->getRequestData()));
+
+        $urlParams = $this->request->getParams();
+        $page = $urlParams['page'] ?? 1;
+        $limit = $urlParams['limit'] ?? Constants::LIMIT;
+        $result = $this->reviewResponseInterfaceFactory->create();
         try {
-            $collection = $this->_itemCollectionFactory->create()
-                ->addStoreFilter($storeId)
-                ->addReviewReplyOneLevel($page, $limit);
-            $collection->load()
-                ->addRateVotes();
-
-            foreach ($collection as $item) {
-                $item->setRatingVotes($item->getRatingVotes()->toArray());
-            }
-
-            $reviews = [];
-            foreach ($collection as $item) {
-                $reviews[] = $this->getDynamicData($item);
-            }
-
-            $response = [
-                'items'        => $reviews,
-                'totalRecords' => $collection->getSize(),
-                'currentPage'  => $collection->getCurPage(),
-                'lastPage'     => $collection->getLastPageNumber(),
-            ];
-
-            return $this->_jsonHelper->jsonEncode($response);
-
+            $result
+                ->setRatings($this->ratingDataProvider->getRatings())
+                ->setReviews($this->reviewDataProvider->getReviews($page, $limit))
+            ;
         } catch (\Exception $e) {
-            return false;
+            $this->logger->error($e->getMessage());
         }
+        $this->logger->info('Response: ' . $this->serializer->serialize($result->__toArray()));
+        $this->logger->info('');
+
+        return $result;
     }
 
     /**
-     * @param $item
-     * @return array
+     * Get Rating List
+     *
+     * @return RatingResponseInterface
      */
-    protected function getDynamicData($item)
+    public function getRatingList(): RatingResponseInterface
     {
-        $data = $item->getData();
+        $result = $this->ratingResponseInterfaceFactory->create();
+        $result->setRatings($this->ratingDataProvider->getRatings());
 
-        $keys = [
-            'created_at',
-            'customer_id',
-            'detail',
-            'detail_id',
-            'entity_id',
-            'entity_pk_value',
-            'level',
-            'nickname',
-            'parent_id',
-            'path',
-            'r_customer_id',
-            'r_detail',
-            'r_detail_id',
-            'r_level',
-            'r_nickname',
-            'r_review_id',
-            'r_title',
-            'rating_votes',
-            'review_id',
-            'source',
-            'source_id',
-            'status_id',
-            'title',
-            'updated_at',
-        ];
-
-        foreach ($keys as $key) {
-            $method = 'get' . str_replace(
-                    '_',
-                    '',
-                    ucwords($key, '_')
-                );
-            $data[$key] = $item->$method();
-        }
-
-        return $data;
+        return $result;
     }
 }

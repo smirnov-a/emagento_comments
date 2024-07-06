@@ -1,0 +1,10 @@
+<div class="control review-control-vote local-review-control-vote">
+    <!-- ko foreach: $col.getLabel($row()) -->
+    <!-- ko if: $data == "selected" -->
+    <span style="color: rgb(255 17 17);">★</span>
+    <!--/ko-->
+    <!-- ko if: $data != "selected" -->
+    <span style="color: rgb(204, 204, 204);">★</span>
+    <!-- /ko -->
+    <!-- /ko -->
+</div>

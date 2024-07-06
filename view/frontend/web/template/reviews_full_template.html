@@ -1,10 +1,5 @@
 <div data-bind="{ visible: totalRecords() }">
     <h3>Отзывы об интернет-магазине:</h3>
-    <!--
-    <div>
-        Всего <span data-bind="text: totalRecords()"></span> комментариев
-    </div>
-    -->
     <!-- ko foreach: reviewsFull() -->
     <div class="review-content">
         <!-- ko if: $data.source == 'flamp' -->
@@ -40,6 +35,6 @@
     <!-- /ko -->
     <!-- link More -->
     <!-- ko if: curPage() < totalPages() -->
-    <button type="button" class="acion btn" data-bind="click: loadMoreReview, attr: { title: totalPages() }">Показать больше...</button>
+    <button type="button" class="action btn" data-bind="click: loadMoreReview, attr: { title: totalPages() }">Показать больше...</button>
     <!-- /ko -->
 </div>

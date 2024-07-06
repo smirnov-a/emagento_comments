@@ -2,11 +2,30 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 
+    <preference for="Emagento\Comments\Api\ReviewManagementInterface" type="Emagento\Comments\Model\ReviewManagement"/>
+    <preference for="Emagento\Comments\Api\ReviewInterface" type="Emagento\Comments\Model\Review"/>
+    <preference for="Emagento\Comments\Api\ReviewEntityRepositoryInterface" type="Emagento\Comments\Model\Review\EntityRepository"/>
+    <preference for="Emagento\Comments\Api\ReviewRepositoryInterface" type="Emagento\Comments\Model\ReviewRepository"/>>
+    <preference for="Emagento\Comments\Api\RatingRepositoryInterface" type="Emagento\Comments\Model\Rating\RatingRepository"/>
+    <preference for="Emagento\Comments\Api\Data\Review\ReviewResponseInterface" type="Emagento\Comments\Model\Data\Review\ReviewResponse"/>
+    <preference for="Emagento\Comments\Api\Data\Review\ReviewResultsInterface" type="Emagento\Comments\Model\Data\Review\ReviewResults"/>
+    <preference for="Emagento\Comments\Api\Data\Review\ReviewInterface" type="Emagento\Comments\Model\Data\Review\Review"/>
+    <preference for="Emagento\Comments\Api\Data\Rating\RatingResponseInterface" type="Emagento\Comments\Model\Data\Rating\RatingResponse"/>
+    <preference for="Emagento\Comments\Api\Data\Rating\RatingInterface" type="Emagento\Comments\Model\Data\Rating\Rating"/>
+    <preference for="Emagento\Comments\Api\Data\Rating\OptionInterface" type="Emagento\Comments\Model\Data\Rating\Option"/>
+    <preference for="Emagento\Comments\Api\Data\Review\RatingSummaryInterface" type="Emagento\Comments\Model\Data\Review\RatingSummary"/>
+    <preference for="Emagento\Comments\Api\Data\Review\ReplyDataInterface" type="Emagento\Comments\Model\Data\Review\ReplyData"/>
+
     <type name="Magento\Framework\Console\CommandList">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="job_review_command" xsi:type="object">Emagento\Comments\Console\Command\JobCommand</item>
+                <item name="process_reviews" xsi:type="object">Emagento\Comments\Console\Command\ProcessReviews</item>
             </argument>
+        </arguments>
+    </type>
+    <type name="Emagento\Comments\Model\Review\Remote\Provider\AbstractProvider">
+        <arguments>
+            <argument name="logger" xsi:type="object">Emagento\Comments\Logger\Logger</argument>
         </arguments>
     </type>
 
@@ -24,7 +43,12 @@
         </arguments>
     </type>
 
-    <!-- local_comments logger -->
+    <type name="Emagento\Comments\Api\ReviewEntityRepositoryInterface">
+        <arguments>
+            <argument name="resource" xsi:type="object">Emagento\Comments\Model\ResourceModel\Review\Entity</argument>
+        </arguments>
+    </type>
+
     <virtualType name="Emagento\Comments\Logger\Handler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>
             <argument name="filesystem" xsi:type="object">Magento\Framework\Filesystem\Driver\File</argument>
@@ -39,12 +63,4 @@
             </argument>
         </arguments>
     </virtualType>
-
-    <type name="Emagento\Comments\Model\Remote\AbstractRemote">
-        <arguments>
-            <argument name="logger" xsi:type="object">Emagento\Comments\Logger\Logger</argument>
-        </arguments>
-    </type>
-    <!-- Api -->
-    <preference for="Emagento\Comments\Api\ReviewManagementInterface" type="Emagento\Comments\Model\ReviewManagement" />
 </config>

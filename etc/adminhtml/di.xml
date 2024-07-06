@@ -2,10 +2,20 @@
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Review\Block\Adminhtml\Rating\Edit\Tab\Form">
-        <plugin name="add_entity_type_rating_form" type="Emagento\Comments\Plugin\Block\Adminhtml\Rating\Edit\Tab\Form" sortOrder="10" disabled="false" />
+        <plugin name="add_entity_type_rating_form" type="Emagento\Comments\Plugin\Block\Adminhtml\Rating\Edit\Tab\FormPlugin"/>
     </type>
 
     <type name="Magento\Review\Controller\Adminhtml\Rating\Save">
-        <plugin name="replace_rating_save_execute" type="Emagento\Comments\Plugin\Controller\Adminhtml\Rating\Save" sortOrder="10" disabled="false" />
+        <plugin name="replace_rating_save_execute" type="Emagento\Comments\Plugin\Controller\Adminhtml\Rating\Save"/>
+    </type>
+
+    <type name="Magento\Review\Block\Adminhtml\Edit\Form">
+        <plugin name="add_entity_type_review_form" type="Emagento\Comments\Plugin\Block\Adminhtml\Review\Edit\FormPlugin"/>
+    </type>
+
+    <type name="Emagento\Comments\Controller\Adminhtml\Comment\Save">
+        <arguments>
+            <argument name="logger" xsi:type="object">Emagento\Comments\Logger\Logger</argument>
+        </arguments>
     </type>
 </config>

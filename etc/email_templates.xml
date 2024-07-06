@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+
+    <template id="local_comments_notify_template"
+              label="New Reviews notification email"
+              file="local_comments_notify.html"
+              type="html"
+              module="Emagento_Comments"
+              area="frontend"
+    />
+</config>

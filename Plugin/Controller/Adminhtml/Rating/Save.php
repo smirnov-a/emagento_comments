@@ -6,56 +6,73 @@ use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\Controller\ResultFactory;
-use Magento\Review\Model\Rating;
-use Magento\Backend\Model\Session;
+use Magento\Review\Model\RatingFactory;
+use Magento\Review\Model\Rating\OptionFactory;
+use Magento\Backend\Model\SessionFactory;
 
 class Save extends Action
 {
-    /**
-     * Authorization level of a basic admin session
-     *
-     * @see _isAllowed()
-     */
-    const ADMIN_RESOURCE = 'Magento_Review::ratings';
+    public const ADMIN_RESOURCE = 'Magento_Review::ratings';
+
+    /** @var Registry */
+    protected Registry $coreRegistry;
+    /** @var RatingFactory */
+    private RatingFactory $ratingFactory;
+    /** @var OptionFactory */
+    private OptionFactory $optionFactory;
+    /** @var SessionFactory */
+    private SessionFactory $sessionFactory;
 
     /**
-     * Core registry
-     *
-     * @var \Magento\Framework\Registry
-     */
-    protected $coreRegistry = null;
-
-    /**
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Framework\Registry $coreRegistry
+     * @param Context $context
+     * @param Registry $coreRegistry
+     * @param RatingFactory $ratingFactory
+     * @param OptionFactory $optionFactory
+     * @param SessionFactory $sessionFactory
      */
     public function __construct(
         Context $context,
-        Registry $coreRegistry
+        Registry $coreRegistry,
+        RatingFactory $ratingFactory,
+        OptionFactory $optionFactory,
+        SessionFactory $sessionFactory,
     ) {
-        $this->coreRegistry = $coreRegistry;
         parent::__construct($context);
+        $this->coreRegistry = $coreRegistry;
+        $this->ratingFactory = $ratingFactory;
+        $this->optionFactory = $optionFactory;
+        $this->sessionFactory = $sessionFactory;
     }
 
+    /**
+     * Around Execute
+     *
+     * @param \Magento\Review\Controller\Adminhtml\Rating\Save $subject
+     * @param \Closure $proceed
+     * @return \Magento\Backend\Model\View\Result\Redirect
+     * @throws \Magento\Framework\Exception\NotFoundException
+     */
     public function aroundExecute(\Magento\Review\Controller\Adminhtml\Rating\Save $subject, \Closure $proceed)
     {
-        $returnValue = $this->execute();
-
-        return $returnValue;
+        return $this->execute();
     }
 
+    /**
+     * Execute
+     *
+     * @return \Magento\Backend\Model\View\Result\Redirect
+     */
     public function execute()
     {
         /** @var \Magento\Backend\Model\View\Result\Redirect $resultRedirect */
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
         if ($this->getRequest()->getPostValue()) {
             try {
-                /** @var \Magento\Review\Model\Rating $ratingModel */
-                $ratingModel = $this->_objectManager->create(Rating::class);
+                $ratingModel = $this->ratingFactory->create();
                 $stores = $this->getRequest()->getParam('stores');
-                $position = (int)$this->getRequest()->getParam('position');
+                $position = (int) $this->getRequest()->getParam('position');
                 $stores[] = 0;
-                $isActive = (bool)$this->getRequest()->getParam('is_active');
+                $isActive = (bool) $this->getRequest()->getParam('is_active');
 
                 $ratingModel->setRatingCode($this->getRequest()->getParam('rating_code'))
                     ->setRatingCodes($this->getRequest()->getParam('rating_codes'))
@@ -71,7 +88,7 @@ class Save extends Action
                 if (is_array($options)) {
                     $i = 1;
                     foreach ($options as $key => $optionCode) {
-                        $optionModel = $this->_objectManager->create(Rating\Option::class);
+                        $optionModel = $this->optionFactory->create();
                         if (!preg_match("/^add_([0-9]*?)$/", $key)) {
                             $optionModel->setId($key);
                         }
@@ -86,10 +103,11 @@ class Save extends Action
                 }
 
                 $this->messageManager->addSuccessMessage(__('You saved the rating.'));
-                $this->_objectManager->get(Session::class)->setRatingData(false);
+                $this->sessionFactory->create()
+                    ->setRatingData(false);
             } catch (\Exception $e) {
                 $this->messageManager->addErrorMessage($e->getMessage());
-                $this->_objectManager->get(Session::class)
+                $this->sessionFactory->create()
                     ->setRatingData($this->getRequest()->getPostValue());
                 $resultRedirect->setPath('review/rating/edit', ['id' => $this->getRequest()->getParam('id')]);
                 return $resultRedirect;

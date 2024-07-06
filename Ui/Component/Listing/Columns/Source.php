@@ -10,13 +10,10 @@ use Emagento\Comments\Helper\Data as DataSource;
 
 class Source extends Column implements OptionSourceInterface
 {
-    /**
-     * @var DataSource
-     */
-    public $source;
+    /** @var DataSource */
+    public DataSource $source;
 
     /**
-     * Source constructor.
      * @param ContextInterface $context
      * @param UiComponentFactory $uiComponentFactory
      * @param DataSource $source
@@ -35,6 +32,8 @@ class Source extends Column implements OptionSourceInterface
     }
 
     /**
+     * Get Option Array
+     *
      * @return array
      */
     public function toOptionArray()

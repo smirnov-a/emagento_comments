@@ -4,48 +4,47 @@ namespace Emagento\Comments\Block\Adminhtml;
 
 use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 use Magento\Backend\Model\UrlInterface;
+use Magento\Framework\View\LayoutInterface;
+use Emagento\Comments\Helper\Constants;
 
 class ProcessButton implements ButtonProviderInterface
 {
-    /**
-     * @var UrlInterface
-     */
-    protected $_backendUrlBuilder;
+    /** @var UrlInterface */
+    protected UrlInterface $backendUrlBuilder;
+    /** @var LayoutInterface */
+    protected LayoutInterface $layout;
 
+    /**
+     * @param UrlInterface $urlInterface
+     * @param LayoutInterface $layout
+     */
     public function __construct(
-        UrlInterface $urlInterface
+        UrlInterface $urlInterface,
+        LayoutInterface $layout
     ) {
-        $this->_backendUrlBuilder = $urlInterface;
+        $this->backendUrlBuilder = $urlInterface;
+        $this->layout = $layout;
     }
 
-    public function getButtonData()
+    /**
+     * Get Button Data
+     *
+     * @return array
+     */
+    public function getButtonData(): array
     {
-        $imgLoader = $this->_backendUrlBuilder->getDirectUrl(
-            'wysiwyg/ajax-loader.gif',
-            ['_type' => \Magento\Framework\UrlInterface::URL_TYPE_MEDIA]
-        );
-        $html =  '<div style="height:5em; position:relative">';
-        $html .=   '<p style="margin:0; position:absolute; top:50%; left:50%; margin-right:-50%; ';
-        $html .=             'transform:translate(-50%,-50%)">';
-        $html .=      '<span>Processing... </span><img src="' . $imgLoader . '" alt="Ajax loader" />';
-        $html .=   '</p>';
-        $html .= '</div>';
-
         return [
-            'label'      => __('Load reviews'),
-            'class'      => 'save primary',
-            'on_click'   => '',
+            'label'          => __('Load Reviews'),
+            'class'          => 'save primary',
+            'on_click'       => '',
             'data_attribute' => [
                 'mage-init' => [
                     'Emagento_Comments/js/button' => [
-                        'url'        =>  $this->_backendUrlBuilder->getUrl(
-                            'local_comments/reviews/load'
-                        ),
-                        'html_templ' => $html,
+                        'url' => $this->backendUrlBuilder->getUrl(Constants::LOCAL_COMMENT_REVIEW_LOAD_PATH),
                     ],
                 ]
             ],
-            'sort_order' => 90,
+            'sort_order'     => 90,
         ];
     }
 }
