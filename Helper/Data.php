@@ -201,4 +201,14 @@ class Data extends AbstractHelper
 
         return $types;
     }
+
+    /**
+     * Get Default Review Status Id
+     *
+     * @return int
+     */
+    public function getDefaultReviewStatusId(): int
+    {
+        return (int) $this->getConfigValue('default_status', 'general');
+    }
 }

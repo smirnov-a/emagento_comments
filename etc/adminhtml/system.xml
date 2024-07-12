@@ -12,23 +12,27 @@
             <resource>Emagento_Comments::store_reviews</resource>
             <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General</label>
-                <field id="rating_id" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="default_status" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>New Review Status</label>
+                    <source_model>Emagento\Comments\Model\Config\Source\ReviewStatus</source_model>
+                </field>
+                <field id="rating_id" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Rating ID for Store Review</label>
                     <source_model>Emagento\Comments\Model\Rating\Config\Source</source_model>
                 </field>
-                <field id="notification_enabled" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="notification_enabled" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Email Notification Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="notification_email" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="notification_email" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Notification Email(s)</label>
                     <comment><![CDATA[Comma separated emails]]></comment>
                 </field>
-                <field id="cron_enabled" translate="label" sortOrder="40" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="cron_enabled" translate="label" sortOrder="50" type="select" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Cron Enabled</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="cron_schedule" translate="label" sortOrder="50" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="cron_schedule" translate="label" sortOrder="60" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Cron Schedule</label>
                     <validate>validate-cron</validate>
                 </field>

@@ -8,11 +8,10 @@ use Emagento\Comments\Model\Review;
 class FlampProvider extends AbstractProvider implements ReviewProviderInterface
 {
     public const REMOTE_TYPE = 'flamp';
-    private const FLAMP_API_URL =  'https://api.reviews.2gis.com/2.0/branches/';
+    private const FLAMP_API_URL = 'https://api.reviews.2gis.com/2.0/branches/';
     private const LIMIT = 24;
-    // phpcs:disable
+    // phpcs:ignore Generic.Files.LineLength
     private const FIELDS = 'meta.providers,meta.branch_rating,meta.branch_reviews_count,meta.org_rating,meta.org_reviews_count';
-    // phpcs:enable
 
     /**
      * Get Url of the Service
@@ -97,7 +96,7 @@ class FlampProvider extends AbstractProvider implements ReviewProviderInterface
                 'source_id'  => $comment['id'],
                 'created_at' => $comment['date_created'] ?? $this->dateTime->timestamp(),
                 'updated_at' => $comment['date_edited'] ?? null,
-                'status_id'  => Review::STATUS_PENDING,
+                'status_id'  => $this->helper->getDefaultReviewStatusId(),
                 'title'      => self::ROBOT_TITLE,
                 'detail'     => $detail,
                 'nickname'   => $nickname,
@@ -154,7 +153,7 @@ class FlampProvider extends AbstractProvider implements ReviewProviderInterface
                 'parent_id'  => $reviewId,
                 'created_at' => $comment['official_answer']['date_created'] ?? $this->dateTime->timestamp(),
                 'updated_at' => $comment['official_answer']['date_edited'] ?? null,
-                'status_id'  => Review::STATUS_PENDING,
+                'status_id'  => $this->helper->getDefaultReviewStatusId(),
                 'title'      => self::ROBOT_TITLE,
                 'detail'     => $detailReply,
                 'nickname'   => $nicknameReply,

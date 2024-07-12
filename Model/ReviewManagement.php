@@ -13,6 +13,7 @@ use Magento\Framework\Serialize\SerializerInterface;
 use Emagento\Comments\Model\DataProvider\Review as ReviewDataProvider;
 use Emagento\Comments\Model\DataProvider\Rating as RatingDataProvider;
 use Emagento\Comments\Helper\Constants;
+use Emagento\Comments\Api\ReviewRepositoryInterface;
 
 class ReviewManagement implements ReviewManagementInterface
 {
@@ -30,6 +31,8 @@ class ReviewManagement implements ReviewManagementInterface
     private ReviewDataProvider $reviewDataProvider;
     /** @var RatingDataProvider */
     private RatingDataProvider $ratingDataProvider;
+    /** @var ReviewRepositoryInterface */
+    private ReviewRepositoryInterface $reviewRepository;
 
     /**
      * @param ReviewResponseInterfaceFactory $reviewResponseInterfaceFactory
@@ -39,6 +42,7 @@ class ReviewManagement implements ReviewManagementInterface
      * @param SerializerInterface $serializer
      * @param ReviewDataProvider $reviewDataProvider
      * @param RatingDataProvider $ratingDataProvider
+     * @param ReviewRepositoryInterface $reviewRepository
      */
     public function __construct(
         ReviewResponseInterfaceFactory $reviewResponseInterfaceFactory,
@@ -48,6 +52,7 @@ class ReviewManagement implements ReviewManagementInterface
         SerializerInterface $serializer,
         ReviewDataProvider $reviewDataProvider,
         RatingDataProvider $ratingDataProvider,
+        ReviewRepositoryInterface $reviewRepository,
     ) {
         $this->reviewResponseInterfaceFactory = $reviewResponseInterfaceFactory;
         $this->ratingResponseInterfaceFactory = $ratingResponseInterfaceFactory;
@@ -56,6 +61,7 @@ class ReviewManagement implements ReviewManagementInterface
         $this->serializer = $serializer;
         $this->reviewDataProvider = $reviewDataProvider;
         $this->ratingDataProvider = $ratingDataProvider;
+        $this->reviewRepository = $reviewRepository;
     }
 
     /**
@@ -97,5 +103,21 @@ class ReviewManagement implements ReviewManagementInterface
         $result->setRatings($this->ratingDataProvider->getRatings());
 
         return $result;
+    }
+
+    /**
+     * Review delete
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function delete($id)
+    {
+        try {
+            $review = $this->reviewRepository->getById($id);
+            return $this->reviewRepository->delete($review);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

@@ -29,6 +29,8 @@ class ReviewResponse extends AbstractSimpleObject implements ReviewResponseInter
     }
 
     /**
+     * Get Ratings
+     *
      * @return \Emagento\Comments\Api\Data\Rating\RatingInterface[]
      */
     public function getRatings()
@@ -37,6 +39,8 @@ class ReviewResponse extends AbstractSimpleObject implements ReviewResponseInter
     }
 
     /**
+     * Set Ratings
+     *
      * @param \Emagento\Comments\Api\Data\Rating\RatingInterface[] $value
      * @return \Emagento\Comments\Api\Data\Review\ReviewResponseInterface
      */

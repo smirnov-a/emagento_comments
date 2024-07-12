@@ -15,6 +15,7 @@ use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 use Magento\Framework\View\Element\UiComponent\DataProvider\Document;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Psr\Log\LoggerInterface;
+
 class Collection extends AbstractCollection implements SearchResultInterface
 {
     /** @var AggregationInterface */

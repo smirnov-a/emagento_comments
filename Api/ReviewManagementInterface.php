@@ -20,4 +20,12 @@ interface ReviewManagementInterface
      * @return RatingResponseInterface
      */
     public function getRatingList(): RatingResponseInterface;
+
+    /**
+     * Delete specified review
+     *
+     * @param int $id
+     * @return bool
+     */
+    public function delete($id);
 }

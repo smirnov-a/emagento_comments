@@ -18,4 +18,17 @@
             <argument name="logger" xsi:type="object">Emagento\Comments\Logger\Logger</argument>
         </arguments>
     </type>
+
+    <type name="Emagento\Comments\Ui\Component\MassAction\Status\AssignOptions">
+        <arguments>
+            <argument name="data" xsi:type="array">
+                <item name="urlPath" xsi:type="string">local_comments/comment/massChangeStatus</item>
+                <item name="paramName" xsi:type="string">status</item>
+                <item name="confirm" xsi:type="array">
+                    <item name="title" xsi:type="string" translatable="true">Change Status</item>
+                    <item name="message" xsi:type="string" translatable="true">Are you sure to change the status of selected review(s)?</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
 </config>

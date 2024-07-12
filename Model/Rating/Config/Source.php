@@ -39,5 +39,4 @@ class Source implements \Magento\Framework\Option\ArrayInterface
 
         return $result;
     }
-
 }

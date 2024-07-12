@@ -11,6 +11,8 @@ class ReviewResults extends AbstractSimpleObject implements ReviewResultsInterfa
     public const KEY_TOTAL_COUNT = 'total_count';
 
     /**
+     * Get Items
+     *
      * @return \Emagento\Comments\Api\Data\Review\ReviewInterface[]
      */
     public function getItems()
@@ -19,6 +21,8 @@ class ReviewResults extends AbstractSimpleObject implements ReviewResultsInterfa
     }
 
     /**
+     * Set Items
+     *
      * @param \Emagento\Comments\Api\Data\Review\ReviewInterface[] $items
      * @return ReviewResults
      */
@@ -28,6 +32,8 @@ class ReviewResults extends AbstractSimpleObject implements ReviewResultsInterfa
     }
 
     /**
+     * Get Total Count
+     *
      * @return int
      */
     public function getTotalCount()
@@ -36,6 +42,8 @@ class ReviewResults extends AbstractSimpleObject implements ReviewResultsInterfa
     }
 
     /**
+     * Set Total Count
+     *
      * @param int $count
      * @return ReviewResults
      */

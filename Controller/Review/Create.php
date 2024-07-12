@@ -106,7 +106,7 @@ class Create implements HttpPostActionInterface
         try {
             $review->setEntityPkValue($productId)
                 ->setEntityId($this->helper->getStoreReviewEntityId())
-                ->setStatusId(\Magento\Review\Model\Review::STATUS_PENDING)
+                ->setStatusId($this->helper->getDefaultReviewStatusId())
                 ->setCustomerId($customerId)
                 ->setNickname(trim($data['nickname']))
                 ->setStoreId($this->storeManager->getStore()->getId())

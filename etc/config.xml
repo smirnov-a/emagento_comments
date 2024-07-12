@@ -4,6 +4,7 @@
     <default>
         <local_comments>
             <general>
+                <default_status>2</default_status>
                 <notification_enabled>0</notification_enabled>
                 <notification_email>test@test.com</notification_email>
                 <cron_enabled>0</cron_enabled>

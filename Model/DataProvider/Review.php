@@ -44,6 +44,7 @@ class Review
     private ReplyDataInterfaceFactory $replyDataFactory;
     /** @var DataHelper */
     private DataHelper $dataHelper;
+    /** @var ReviewResultsInterfaceFactory */
     private ReviewResultsInterfaceFactory $resultFactory;
 
     /**
@@ -93,6 +94,7 @@ class Review
         if ($this->isCacheEnabled()) {
             $cacheKey = $this->getCacheKey($page, $limit);
             if ($serializedData = $this->cache->load($cacheKey)) {
+                // phpcs:ignore
                 return unserialize($serializedData);
             }
         }
@@ -115,6 +117,7 @@ class Review
 
         if ($cacheKey) {
             $this->cache->save(
+                // phpcs:ignore
                 serialize($result),
                 $cacheKey,
                 [

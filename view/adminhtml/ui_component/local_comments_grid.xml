@@ -47,34 +47,35 @@
             </settings>
         </filters>
         <paging name="listing_paging"/>
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">
+            <action name="delete">
+                <settings>
+                    <url path="local_comments/comment/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Delete</label>
+                    <confirm>
+                        <message translate="true">Are you sure you want to delete selected items?</message>
+                    </confirm>
+                </settings>
+            </action>
+            <action name="change_status">
+                <settings>
+                    <type>change_status</type>
+                    <label translate="true">Change Status</label>
+                    <actions class="Emagento\Comments\Ui\Component\MassAction\Status\AssignOptions"/>
+                </settings>
+            </action>
+        </massaction>
     </listingToolbar>
 
     <columns name="local_comments_columns" class="Magento\Ui\Component\Listing\Columns">
-        <!--
-        <settings>
-            <childDefaults>
-                <param name="fieldAction" xsi:type="array">
-                    <item name="provider" xsi:type="string">reviewsGrid</item>
-                    <item name="target" xsi:type="string">selectReview</item>
-                    <item name="params" xsi:type="array">
-                        <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
-                    </item>
-                </param>
-            </childDefaults>
-        </settings>
-        -->
-        <!--
         <selectionsColumn name="ids">
             <settings>
                 <indexField>review_id</indexField>
-                <resizeEnabled>false</resizeEnabled>
-                <resizeDefaultWidth>55</resizeDefaultWidth>
             </settings>
         </selectionsColumn>
-        -->
         <column name="review_id" sortOrder="10">
             <settings>
-                <!-- filter>textRange</filter -->
                 <filter>text</filter>
                 <label translate="true">ID</label>
                 <sorting>desc</sorting>
@@ -87,7 +88,7 @@
                 <label translate="true">Created</label>
             </settings>
         </column>
-        <column name="source" sortOrder="20"> 
+        <column name="source" sortOrder="20">
             <settings>
                 <filter>select</filter>
                 <options class="Emagento\Comments\Ui\Component\Listing\Columns\Source" />
@@ -143,13 +144,6 @@
                 <bodyTmpl>ui/grid/cells/html</bodyTmpl>
             </settings>
         </column>
-        <!--
-        <column name="type" class="Magento\Review\Ui\Component\Listing\Columns\Type" sortOrder="70">
-            <settings>
-                <label translate="true">Type</label>
-            </settings>
-        </column>
-        -->
         <column name="level" class="Emagento\Comments\Ui\Component\Listing\Columns\Level" sortOrder="80">
             <settings>
                 <label translate="true">Level</label>
