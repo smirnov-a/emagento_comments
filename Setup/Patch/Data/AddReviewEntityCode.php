@@ -1,7 +1,5 @@
 <?php
-/**
- * добавляет тип комментария "К магазину"
- */
+
 namespace Emagento\Comments\Setup\Patch\Data;
 
 use Magento\Framework\Setup\ModuleDataSetupInterface;
@@ -10,17 +8,12 @@ use Magento\Framework\Setup\Patch\PatchVersionInterface;
 
 class AddReviewEntityCode implements DataPatchInterface, PatchVersionInterface
 {
-    /**
-     * @var ModuleDataSetupInterface
-     */
+    /** @var ModuleDataSetupInterface */
     private $moduleDataSetup;
-    /**
-     * @var \Psr\Log\LoggerInterface
-     */
+    /** @var \Psr\Log\LoggerInterface */
     private $logger;
 
     /**
-     * PatchInitial constructor.
      * @param ModuleDataSetupInterface $moduleDataSetup
      * @param \Psr\Log\LoggerInterface $logger
      */
@@ -39,7 +32,6 @@ class AddReviewEntityCode implements DataPatchInterface, PatchVersionInterface
     {
         $connection = $this->moduleDataSetup->getConnection();
 
-        // add store type int review_entity and rating_entity tables
         foreach (['review_entity', 'rating_entity'] as $tableName) {
             $table = $this->moduleDataSetup->getTable($tableName);
             $select = $connection->select()
@@ -56,7 +48,6 @@ class AddReviewEntityCode implements DataPatchInterface, PatchVersionInterface
             $connection->insertForce(
                 $table,
                 [
-                    'entity_id'   => \Emagento\Comments\Helper\Data::REVIEW_ENTITY_TYPE_STORE,
                     'entity_code' => 'store'
                 ]
             );
