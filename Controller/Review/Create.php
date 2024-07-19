@@ -15,6 +15,7 @@ use Magento\Framework\Controller\Result\Json;
 use Emagento\Comments\Helper\Data as Helper;
 use Emagento\Comments\Helper\Constants;
 use Emagento\Comments\Api\ReviewRepositoryInterface;
+use Magento\Review\Model\Review as MagentoReview;
 
 class Create implements HttpPostActionInterface
 {
@@ -106,7 +107,7 @@ class Create implements HttpPostActionInterface
         try {
             $review->setEntityPkValue($productId)
                 ->setEntityId($this->helper->getStoreReviewEntityId())
-                ->setStatusId($this->helper->getDefaultReviewStatusId())
+                ->setStatusId(MagentoReview::STATUS_PENDING)
                 ->setCustomerId($customerId)
                 ->setNickname(trim($data['nickname']))
                 ->setStoreId($this->storeManager->getStore()->getId())
